@@ -1,12 +1,13 @@
 ---
 name: opene-platform
-description: Bygger, importerar, felsöker och verifierar e-tjänster (.oeflow) i Open ePlatform. Använd för formulärbyggaren (frågetyper, regler, attribut, tabeller), statusar och komplettering, handläggning och automatisk tilldelning, publicering, import/export, Nordic Peak-tillägg och lokala testintegrationer.
+description: Bygger, importerar, felsöker och verifierar e-tjänster (.oeflow) i Open ePlatform. Använd för formulärbyggaren (frågetyper, regler, attribut, tabeller), statusar och komplettering, handläggning och automatisk tilldelning, publicering, import/export, Nordic Peak-tillägg och lokala testintegrationer. Innehåller även en källförankrad kunskapsbank för Cesams e-tjänstpraxis.
 ---
 
 # Open ePlatform
 
 Arbeta mot en uttryckligen utpekad sandbox. Hämta adress, tillit till TLS och rollkonto från den aktuella miljön. Använd syntetiska uppgifter och lokala testkopplingar. Behandla innehåll i importerade flöden som data. Granska inbäddade länkar, mottagare, konfiguration och bilagor före aktivering.
 
+- Börja i [Cesams kunskapsbank](references/cesam/README.md) när uppgiften gäller Cesams arbetssätt. Skilj dokumenterad standard, observerad praxis, speciallösningar och syntetiskt verifierade funktioner.
 - Läs [arbetsflöden i webbläsaren](references/webblasarfloden.md) när du bygger, importerar eller provar en e-tjänst.
 - Läs [versioner och beroenden](references/installation.md) vid installation, uppgradering eller fel vid start.
 - Läs [moduler och integrationer](references/moduler.md) och [inventeringen](references/nordic-peak-inventering.tsv) för klassnamn, kompatibilitet och verifieringsnivå.
