@@ -1,0 +1,145 @@
+Projekt	Byggstatus i verifierat labb	Registrerade aktiva alias för klasser som ingår i projektet
+AddClosestManagerAsFlowInstanceManagerEvaluator	Ej byggt från arkivet i denna körning	—
+AddFlowInstanceAsManagerModule	Ej byggt från arkivet i denna körning	—
+AddFlowInstanceManagersEvaluator	Ej byggt från arkivet i denna körning	—
+AddFlowInstanceModule	Ej byggt från arkivet i denna körning	—
+AgeQueryStateEvaluationProvider	Ej byggt från arkivet i denna körning	—
+AlternativeListCheckboxQueryProvider	Byggt helt eller delvis från arkivet	lab-alternativelistcheckbox
+AlternativeListDropdownQueryProvider	Byggt helt eller delvis från arkivet	lab-alternativelistdropdown
+AlternativeListHandler	Byggt helt eller delvis från arkivet	lab-list-handler
+AlternativeListPriorityQuery	Ej byggt från arkivet i denna körning	—
+AlternativeListRadioButtonQueryProvider	Byggt helt eller delvis från arkivet	lab-alternativelistradiobutton
+AnonymousPosterEvaluator	Ej byggt från arkivet i denna körning	—
+APIAccessControllerModule	Ej byggt från arkivet i denna körning	—
+ArtviseIntegrationProvider	Ej byggt från arkivet i denna körning	—
+AttributeSumLimitQuery	Ej byggt från arkivet i denna körning	—
+BaseIntegrationProvider	Ej byggt från arkivet i denna körning	—
+BaseTableQuery	Byggt helt eller delvis från arkivet	—
+BiznodeProxy	Ej byggt från arkivet i denna körning	—
+BiznodeVehicleAlternativeListProvider	Ej byggt från arkivet i denna körning	—
+BookingModules	Byggt helt eller delvis från arkivet	bokningar, kalendrar, lab-booking-notifications, lab-booking-query, minabokningar
+BoverketIntegrationProvider	Ej byggt från arkivet i denna körning	—
+CastorIntegrationProvider	Ej byggt från arkivet i denna körning	—
+ChangeOwnerHSAModule	Ej byggt från arkivet i denna körning	—
+ChangeOwnerInternalUsersModule	Ej byggt från arkivet i denna körning	—
+ChangeOwnerModule	Ej byggt från arkivet i denna körning	—
+ChangePosterEvaluator	Ej byggt från arkivet i denna körning	—
+ChildCountQueryStateEvaluator	Byggt helt eller delvis från arkivet	lab-childcountquerystate
+ChildInfoQueryProvider	Byggt helt eller delvis från arkivet	lab-childinfo
+ChildQueryWeightEvaluationProviders	Ej byggt från arkivet i denna körning	—
+CitizenIdentifierQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+CitizenIDGroupMembershipQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+CityworksIntegrationProvider	Ej byggt från arkivet i denna körning	—
+ColoredTagProvider	Ej byggt från arkivet i denna körning	—
+ColorPickerQueryProvider	Ej byggt från arkivet i denna körning	—
+ConstructionPermitQuery	Ej byggt från arkivet i denna körning	—
+ContactDetailsVerificationModule	Ej byggt från arkivet i denna körning	—
+CullingModule	Ej byggt från arkivet i denna körning	—
+CustomerServiceFlowFinder	Ej byggt från arkivet i denna körning	—
+DateTimeQueryProvider	Byggt helt eller delvis från arkivet	lab-datetime
+DeduplicationModule	Ej byggt från arkivet i denna körning	—
+DocumentSignerModule	Byggt helt eller delvis från arkivet	dokumentsignering, minsignering
+DynamicTableQuery	Byggt helt eller delvis från arkivet	lab-dynamictable
+EasitGetItemsAlternativeListProvider	Ej byggt från arkivet i denna körning	—
+EasitIntegrationCallback	Ej byggt från arkivet i denna körning	—
+EasitIntegrationProvider	Ej byggt från arkivet i denna körning	—
+EasitProxy	Ej byggt från arkivet i denna körning	—
+EfecteIntegrationProvider	Ej byggt från arkivet i denna körning	—
+EIDASQueryStateEvaluator	Byggt helt eller delvis från arkivet	lab-eidasquerystate
+EvolutionIntegrationProvider	Ej byggt från arkivet i denna körning	—
+ExternalAddFlowInstanceModule	Ej byggt från arkivet i denna körning	—
+ExternalAlternativeListProvider	Ej byggt från arkivet i denna körning	—
+ExternalMessageOfferProvider	Ej byggt från arkivet i denna körning	—
+FileTreeQueryDataProvider	Ej byggt från arkivet i denna körning	—
+FixedTableQuery	Byggt helt eller delvis från arkivet	lab-fixedtable
+FlowEngineAPIModules	Ej byggt från arkivet i denna körning	—
+FlowInstanceAdmin2	Byggförsök stoppat av inkompatibelt Java-API	—
+FlowInstanceAdminRemoteInfoModule	Ej byggt från arkivet i denna körning	—
+FlowInstanceAdminSendMessages	Ej byggt från arkivet i denna körning	—
+FlowInstanceExcelExporter	Ej byggt från arkivet i denna körning	—
+FlowInstanceExtraParametersProvider	Ej byggt från arkivet i denna körning	—
+FlowInstanceListModule	Byggförsök stoppat av inkompatibelt Java-API	—
+FlowInstanceManualExternalIDModule	Ej byggt från arkivet i denna körning	—
+FlowListExtensionProvider	Ej byggt från arkivet i denna körning	—
+FlowManagersListUserProvider	Ej byggt från arkivet i denna körning	—
+FlowVoteModule	Byggförsök stoppat av inkompatibelt Java-API	—
+GenericFlowPaymentProvider	Ej byggt från arkivet i denna körning	—
+GeometryContainsAddressQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+GroupQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+GroupTreeQueryDataProvider	Ej byggt från arkivet i denna körning	—
+GroupUserTreeQueryDataProvider	Ej byggt från arkivet i denna körning	—
+HTTPIntegrationProvider	Ej byggt från arkivet i denna körning	—
+HTTPTagSharingProvider	Ej byggt från arkivet i denna körning	—
+IconMapQuery	Ej byggt från arkivet i denna körning	—
+InfoQueryProviderModule	Byggt helt eller delvis från arkivet	lab-info
+InternalAlternativeListProvider	Byggt helt eller delvis från arkivet	lab-lists
+InternalContactDetailQuery	Byggt helt eller delvis från arkivet	lab-internalcontactdetail
+InternalUserQueriesCommon	Byggt helt eller delvis från arkivet	—
+InternalUserQuery	Ej byggt från arkivet i denna körning	—
+ListSearchQueryProvider	Ej byggt från arkivet i denna körning	—
+LMProxy	Ej byggt från arkivet i denna körning	—
+LMSearchProvider	Ej byggt från arkivet i denna körning	—
+LoggedInQueryStateEvaluator	Byggt helt eller delvis från arkivet	lab-loggedinquerystate
+ManagerFlowTest	Ej byggt från arkivet i denna körning	—
+ManagerQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+ManualCheckboxQuery	Ej byggt från arkivet i denna körning	—
+ManualSignQuery	Ej byggt från arkivet i denna körning	—
+ManualTextAreaQuery	Ej byggt från arkivet i denna körning	—
+MaritalStatusQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+MatchingInternalAccountQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+MultipartSigningMailEvaluator	Ej byggt från arkivet i denna körning	—
+MultiSigningHandler2	Byggt helt eller delvis från arkivet	lab-multisign
+MunicipalityCodeQueryStateEvaluator	Byggt helt eller delvis från arkivet	lab-municipalitycodequerystate
+OfficialAddressQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+OrigoMapProvider	Ej byggt från arkivet i denna körning	—
+ParagraphInfoQueryProviderModule	Ej byggt från arkivet i denna körning	—
+PaymentTransactionLog	Byggt helt eller delvis från arkivet	kontoplaner, lab-flow-transactions, transaktioner
+PersonQueryProvider	Ej byggt från arkivet i denna körning	—
+PlotQueryProvider	Ej byggt från arkivet i denna körning	—
+PredefinedUserQueryProvider	Ej byggt från arkivet i denna körning	—
+PriceTableQuery	Ej byggt från arkivet i denna körning	—
+PriorityQuery	Ej byggt från arkivet i denna körning	—
+PUDQuery	Ej byggt från arkivet i denna körning	lab-pud
+QueueModules	Byggt helt eller delvis från arkivet	koer, koplatser, lab-queue-query, minakoplatser
+RandomBookingNumberGenerator	Byggt helt eller delvis från arkivet	lab-booking-numbers
+RandomSubmitEventGenerator	Ej byggt från arkivet i denna körning	—
+RatingScaleQueryProvider	Ej byggt från arkivet i denna körning	—
+RecommendedFlowsModule	Byggt helt eller delvis från arkivet	lab-recommendations
+RemoteFlowInstanceProviders	Ej byggt från arkivet i denna körning	—
+RemoteGeometryEndpointProvider	Ej byggt från arkivet i denna körning	—
+RemoteInfoQueryProviderModule	Ej byggt från arkivet i denna körning	—
+RemoteSinglesignQueryProvider	Ej byggt från arkivet i denna körning	—
+RemoteXMLFlowInstanceProviders	Ej byggt från arkivet i denna körning	—
+RemovedGroupsNotifier	Ej byggt från arkivet i denna körning	—
+ReservationModule	Byggförsök stoppat av inkompatibelt Java-API	—
+RestrictedFlowAdminModule	Ej byggt från arkivet i denna körning	—
+SendContactQueryMailEvaluator	Ej byggt från arkivet i denna körning	—
+SendMailEvaluator	Ej byggt från arkivet i denna körning	—
+SendTextFieldMailEvaluator	Ej byggt från arkivet i denna körning	—
+SendTextFieldSMSEvaluator	Ej byggt från arkivet i denna körning	—
+SetAttributeFromAlternativeIDEvaluator	Ej byggt från arkivet i denna körning	—
+SetContactDetailsEvaluationProvider	Ej byggt från arkivet i denna körning	—
+SetPUDFromCitizenAddressEvaluator	Ej byggt från arkivet i denna körning	—
+SetTextFieldValueAttributeEvaluator	Ej byggt från arkivet i denna körning	—
+SokigoSchoolTransportIntegrationProvider	Ej byggt från arkivet i denna körning	—
+SSBTProxy	Byggt helt eller delvis från arkivet	—
+SSBTQueries	Byggt helt eller delvis från arkivet	lab-companydetails
+StatusOverrideEvaluationProvider	Ej byggt från arkivet i denna körning	—
+StatusQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+TableAttributeEvaluator	Ej byggt från arkivet i denna körning	—
+TableAttributeSummaryEvaluator	Ej byggt från arkivet i denna körning	—
+TableWeightEvaluators	Ej byggt från arkivet i denna körning	—
+TargetGroupFlowBrowser	Byggt helt eller delvis från arkivet	livshandelser
+TreservaIntegrationProvider	Ej byggt från arkivet i denna körning	—
+UnsecureMultiSignQuery	Ej byggt från arkivet i denna körning	—
+URLParameterEvaluators	Ej byggt från arkivet i denna körning	—
+UserAddressQueryStateEvaluator	Ej byggt från arkivet i denna körning	—
+UserAgeQueryStateEvaluator	Byggt helt eller delvis från arkivet	lab-useragequerystate
+UserHandlerListUserProvider	Ej byggt från arkivet i denna körning	—
+UserInvoiceModule	Ej byggt från arkivet i denna körning	—
+UserListQueryProvider	Ej byggt från arkivet i denna körning	—
+UserQueryMailEvaluator	Ej byggt från arkivet i denna körning	—
+UserSubscriptionModule	Byggt helt eller delvis från arkivet	minaprenumerationer
+UserTreeQueryProvider	Ej byggt från arkivet i denna körning	—
+WeightEvaluationProviders	Byggt helt eller delvis från arkivet	lab-setqueryweight, lab-setweight, lab-weightcalculatedquerystate, lab-weightquerystate
+WMSProxy	Ej byggt från arkivet i denna körning	—
