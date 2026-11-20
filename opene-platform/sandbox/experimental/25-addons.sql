@@ -8,8 +8,9 @@ INSERT INTO sandbox_query_modules VALUES
  ('com.nordicpeak.flowengine.booking.queries.BookingQueryProviderModule','sandbox-booking-query','BookingQuery'),
  ('com.nordicpeak.flowengine.queue.query.QueueQueryProviderModule','sandbox-queue-query','QueueQuery');
 INSERT INTO openhierarchy_foreground_modules
- (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu)
-SELECT q.classname,q.prefix,q.alias,'Sandbox query provider',CONCAT(q.prefix,'Admin.sv.xsl'),'Classpath',1,1,1,1,1,0
+ (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu,staticContentPackage)
+SELECT q.classname,q.prefix,q.alias,'Sandbox query provider',CONCAT(q.prefix,'Admin.sv.xsl'),'Classpath',1,1,1,1,1,0,
+       CASE WHEN q.prefix IN ('DateTimeQuery','DynamicTableQuery','BookingQuery','QueueQuery') THEN 'staticcontent' ELSE NULL END
 FROM sandbox_query_modules q WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_modules m WHERE m.classname=q.classname);
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,'queryStyleSheet',CONCAT(q.prefix,'.sv.xsl') FROM sandbox_query_modules q JOIN openhierarchy_foreground_modules m ON m.classname=q.classname

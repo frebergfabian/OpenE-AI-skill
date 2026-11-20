@@ -8,6 +8,15 @@ for(const [from,to] of [[path.join(dist,'webapp'),'webapp'],[path.join(runtime,'
  fs.cpSync(from,path.join(payload,to),{recursive:true,filter:p=>!/(?:^|[\\/])(?:logs|work|temp|webapps)(?:[\\/]|$)/.test(path.relative(from,p))&&!/(?:config\.xml|systemlog\.log|.*\.log)$/.test(p)});
 }
 fs.mkdirSync(path.join(payload,'sql'),{recursive:true});
+// The demo theme otherwise loads versioned copies of jQuery repeatedly. This
+// destroys plugins registered by earlier scripts, including the calendar.
+const theme=path.join(payload,'webapp','WEB-INF','xsl','design.xsl');
+let themeBytes=fs.readFileSync(theme).toString('latin1');
+const jquery='<script type="text/javascript" src="{/document/requestinfo/contextpath}/static/global/jquery/jquery.js"/>';
+if(!themeBytes.includes(jquery))throw Error('Unexpected demo theme');
+themeBytes=themeBytes.replace(jquery,jquery+'\n<script type="text/javascript" src="{/document/requestinfo/contextpath}/static/global/jquery/jquery-migrate.js"/>');
+themeBytes=themeBytes.replace("scripts/script[src != '/static/global/jquery/jquery.js']","scripts/script[not(starts-with(src, '/static/global/jquery/jquery.js')) and not(starts-with(src, '/static/global/jquery/jquery-migrate.js'))]");
+fs.writeFileSync(theme,themeBytes,'latin1');
 let dump=fs.readFileSync(path.join(dist,'sql','10-demo.sql'),'utf8');
 // Do not distribute upstream demo credentials or account data in the executable.
 dump=dump.replace(/^INSERT INTO `simple_users`[^\r\n]*\r?\n/gm,'').replace(/^INSERT INTO `simple_user_groups`[^\r\n]*\r?\n/gm,'');

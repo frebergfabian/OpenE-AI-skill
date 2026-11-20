@@ -1,0 +1,9 @@
+# Test av Funktionslabbet i experimentell instans
+2026-11-20: publicerad testversion, separat syntetiskt sökandekonto.
+Signering avstängd under detta test. Kalender och kö skapades och kopplades manuellt.
+Sökanden valde en tid och accepterade en köplats genom webbläsaren.
+Kvittens: ärende 788, inskickat.
+Databas: ärende 788 status Inskickat; bookings (bookingID=1, bookingSlotID=1, flowInstanceID=788); queue_slots (queueSlotID=1, queueID=1, flowInstanceID=788).
+OpenHierarchys systemlogg: 0 ERROR vid kontrollen.
+E-post: inga meddelanden fångades; notifieringar var inte aktiverade, så e-post är inte verifierad.
+Webbläsaren rapporterade flera JavaScript-fel om egenskapen msie; detta kvarstår att undersöka.
