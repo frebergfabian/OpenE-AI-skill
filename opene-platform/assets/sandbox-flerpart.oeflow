@@ -282,7 +282,7 @@
   <shortDescription>&lt;p&gt;&amp;Ouml;va p&amp;aring; att fylla i, spara och signera en fiktiv ans&amp;ouml;kan. F&amp;ouml;lj &amp;auml;rendet och kommunicera med en testhandl&amp;auml;ggare.&lt;/p&gt;</shortDescription>
   <longDescription>&lt;p&gt;Funktionslabbet anv&amp;auml;nder syntetiska uppgifter. Du kan f&amp;ouml;rhandsgranska och spara ans&amp;ouml;kan innan du skickar in den.&lt;/p&gt;</longDescription>
   <submittedMessage>&lt;p&gt;Din fiktiva ans&amp;ouml;kan har kommit in. Du hittar kvittot och &amp;auml;rendet p&amp;aring; Mina sidor.&lt;/p&gt;</submittedMessage>
-  <loginQuestionText>&lt;p&gt;Om du loggar in s&amp;aring; kan vi f&amp;ouml;rifylla fr&amp;aring;gor med uppgifter vi h&amp;auml;mtar fr&amp;aring;n andra system t.ex. skatteverket.&lt;/p&gt;
-
+  <loginQuestionText>&lt;p&gt;Om du loggar in s&amp;aring; kan vi f&amp;ouml;rifylla fr&amp;aring;gor med uppgifter vi h&amp;auml;mtar fr&amp;aring;n andra system t.ex. skatteverket.&lt;/p&gt;
+
 &lt;p&gt;Du kan &amp;auml;ven f&amp;aring; &amp;aring;terkoppling om &amp;auml;rendets status och notifiering om handl&amp;auml;ggaren beh&amp;ouml;ver mer information.&lt;/p&gt;</loginQuestionText>
 </Flow>
