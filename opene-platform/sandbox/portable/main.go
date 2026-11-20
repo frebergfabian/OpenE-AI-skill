@@ -797,7 +797,10 @@ func (i *Instance) configure() error {
 	return os.WriteFile(filepath.Join(i.Dir, "webapps", "ROOT", "WEB-INF", "config.xml"), []byte(s), 0600)
 }
 func (i *Instance) checks() map[string]bool {
-	r := map[string]bool{"ready": true, "http": false, "loginForm": false, "accounts": false, "simulator": false, "adminLogin": false}
+	r := map[string]bool{"ready": true, "http": false, "loginForm": false, "accounts": false, "simulator": false, "adminLogin": false, "systemLog": false}
+	if log, err := os.ReadFile(filepath.Join(i.Dir, "webapps", "ROOT", "WEB-INF", "systemlog.log")); err == nil {
+		r["systemLog"] = !bytes.Contains(log, []byte("[ERROR]"))
+	}
 	jar, _ := cookiejar.New(nil)
 	c := &http.Client{Jar: jar, Timeout: 4 * time.Second, Transport: &http.Transport{Proxy: nil}, CheckRedirect: func(req *http.Request, via []*http.Request) error {
 		if req.URL.Host != fmt.Sprintf("127.0.0.1:%d", i.State.HTTP) {

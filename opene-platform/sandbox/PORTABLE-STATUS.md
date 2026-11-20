@@ -21,3 +21,10 @@ Playwright försöktes men startade inte: Chromium headless shell saknades. Inge
 - Kod för syntetiska personidentifierare i kontoseedningen är tillagd men ännu inte provad i en ny exe.
 - Spegelbygget kördes till slut med `OPENE_SVN_MIRROR` och SHA-256 ovan: OpenE-webbrot med 188 jar. Detta verifierar byggbarhet från spegeln, inte bitidentiska binärer.
 - Båda namngivna GitHub-repona är offentliga; destinationen för en intern release måste väljas. Ingen release har publicerats.
+
+## Fortsatt arbete: frågetyper och hämtningsskript
+- `get-sandbox.ps1` och `get-sandbox.sh` är tillagda; PowerShell-syntax och avvisning av ogiltigt versionsnamn har provats. Nedladdning kan inte end-to-end-testas innan en release finns.
+- En särskild experimentell exe (`0.1.2-dev`) byggdes med Information, Datum/Tid, Dynamisk tabell och deras beroenden. Alla tre moduler migrerade och laddades med 0 ERROR; alla tre tilläts i e-tjänsttypen. Fem syntetiska citizenIdentifier-attribut seedades. Hälsokontrollen har utökats med systemloggen.
+- Import av `funktionslabbet.oeflow` med administratörskonto ger fortfarande två fel: frågetyperna Bokning och Kö hittades inte. Importen lyckades inte och inget komplett ärende har testats.
+- Den första experimentkörningen saknade AlternativeListHandler och genererade ett ERROR trots att dåvarande hälsokontrollen rapporterade frisk. Beroendet lades till och ny ren instans fick 0 ERROR. Detta bevisar att äldre exe-varianter inte har tillräcklig hälsokontroll.
+- Användaren har valt OpenE-AI-skill som releasedestination trots att repot och releasen är offentliga. Ingen release har publicerats.

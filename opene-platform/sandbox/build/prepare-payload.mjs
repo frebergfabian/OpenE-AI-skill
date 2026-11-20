@@ -14,7 +14,10 @@ dump=dump.replace(/^INSERT INTO `simple_users`[^\r\n]*\r?\n/gm,'').replace(/^INS
 if(dump.includes('6e2b592b196249838b312cfa026ebe2146dfa6dc')||/INSERT INTO `simple_users`/.test(dump))throw Error('Demo account scrub failed');
 fs.writeFileSync(path.join(payload,'sql','10-demo.sql'),dump);
 fs.copyFileSync(path.join(sb,'docker','sql','20-sandbox-pre.sql'),path.join(payload,'sql','20-sandbox-pre.sql'));
+if(process.env.OPENE_EXPERIMENTAL_ADDONS==='1')fs.copyFileSync(path.join(sb,'experimental','25-addons.sql'),path.join(payload,'sql','25-addons.sql'));
+else fs.rmSync(path.join(payload,'sql','25-addons.sql'),{force:true});
 fs.copyFileSync(path.join(sb,'docker','config.xml.tmpl'),path.join(payload,'config.xml.tmpl'));
 fs.copyFileSync(path.join(dist,'BUILDINFO'),path.join(payload,'BUILDINFO'));
+fs.rmSync(path.join(portable,'payload.zip'),{force:true});
 const r=spawnSync('C:/Program Files/7-Zip/7z.exe',['a','-tzip','-mx=1',path.join(portable,'payload.zip'),'.'],{cwd:payload,encoding:'utf8'});
 if(r.status!==0)throw Error(r.stderr);console.log(r.stdout);
