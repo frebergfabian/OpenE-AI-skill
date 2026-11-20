@@ -12,9 +12,9 @@ INSERT IGNORE INTO site_profile_domains(profileID,domain,sortIndex) VALUES(@prof
 -- Publish only our named synthetic fixtures, using a relative date so a fresh
 -- installation works regardless of when the portable build was produced.
 UPDATE flowengine_flows SET enabled=1,publishDate=CURRENT_DATE,unPublishDate=NULL
-WHERE name IN ('Funktionslabbet - portabelt utkast','Sandbox fastighetstest','Sandbox barntest','Sandbox betalningstest','Sandbox foretagstest');
+WHERE name IN ('Funktionslabbet - portabelt utkast','Sandbox fastighetstest','Sandbox barntest','Sandbox betalningstest','Sandbox foretagstest','Sandbox flerpartssignering');
 UPDATE flowengine_flows SET requireSigning=1,appendSigningSignatureToPDF=1,showSubmitSurvey=0
-WHERE name IN ('Funktionslabbet - portabelt utkast','Sandbox betalningstest');
+WHERE name IN ('Funktionslabbet - portabelt utkast','Sandbox betalningstest','Sandbox flerpartssignering');
 INSERT INTO booking_calendars(name,enabled,price,hoursBeforeBookingLocked,disableLeaving,disableRebooking,restrictRebookingToPreviousManager,allowDuplicateBookings)
 SELECT 'Sandbox testkalender',1,0,0,0,0,0,0 WHERE NOT EXISTS (SELECT 1 FROM booking_calendars WHERE name='Sandbox testkalender');
 SET @calendar=(SELECT calendarID FROM booking_calendars WHERE name='Sandbox testkalender' ORDER BY calendarID LIMIT 1);

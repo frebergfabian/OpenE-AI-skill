@@ -5,7 +5,7 @@ Testbevis och exakta förutsättningar finns i `tests/integration-cases-result.t
 | Integration | Status |
 | --- | --- |
 | Betalning | Egen adapter och lokal Checkout-simulator; lyckad och avbruten betalning med sparade ärenden och transaktionslogg är provade. Endast en delmängd av [Swedbank Pays kontrakt](https://developer.swedbankpay.com/checkout-v3/get-started/payment-request/) är implementerad. Återhämtning vid avbrott mitt i callback är inte verifierad. |
-| Enkel-, flerparts- och dokumentsignering | DummySigningProvider och respektive OpenE-modul har provats med bestående data. Flerpartsprovet krävde manuell tjänstekonfiguration. |
+| Enkel-, flerparts- och dokumentsignering | DummySigningProvider och respektive OpenE-modul har provats med bestående data. En separat flerpartstjänst importeras och publiceras automatiskt. |
 | PUD | Lokal söktjänst, syntetisk fastighet och sparat ärende är provade. LMProxy, LMSearch och WMS är inte verifierade end-to-end. |
 | SSBT | Företagsfrågan har provats med sparat ärende genom en lokal JSON-adapter. Bolagsverkets SOAP-kontrakt är inte implementerat eller verifierat. |
 | Barn och Navet | DummyChildRelationProvider och ChildInfo har provats med ett sparat ärende och syntetiskt barn. Ett separat Navet-kontrakt och PersonQueryProvider är inte verifierade. |

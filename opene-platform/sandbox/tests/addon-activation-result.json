@@ -8,10 +8,12 @@
   },
   {
     "project": "AddClosestManagerAsFlowInstanceManagerEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.addclosestmanagerasflowinstancemanagerevaluator.AddClosestManagerAsFlowInstanceManagerEvaluationProviderModule"
+    ]
   },
   {
     "project": "AddFlowInstanceAsManagerModule",
@@ -22,10 +24,12 @@
   },
   {
     "project": "AddFlowInstanceManagersEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.addflowinstancemanagersevaluator.AddFlowInstanceManagersEvaluationProviderModule"
+    ]
   },
   {
     "project": "AddFlowInstanceModule",
@@ -90,10 +94,12 @@
   },
   {
     "project": "AnonymousPosterEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.anonymousposterevaluator.AnonymousPosterEvaluationProviderModule"
+    ]
   },
   {
     "project": "ArtviseIntegrationProvider",
@@ -185,10 +191,12 @@
   },
   {
     "project": "ChangePosterEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.changeposterevaluator.ChangePosterEvaluationProviderModule"
+    ]
   },
   {
     "project": "ChildCountQueryStateEvaluator",
@@ -461,10 +469,12 @@
   },
   {
     "project": "FlowManagersListUserProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.userlistquery.FlowManagersListUserProvider"
+    ]
   },
   {
     "project": "FlowVoteModule",
@@ -680,10 +690,12 @@
   },
   {
     "project": "MultipartSigningMailEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.multipartsigningmailevaluator.MultipartSigningMailEvaluatorEvaluationProviderModule"
+    ]
   },
   {
     "project": "MunicipalityCodeQueryStateEvaluator",
@@ -925,17 +937,21 @@
   },
   {
     "project": "SetAttributeFromAlternativeIDEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.setattributefromalternativeid.SetAttributeFromAlternativeIDEvaluationProviderModule"
+    ]
   },
   {
     "project": "SetContactDetailsEvaluationProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.setcontactdetailsevaluator.SetContactDetailsEvaluationProviderModule"
+    ]
   },
   {
     "project": "SetPUDFromCitizenAddressEvaluator",
@@ -945,10 +961,12 @@
   },
   {
     "project": "SetTextFieldValueAttributeEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.settextfieldvalueattribute.SetTextFieldValueAttributeEvaluationProviderModule"
+    ]
   },
   {
     "project": "SokigoSchoolTransportIntegrationProvider",
@@ -958,10 +976,12 @@
   },
   {
     "project": "StatusOverrideEvaluationProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.statusoverrideevaluator.StatusOverrideEvaluationProviderModule"
+    ]
   },
   {
     "project": "StatusQueryStateEvaluator",
@@ -974,17 +994,21 @@
   },
   {
     "project": "TableAttributeEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.tableattributeevaluator.TableAttributeEvaluationProviderModule"
+    ]
   },
   {
     "project": "TableAttributeSummaryEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.tableattributesummaryevaluator.TableAttributeSummaryEvaluationProviderModule"
+    ]
   },
   {
     "project": "TableWeightEvaluators",
@@ -1031,17 +1055,21 @@
   },
   {
     "project": "UserAgeQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.userage.UserAgeQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "UserHandlerListUserProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.usertreequery.UserHandlerListUserProvider"
+    ]
   },
   {
     "project": "UserInvoiceModule",

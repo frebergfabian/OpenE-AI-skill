@@ -41,6 +41,7 @@ if(process.env.OPENE_EXPERIMENTAL_ADDONS==='1'){
  fs.copyFileSync(path.join(sb,'..','assets','sandbox-barn.oeflow'),path.join(payload,'fixtures','sandbox-barn.oeflow'));
  fs.copyFileSync(path.join(sb,'..','assets','sandbox-betalning.oeflow'),path.join(payload,'fixtures','sandbox-betalning.oeflow'));
  fs.copyFileSync(path.join(sb,'..','assets','sandbox-foretag.oeflow'),path.join(payload,'fixtures','sandbox-foretag.oeflow'));
+ fs.copyFileSync(path.join(sb,'..','assets','sandbox-flerpart.oeflow'),path.join(payload,'fixtures','sandbox-flerpart.oeflow'));
 }else{
  fs.rmSync(path.join(payload,'sql','30-fixtures.sql'),{force:true});
  fs.rmSync(path.join(payload,'fixtures'),{force:true,recursive:true});

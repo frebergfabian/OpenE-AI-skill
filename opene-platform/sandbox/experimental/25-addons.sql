@@ -82,7 +82,9 @@ INSERT INTO sandbox_support_modules VALUES
  ('com.nordicpeak.flowengine.multisigninghandlers.MultiSigningHandler2Module','sandbox-multisign','MultiSigningHandler2Module.sv.xsl'),
  ('com.nordicpeak.flowengine.documentsigner.DocumentSignerAdminModule','sandbox-documents','DocumentSignerAdminModule.sv.xsl'),
  ('com.nordicpeak.flowengine.documentsigner.DocumentSignerUserModule','sandbox-mydocuments','DocumentSignerUserModule.sv.xsl'),
- ('com.nordicpeak.flowengine.internalalternativelist.InternalAlternativeListProviderModule','sandbox-lists','InternalAlternativeListProviderModule.sv.xsl');
+ ('com.nordicpeak.flowengine.internalalternativelist.InternalAlternativeListProviderModule','sandbox-lists','InternalAlternativeListProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.queries.userlistquery.FlowManagersListUserProvider','sandbox-list-managers',NULL),
+ ('com.nordicpeak.flowengine.queries.usertreequery.UserHandlerListUserProvider','sandbox-list-users',NULL);
 INSERT INTO openhierarchy_foreground_modules
  (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu,staticContentPackage)
 SELECT q.classname,q.alias,q.alias,'Experimental sandbox module',q.xsl,IF(q.xsl IS NULL,NULL,'Classpath'),IF(q.alias='sandbox-pay',1,0),IF(q.alias IN ('sandbox-mybookings','sandbox-myqueue','sandbox-flow-pay','sandbox-multisign','sandbox-mydocuments'),1,0),1,1,1,0,IF(q.xsl IS NULL,NULL,'staticcontent')
@@ -111,12 +113,30 @@ INSERT INTO sandbox_rule_modules VALUES
  ('com.nordicpeak.flowengine.evaluators.userquerymailevaluator.UserQueryMailEvaluationProviderModule','sandbox-rule-user-mail','UserQueryMailEvaluationProviderModule.sv.xsl'),
  ('com.nordicpeak.flowengine.evaluators.internalaccount.MatchingInternalAccountQueryStateEvaluationProviderModule','sandbox-rule-internal-account','MatchingInternalAccountQueryStateEvaluationProviderModule.sv.xsl'),
  ('com.nordicpeak.flowengine.evaluators.officialaddressquerystateevaluator.OfficialAddressQueryStateEvaluationProviderModule','sandbox-rule-address','OfficialAddressQueryStateEvaluationProviderModule.sv.xsl'),
- ('com.nordicpeak.flowengine.evaluators.statusquerystate.StatusQueryStateEvaluationProviderModule','sandbox-rule-status','StatusQueryStateEvaluationProviderModule.sv.xsl');
+ ('com.nordicpeak.flowengine.evaluators.statusquerystate.StatusQueryStateEvaluationProviderModule','sandbox-rule-status','StatusQueryStateEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.addclosestmanagerasflowinstancemanagerevaluator.AddClosestManagerAsFlowInstanceManagerEvaluationProviderModule','sandbox-rule-closest-manager','AddClosestManagerAsFlowInstanceManagerEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.addflowinstancemanagersevaluator.AddFlowInstanceManagersEvaluationProviderModule','sandbox-rule-add-managers','AddFlowInstanceManagersEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.anonymousposterevaluator.AnonymousPosterEvaluationProviderModule','sandbox-rule-anonymous','AnonymousPosterEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.changeposterevaluator.ChangePosterEvaluationProviderModule','sandbox-rule-change-poster','ChangePosterEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.multipartsigningmailevaluator.MultipartSigningMailEvaluatorEvaluationProviderModule','sandbox-rule-multipart-mail','MultipartSigningMailEvaluatorEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.setattributefromalternativeid.SetAttributeFromAlternativeIDEvaluationProviderModule','sandbox-rule-list-attribute','SetAttributeFromAlternativeIDEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.setcontactdetailsevaluator.SetContactDetailsEvaluationProviderModule','sandbox-rule-contact','SetContactDetailsEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.settextfieldvalueattribute.SetTextFieldValueAttributeEvaluationProviderModule','sandbox-rule-text-attribute','SetTextFieldValueAttributeEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.statusoverrideevaluator.StatusOverrideEvaluationProviderModule','sandbox-rule-status-override','StatusOverrideEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.tableattributeevaluator.TableAttributeEvaluationProviderModule','sandbox-rule-table-attribute','TableAttributeEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.tableattributesummaryevaluator.TableAttributeSummaryEvaluationProviderModule','sandbox-rule-table-summary','TableAttributeSummaryEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.userage.UserAgeQueryStateEvaluationProviderModule','sandbox-rule-user-age','UserAgeQueryStateEvaluationProviderModule.sv.xsl');
 INSERT INTO openhierarchy_foreground_modules
  (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu)
 SELECT q.classname,q.alias,q.alias,'Sandbox rule provider',q.xsl,'Classpath',0,0,1,1,1,0
 FROM sandbox_rule_modules q WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_modules m WHERE m.classname=q.classname);
 DROP TEMPORARY TABLE sandbox_rule_modules;
+INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
+SELECT m.moduleID,'pdfFilename','$flow.name - $flowInstance.flowInstanceID'
+FROM openhierarchy_foreground_modules m
+WHERE m.classname IN ('com.nordicpeak.flowengine.evaluators.addclosestmanagerasflowinstancemanagerevaluator.AddClosestManagerAsFlowInstanceManagerEvaluationProviderModule',
+                      'com.nordicpeak.flowengine.evaluators.addflowinstancemanagersevaluator.AddFlowInstanceManagersEvaluationProviderModule')
+AND NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE s.moduleID=m.moduleID AND s.id='pdfFilename');
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m
 JOIN (SELECT 'child1' id,'true' value UNION ALL SELECT 'childID1','201001010006' UNION ALL SELECT 'ensam1','true') v
@@ -129,4 +149,6 @@ SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m JOIN
  UNION ALL SELECT 'com.nordicpeak.flowengine.internalalternativelist.InternalAlternativeListProviderModule','tempDir','/var/lib/opene/tmp'
  UNION ALL SELECT 'com.nordicpeak.flowengine.internalalternativelist.InternalAlternativeListProviderModule','maxRequestSize','10'
  UNION ALL SELECT 'com.nordicpeak.flowengine.internalalternativelist.InternalAlternativeListProviderModule','ramThreshold','500'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.queries.userlistquery.FlowManagersListUserProvider','providerID','sandbox-managers'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.queries.usertreequery.UserHandlerListUserProvider','providerID','sandbox-users'
  UNION ALL SELECT 'com.nordicpeak.flowengine.multisigninghandlers.MultiSigningHandler2Module','serverURL','@OPENE@') v ON v.classname=m.classname;

@@ -26,6 +26,8 @@ Dokumentsignering 0.2.7-dev: en ny instans skapade lokal webbplatsprofil automat
 
 Utökade frågetyper 0.2.9-dev: tretton ytterligare frågetypsmoduler registrerades och laddades vid ren start med 0 ERROR; samtliga tretton fanns i den tillåtna frågetypslistan för tjänstetyp 4. I 0.3.1-dev registrerades dessutom listhanteraren, en lokal listleverantör och sex frågetyper, som laddades med 0 ERROR och tilläts för tjänstetyp 4. De nya frågetyperna syntes även i administratörens lista i 0.3.2-dev. Detta verifierar inte varje frågetyps användarflöde.
 
-Regler 0.3.3-dev: sjutton lokala regelmoduler, inklusive SMS- och e-postregler, laddades och registrerades i regelhanteraren med 0 ERROR. Individuella regelutföranden med ärenden är inte verifierade. `addon-activation-result.json` inventerar bygg- och registreringsstatus för 0.3.3-dev; en aktiverad klass innebär inte att hela projektet är funktionstestat.
+Regler 0.3.3-dev: sjutton lokala regelmoduler, inklusive SMS- och e-postregler, laddades och registrerades i regelhanteraren med 0 ERROR. I 0.3.4-dev laddades ytterligare tolv regelmoduler med 0 ERROR. Individuella regelutföranden med ärenden är inte verifierade. En aktiverad klass innebär inte att hela projektet är funktionstestat.
+
+Automatisk flerpartstjänst 0.3.5-dev: en ren instans importerade och publicerade tjänsten utan manuell konfiguration. Sökande och medsignerare signerade ärende 788; databasen visar två SIGNED med olika användare, SUBMITTED och en sparad signaturpart. Systemloggen hade 0 ERROR. Inventeringen i `addon-activation-result.json` avser nu denna körning.
 
 Alla prov avser isolerade lokala testinstanser med syntetisk data. Ingen av ovanstående körningar visar att samtliga fixtures och integrationer fungerar automatiskt på en ny installation.
