@@ -13,3 +13,11 @@ Detta är ett pågående arbete, inte en release eller ett godkänt paket. `port
 Automatisk modulregistrering och all konfiguration, boknings- och ködata, fixtures, komplett betalningskedja och transaction log, signering, SSBT, barn, SMS och verksamhetssystem med persistenta ärenden, PUD-integrationskonfiguration, verifiering av e-post, fler samtidiga instanser, reset, Playwright, rena Windows-konton, verifierad spärr av utgående trafik, spegling och checksummor av SVN-källor, komplett reproducerbart byggskript, skillens hämtningsskript, samt GitHub Release. Proxyinställningar täcker inte råa socketar. Distributionen får inte beskrivas som isolerad från all utgående trafik. Säkerhetsgranska även simulerade betalningars callback och idempotens innan användning.
 
 Playwright försöktes men startade inte: Chromium headless shell saknades. Ingen release har publicerats. Befintlig gemensam sandbox har inte rörts.
+
+## Fortsatt verifiering
+- Playwright 1.55 kördes mot grund-exe:n med installerad Microsoft Edge (`OPENE_BROWSER_PATH`): 6/6 tester gröna, desktop och mobil. Detta är inte ett test av tillägg eller integrationsflöden.
+- Två grundinstanser startades samtidigt med egna portar och kontrollerades med `status --json`: båda rapporterade friska; därefter förstördes de två testinstanserna.
+- Källspegel `svn-r3190-r1649-r15.tar.gz` har skapats lokalt från exporterna; SHA-256 `744d32447e3d39b91db333110074c004bcde6981401ea42c233caeed866c63ad`. Byggskriptet accepterar spegeln med uttrycklig checksumma. Spegeln är inte publicerad.
+- Kod för syntetiska personidentifierare i kontoseedningen är tillagd men ännu inte provad i en ny exe.
+- Spegelbygget kördes till slut med `OPENE_SVN_MIRROR` och SHA-256 ovan: OpenE-webbrot med 188 jar. Detta verifierar byggbarhet från spegeln, inte bitidentiska binärer.
+- Båda namngivna GitHub-repona är offentliga; destinationen för en intern release måste väljas. Ingen release har publicerats.

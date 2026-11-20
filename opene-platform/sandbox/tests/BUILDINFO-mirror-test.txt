@@ -1,0 +1,7 @@
+built=2026-11-20T18:55:28Z
+opene=a34ab2868be5bfcde7ea1be5f4ffd0be4601fba1
+openhierarchy=r3190
+utils=r1649
+purecaptcha=r15
+javac=javac 21.0.13.1
+jars=188

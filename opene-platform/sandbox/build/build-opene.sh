@@ -21,6 +21,25 @@ WORK=$(cd "$WORK" && pwd); OUT=$(cd "$OUT" && pwd)
 SRC=$WORK/src; JARS=$WORK/jars; LIBS=$WORK/libs
 mkdir -p "$SRC" "$JARS" "$LIBS"
 
+# A published source mirror must be pinned explicitly by SHA-256. Do not use
+# unverified archives or let archive paths escape the source directory.
+if [ -n "${OPENE_SVN_MIRROR:-}" ]; then
+  : "${OPENE_SVN_MIRROR_SHA256:?Set OPENE_SVN_MIRROR_SHA256 to the pinned digest}"
+  case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) OPENE_SVN_MIRROR=$(cygpath -u "$OPENE_SVN_MIRROR") ;; esac
+  printf '%s  %s\n' "$OPENE_SVN_MIRROR_SHA256" "$OPENE_SVN_MIRROR" | sha256sum -c -
+  MIRROR_DIR=$(mktemp -d "$WORK/mirror.XXXXXX")
+  tar -tzf "$OPENE_SVN_MIRROR" | while IFS= read -r p; do
+    case "$p" in /*|../*|*/../*|*/..) echo "Unsafe mirror path: $p" >&2; exit 1 ;; esac
+  done
+  tar -xzf "$OPENE_SVN_MIRROR" -C "$MIRROR_DIR" --no-same-owner
+  for p in OpenHierarchy SiteProfile MinimalUser PaymentProvider PersonProvider StandardUtils EmailUtils FileUploadUtils Log4jUtils WebUtils Cron4JUtils lib-cron4j lib-javamail lib-activation lib-log4j lib-commonsfileupload lib-Commons-IO lib-svnkit lib-ServletAPI PureCaptcha; do
+    [ -d "$MIRROR_DIR/$p" ] || { echo "Mirror is missing $p" >&2; exit 1; }
+    [ ! -e "$SRC/$p" ] || { echo "Refusing to overlay existing source $p" >&2; exit 1; }
+    mv "$MIRROR_DIR/$p" "$SRC/$p"
+  done
+  rmdir "$MIRROR_DIR"
+fi
+
 case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) SEP=';'; native(){ cygpath -w "$1"; } ;; *) SEP=':'; native(){ echo "$1"; } ;; esac
 log(){ printf '\n== %s\n' "$*"; }
 

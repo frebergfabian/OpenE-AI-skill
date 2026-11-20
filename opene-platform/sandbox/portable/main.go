@@ -499,6 +499,7 @@ func (i *Instance) sql(query string, db bool) (string, error) {
 func (i *Instance) seed() error {
 	q := "START TRANSACTION;\n"
 	groups := map[string][]int{"sandbox-admin": {6, 10, 11}, "handlaggare": {11}, "handlaggarchef": {11}, "sokande": {9}, "sokande2": {9}}
+	identifiers := map[string]string{"sandbox-admin": "19000101-0008", "handlaggare": "19000101-0016", "handlaggarchef": "19000101-0024", "sokande": "19000101-0032", "sokande2": "19000101-0040"}
 	for _, u := range []string{"sandbox-admin", "handlaggare", "handlaggarchef", "sokande", "sokande2"} {
 		salt := make([]byte, 128)
 		if _, e := rand.Read(salt); e != nil {
@@ -514,6 +515,7 @@ func (i *Instance) seed() error {
 			admin = 1
 		}
 		q += fmt.Sprintf("INSERT INTO simple_users(username,password,hashAlgoritm,firstname,lastname,email,admin,enabled,added) VALUES('%s','%s','PBKDF2WithHmacSHA256','Sandbox','%s','%s@sandbox.invalid',%d,1,NOW());\n", u, hash, u, u, admin)
+		q += fmt.Sprintf("INSERT INTO simple_user_attributes(userID,name,value) SELECT userID,'citizenIdentifier','%s' FROM simple_users WHERE username='%s';\n", identifiers[u], u)
 		for _, g := range groups[u] {
 			q += fmt.Sprintf("INSERT INTO simple_user_groups(userID,groupID) SELECT userID,%d FROM simple_users WHERE username='%s';\n", g, u)
 		}
