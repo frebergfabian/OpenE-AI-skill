@@ -46,9 +46,9 @@ done
 svn_export "$PURECAPTCHA_SVN" "$PURECAPTCHA_REV" PureCaptcha
 
 if [ ! -d "$SRC/Open-ePlatform/.git" ]; then
-  git clone -q --filter=blob:none "$OPENE_GIT_URL" "$SRC/Open-ePlatform"
+  git -c core.longpaths=true clone -q --filter=blob:none "$OPENE_GIT_URL" "$SRC/Open-ePlatform"
 fi
-git -C "$SRC/Open-ePlatform" -c advice.detachedHead=false checkout -q "$OPENE_GIT_REF"
+git -C "$SRC/Open-ePlatform" -c core.longpaths=true -c advice.detachedHead=false checkout -q "$OPENE_GIT_REF"
 
 # Förbyggda tredjepartsjar från Utils/libraries och OpenHierarchy
 find "$SRC"/lib-{javamail,activation,log4j,commonsfileupload,Commons-IO,svnkit} -name '*.jar' -exec cp {} "$LIBS/" \;
@@ -73,7 +73,7 @@ build_jar(){ # namn källkatalog [beroenden...]
   (cd "$dir" && find . -name '*.java' | sed 's|^\./||' > "$WORK/classes/$name.files" \
      && javac -nowarn -proc:none --release 8 -encoding ISO-8859-1 -Xlint:-options \
           -cp "$cp" -d "$(native "$cls")" @"$(native "$WORK/classes/$name.files")" 2>&1 \
-     | grep -v -E '^Note:|uses unchecked|deprecat|^[0-9]+ warnings?$') || true
+     ) || { echo "Kompileringen av $name misslyckades" >&2; exit 1; }
   [ "$(find "$cls" -name '*.class' | head -1)" ] || { echo "Kompileringen av $name misslyckades" >&2; exit 1; }
   # resurser (XSL, SQL, properties, ...) ligger blandat i src
   (cd "$dir" && find . -type f ! -name '*.java' -print0 | xargs -0 -I{} cp --parents {} "$cls/")

@@ -111,3 +111,7 @@ Efter åtgärderna: **0 ERROR** i OpenHierarchys systemlogg, uppstart på 13–1
 5. Spegla SVN-källorna (r3190, r1649, r15) till en arkiverad tarball med checksumma, så att bygget inte beror på `svn://` port 3690.
 6. Publicera imagen i ett privat register så att agenter inte behöver bygga.
 7. Fler testroller och syntetiska e-tjänster som fixtures (`fixtures/`), plus Playwright-flöden för import, inskick och handläggning.
+
+## Portabel Windows-version, pågående
+Se [utvecklingsstatus](../sandbox/PORTABLE-STATUS.md). Grund-exe:n är provad; integrationer och leverans är ännu inte färdiga.
+
