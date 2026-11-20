@@ -71,5 +71,43 @@ Sandboxmotorn är `sandboxctl` + `compose.yaml` + imagen, utan Claude-specifik k
 4. Importera, testa och exportera `.oeflow` enligt skillens arbetsflöden.
 5. `sandboxctl test` som regressionskontroll. `reset --yes` eller `destroy` när miljön ska rensas.
 
-## 7. Status och kvarstående
-Se tabellen "Verifieringsstatus" längst ned (uppdateras efter varje provkörning).
+## 7. Upptäckta och lösta startproblem (verifierat 2026-11-20)
+Provkörning av den byggda webbroten på Windows (Tomcat 9.0.123 zip, MariaDB 11.8.10 zip, JDK 21.0.13, bara localhost) med samma SQL och skript som containern.
+
+| # | Problem vid första start | Orsak | Lösning i `docker/sql/20-sandbox-pre.sql` | Resultat |
+|---|---|---|---|---|
+| 1 | FlowEngine "upgrade failed at version 137", sedan "Duplicate column 'firstSubmitted'" vid v53 vid varje omstart | Migrering 137 kräver åtgärderna `FlowBrowserModule.pay`/`.multisigning`, som demodumpen saknar. DDL kan inte rullas tillbaka, så halvkörd migrering låser databasen | Lägg in åtgärderna innan första start. Vid fel: **återställ från ren bas** (reset), laga inte för hand | FlowEngine v52 → **v169** |
+| 2 | Temp- och filkataloger saknas (FlowAdmin, FlowBrowser, Mina sidor, Ärenden, PDF, XML, filuppladdning, SiteProfile) | Demodumpen saknar sökvägarna | Inställningar per modulklass → `/var/lib/opene/...` (volym). Obs: FlowAdmins id är `pdfFormFilestore` | Inga fel |
+| 3 | "No format validation handler found" | `FormatValidationHandlerModule` är inte registrerad | Registreras som förgrundsmodul | Validerare E-post, Personnummer, Positivt heltal finns |
+| 4 | Notishanteraren migrerar inte (v3) | Modulen är avstängd i dumpen | Aktiveras. Med `innodb-strict-mode=OFF` går v3 → **v43** utan radstorleksfelet som Codex mötte | Inga fel |
+| 5 | ClassNotFound för TextTagAdmin, favoriter, NewEvents, e-posttest | Klasser som inte finns i Open-ePlatform-repot | Modulerna stängs av | Inga fel |
+| 6 | Alla sidor omdirigeras till `https://<host>/` utan port | Rotsektionen "Hem" har `requiredProtocol = HTTPS` | `NULL` på sektioner och moduler | 200 |
+| 7 | Demokontot `admin` med känd SHA1-hash | – | Inaktiveras. Egna PBKDF2-konton seedas | Inloggning ok |
+
+Efter åtgärderna: **0 ERROR** i OpenHierarchys systemlogg, uppstart på 13–17 s.
+
+## 8. Verifieringsstatus
+
+| Acceptanskriterium | Status | Bevis |
+|---|---|---|
+| OpenE byggs från dokumenterad, reproducerbar version | **[Testat]** (Git Bash + JDK 21) / [Byggt] i Dockerfile | `BUILDINFO`: opene a34ab28, OH r3190, utils r1649, purecaptcha r15. 188 jar |
+| MariaDB initieras med ren testdatabas | **[Testat]** lokalt | Demodump + sandboxjusteringar laddade. Migreringar till FlowEngine v169, notiser v43, användare v10 |
+| Tomcat startar OpenE | **[Testat]** lokalt | "Server startup in 16785 ms", 0 ERROR i systemloggen |
+| Applikationen svarar på HTTP | **[Testat]** | `/` 200 `text/html;charset=ISO-8859-1` |
+| Testanvändare kan logga in | **[Testat]** | `sandbox-admin` (PBKDF2 från seed-skriptet). Negativt test med fel lösenord fallerar som väntat |
+| Administrationsgränssnittet kan öppnas | **[Testat]** | `/flowadmin` visar "Lägg till e-tjänst". useradmin, systemadmin, flowinstanceadmin, minasidor och statusgrupper ger 200 |
+| En syntetisk testtjänst kan visas | **[Testat]** | `provansokan.oeflow` importerad med HTTP-multipart → `showflow/1` (1 steg, 1 fråga). Export 11 kB `text/oeflow` |
+| Stopp/start utan dataförlust | **[Testat]** lokalt (Tomcat-omstart, samma databas) | Tjänst 1 och inloggning kvar efter omstart, röktest 12/12 |
+| Återställning till definierat utgångsläge | **[Testat]** lokalt (drop + omladdning) / [Byggt] `sandboxctl reset` | Tre rena körningar i följd gav samma resultat |
+| Docker: `compose up`, internt nät, proxy, Mailpit, volymer | **[Byggt]**, ej kört | `docker compose config` validerar. **Docker-motorn saknas på värden (WSL2 ej installerat)** |
+| Röktest | **[Testat]** lokalt | `tests/smoke.sh`: 12 OK, 0 FEL |
+| Playwright-navigering | se nedan | |
+
+## 9. Kvarstående
+1. **Kör hela kedjan i Docker** när WSL2 och Docker Desktop fungerar: `sandboxctl create`, `test`, `stop/start`, `reset`, `--ephemeral`, två instanser samtidigt.
+2. **Frågetyper.** Distributionen har 8 aktiva frågetyper (text, textarea, kryssruta, radio, rullista, fil, kontakt privatperson/organisation). Information, Datum/Tid, Dynamisk/Statisk tabell, Bokning, Kö och de alternativlistbaserade frågorna finns **inte i Open-ePlatform-repot** utan i Nordic Peaks separata AGPL-arkiv (se `moduler.md`). Import av Funktionslabbet ger "Frågetypen … hittades inte" för 5 frågor. Nästa steg: bygg dem från arkivet med samma `build_jar`-mönster.
+3. Registrera redan byggda men oregistrerade frågetyper (Stopp, Filinfo, PUD, Barn, Träd, Karta, Personuppgiftshantering) med modulrad, XSL-inställningar och e-tjänsttypens tillåtna lista.
+4. SiteProfile står på v6. Codex beskrev en manuell v8-DDL för domänsortering. Behövs först när profildomäner sparas.
+5. Spegla SVN-källorna (r3190, r1649, r15) till en arkiverad tarball med checksumma, så att bygget inte beror på `svn://` port 3690.
+6. Publicera imagen i ett privat register så att agenter inte behöver bygga.
+7. Fler testroller och syntetiska e-tjänster som fixtures (`fixtures/`), plus Playwright-flöden för import, inskick och handläggning.

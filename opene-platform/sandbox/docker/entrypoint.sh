@@ -16,6 +16,8 @@ sed -e "s/@DB_HOST@/$(esc "$DB_HOST")/" -e "s/@DB_NAME@/$(esc "$DB_NAME")/" \
     /opt/opene/config.xml.tmpl > "$APP/WEB-INF/config.xml"
 chmod 600 "$APP/WEB-INF/config.xml"
 
+mkdir -p /var/lib/opene/files/{flowforms,pdf,xml,uploads,siteprofile} /var/lib/opene/tmp
+
 # 2. vänta på databasen
 for i in $(seq 1 60); do "${MYSQL[@]}" -e 'SELECT 1' >/dev/null 2>&1 && break; sleep 2; done
 "${MYSQL[@]}" -e 'SELECT 1' >/dev/null
@@ -25,7 +27,7 @@ if [ -z "$("${MYSQL[@]}" -Nse "SHOW TABLES LIKE 'sandbox_meta'")" ]; then
   log "Tom databas: laddar demodata"
   for f in /opt/opene/sql/1*.sql /opt/opene/sql/2*.sql; do
     [ -f "$f" ] || continue
-    log "  $f"; "${MYSQL[@]}" --default-character-set=latin1 < "$f"
+    log "  $f"; "${MYSQL[@]}" --default-character-set=utf8mb4 < "$f"
   done
   "${MYSQL[@]}" -e "CREATE TABLE sandbox_meta (k VARCHAR(64) PRIMARY KEY, v VARCHAR(255));
                     INSERT INTO sandbox_meta VALUES ('initialized', NOW()), ('build', '$(tr '\n' ' ' < /opt/opene/BUILDINFO)');"
