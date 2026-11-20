@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "accounts": true,
+    "adminLogin": true,
+    "http": true,
+    "loginForm": true,
+    "ready": true,
+    "simulator": true,
+    "systemLog": true
+  },
+  "healthy": true,
+  "name": "booking-test",
+  "phase": "ready",
+  "simulatorUrl": "http://127.0.0.1:35349",
+  "url": "http://127.0.0.1:35352"
+}

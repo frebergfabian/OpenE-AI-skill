@@ -28,3 +28,9 @@ Playwright försöktes men startade inte: Chromium headless shell saknades. Inge
 - Import av `funktionslabbet.oeflow` med administratörskonto ger fortfarande två fel: frågetyperna Bokning och Kö hittades inte. Importen lyckades inte och inget komplett ärende har testats.
 - Den första experimentkörningen saknade AlternativeListHandler och genererade ett ERROR trots att dåvarande hälsokontrollen rapporterade frisk. Beroendet lades till och ny ren instans fick 0 ERROR. Detta bevisar att äldre exe-varianter inte har tillräcklig hälsokontroll.
 - Användaren har valt OpenE-AI-skill som releasedestination trots att repot och releasen är offentliga. Ingen release har publicerats.
+
+## Bokning och kö: experiment 2026-11-20
+- Den experimentella SQL-registreringen utökades med boknings- och kömoduler. En ren `0.1.3-dev` med de byggda BookingModules och QueueModules startade med 0 ERROR och frisk status.
+- `funktionslabbet.oeflow` importerades med HTTP multipart: `POST /flowadmin/importflow/4` gav `302 /flowadmin/showflow/1`. Detta bevisar att frågetyperna hittades och importen accepterades, men inte att en publicerad ansökan fungerar.
+- I testinstansen skapades manuellt en aktiverad syntetisk kalender, en framtida tid, en aktiverad kö och handläggargrupp; de importerade frågorna kopplades till dessa. Detta är inte automatiserad seedning och är inte provat genom inskick eller databasverifierad bokning/köplats.
+- Modulerna saknar fortfarande verifierad användarbehörighet, notisinställningar, fullständiga fixtures och integrationsflöden. Betalning och andra integrationskategorier är inte end-to-end-testade. Ingen release har publicerats.
