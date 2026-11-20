@@ -1,0 +1,1055 @@
+[
+  {
+    "project": "APIAccessControllerModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AddClosestManagerAsFlowInstanceManagerEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AddFlowInstanceAsManagerModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AddFlowInstanceManagersEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AddFlowInstanceModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AgeQueryStateEvaluationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AlternativeListCheckboxQueryProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AlternativeListDropdownQueryProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AlternativeListHandler",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AlternativeListPriorityQuery",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AlternativeListRadioButtonQueryProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AnonymousPosterEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ArtviseIntegrationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "AttributeSumLimitQuery",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\queries\\attributesumlimitquery\\api\\AttributeSumLimitEndpointAdminModule.java:78: error: AttributeSumLimitEndpointAdminModule is not abstract and does not override abstract method getAPIAccountSources(APISourceAccountDescriptor) in APISourceProvider\r | com\\nordicpeak\\flowengine\\queries\\attributesumlimitquery\\api\\beans\\AttributeSumLimitEndpoint.java:26: error: AttributeSumLimitEndpoint is not abstract and does not override abstract method getSourceID() in APISource\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "BaseIntegrationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "BaseTableQuery",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "BiznodeProxy",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "BiznodeVehicleAlternativeListProvider",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\biznodevehiclealternativelist\\BiznodeVehicleAlternativeListProviderModule.java:19: error: package se.unlogic.oauth does not exist\r | com\\nordicpeak\\flowengine\\biznodevehiclealternativelist\\BiznodeVehicleAlternativeListProviderModule.java:20: error: package se.unlogic.oauth does not exist\r | com\\nordicpeak\\flowengine\\biznodevehiclealternativelist\\BiznodeVehicleAlternativeListProviderModule.java:63: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\biznodevehiclealternativelist\\BiznodeVehicleAlternativeListProviderModule.java:209: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\biznodevehiclealternativelist\\BiznodeVehicleAlternativeListProviderModule.java:96: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "BookingModules",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.booking.BookingSlotAdminModule",
+      "com.nordicpeak.flowengine.booking.CalendarAdminModule",
+      "com.nordicpeak.flowengine.booking.UserBookingModule",
+      "com.nordicpeak.flowengine.booking.notificationhandler.BookingNotificationHandler",
+      "com.nordicpeak.flowengine.booking.queries.BookingQueryProviderModule"
+    ]
+  },
+  {
+    "project": "BoverketIntegrationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "CastorIntegrationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ChangeOwnerHSAModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ChangeOwnerInternalUsersModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ChangeOwnerModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ChangePosterEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ChildCountQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ChildInfoQueryProvider",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.childinfoquery.ChildInfoQueryProviderModule"
+    ]
+  },
+  {
+    "project": "ChildQueryWeightEvaluationProviders",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "CitizenIDGroupMembershipQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "CitizenIdentifierQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "CityworksIntegrationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ColorPickerQueryProvider",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.colorpickerquery.ColorPickerQueryProviderModule"
+    ]
+  },
+  {
+    "project": "ColoredTagProvider",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\coloredtag\\ColoredTagProviderModule.java:80: error: package com.nordicpeak.flowengine.flowinstanceadmin2 does not exist\r | com\\nordicpeak\\flowengine\\coloredtag\\ColoredTagProviderModule.java:81: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\coloredtag\\ColoredTagProviderModule.java:82: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\coloredtag\\ColoredTagProviderModule.java:83: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\coloredtag\\ColoredTagProviderModule.java:86: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\coloredtag\\ColoredTagProviderModule.java:86: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\coloredtag\\ColoredTagProviderModule.java:133: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\coloredtag\\ColoredTagProviderModule.java:247: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "ConstructionPermitQuery",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ContactDetailsVerificationModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "CullingModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "CustomerServiceFlowFinder",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "DateTimeQueryProvider",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.DateTimeQueryProviderModule"
+    ]
+  },
+  {
+    "project": "DeduplicationModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "DocumentSignerModule",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.documentsigner.DocumentSignerAdminModule",
+      "com.nordicpeak.flowengine.documentsigner.DocumentSignerUserModule"
+    ]
+  },
+  {
+    "project": "DynamicTableQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.dynamictablequery.DynamicTableQueryProviderModule"
+    ]
+  },
+  {
+    "project": "EIDASQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "EasitGetItemsAlternativeListProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "EasitIntegrationCallback",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\integration\\easit\\callback\\EasitIntegrationCallback.java:35: error: package se.unlogic.hiearchy.foregroundmodules.jaxws does not exist\r | com\\nordicpeak\\flowengine\\integration\\easit\\callback\\EasitIntegrationCallback.java:36: error: package se.unlogic.hiearchy.foregroundmodules.jaxws does not exist\r | com\\nordicpeak\\flowengine\\integration\\easit\\callback\\EasitIntegrationCallback.java:37: error: package se.unlogic.hiearchy.foregroundmodules.jaxws does not exist\r | com\\nordicpeak\\flowengine\\integration\\easit\\callback\\EasitIntegrationCallback.java:58: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\integration\\easit\\callback\\EasitIntegrationCallback.java:57: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\integration\\easit\\callback\\EasitIntegrationCallback.java:79: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\integration\\easit\\callback\\EasitIntegrationCallback.java:78: error: method does not override or implement a method from a supertype\r | com\\nordicpeak\\flowengine\\integration\\easit\\callback\\EasitIntegrationCallback.java:81: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "EasitIntegrationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "EasitProxy",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "EfecteIntegrationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "EvolutionIntegrationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ExternalAddFlowInstanceModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ExternalAlternativeListProvider",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\externalalternativelist\\ExternalAlternativeListProviderModule.java:48: error: ExternalAlternativeListProviderModule is not abstract and does not override abstract method getAPIAccountSources(APISourceAccountDescriptor) in APISourceProvider\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "ExternalMessageOfferProvider",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\externalmessageoffer\\ExternalMessageOfferProviderModule.java:74: error: package com.nordicpeak.flowengine.flowinstanceadmin2 does not exist\r | com\\nordicpeak\\flowengine\\externalmessageoffer\\ExternalMessageOfferProviderModule.java:102: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\externalmessageoffer\\ExternalMessageOfferProviderModule.java:271: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\externalmessageoffer\\ExternalMessageOfferProviderModule.java:732: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "FileTreeQueryDataProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "FixedTableQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.fixedtablequery.FixedTableQueryProviderModule"
+    ]
+  },
+  {
+    "project": "FlowEngineAPIModules",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowInstanceAdmin2",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\flowinstanceadmin2\\FlowInstanceAdmin2Module.java:1653: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\FlowInstanceAdmin2Module.java:1747: error: constructor FlowStatusManagerAccessElementableListener in class FlowStatusManagerAccessElementableListener cannot be applied to given types;\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\FlowInstanceAdmin2Module.java:1882: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\FlowInstanceAdmin2Module.java:2000: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowInstanceAdminRemoteInfoModule",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\flowinstanceadminremoteinfo\\FlowInstanceAdminRemoteInfoModule.java:59: error: package com.nordicpeak.flowengine.flowinstanceadmin2 does not exist\r | com\\nordicpeak\\flowengine\\flowinstanceadminremoteinfo\\FlowInstanceAdminRemoteInfoModule.java:109: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadminremoteinfo\\FlowInstanceAdminRemoteInfoModule.java:209: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadminremoteinfo\\beans\\FlowInstanceAdminRemoteInfoEndpoint.java:28: error: FlowInstanceAdminRemoteInfoEndpoint is not abstract and does not override abstract method getSourceID() in APISource\r | com\\nordicpeak\\flowengine\\flowinstanceadminremoteinfo\\FlowInstanceAdminRemoteInfoModule.java:68: error: FlowInstanceAdminRemoteInfoModule is not abstract and does not override abstract method getAPIAccountSources(APISourceAccountDescriptor) in APISourceProvider\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowInstanceAdminSendMessages",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\flowinstanceadmin2\\sendmessages\\FlowInstanceAdminSendMessagesModule.java:115: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\sendmessages\\FlowInstanceAdminSendMessagesModule.java:116: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\sendmessages\\FlowInstanceAdminSendMessagesModule.java:117: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\sendmessages\\FlowInstanceAdminSendMessagesModule.java:128: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\sendmessages\\FlowInstanceAdminSendMessagesModule.java:223: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\sendmessages\\FlowInstanceAdminSendMessagesModule.java:306: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\sendmessages\\FlowInstanceAdminSendMessagesModule.java:1366: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\sendmessages\\FlowInstanceAdminSendMessagesModule.java:1360: error: method does not override or implement a method from a supertype\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowInstanceExcelExporter",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\flowinstanceadmin2\\export\\excel\\FlowInstanceExcelExporterModule.java:125: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\export\\excel\\FlowInstanceExcelExporterModule.java:127: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\export\\excel\\FlowInstanceExcelExporterModule.java:128: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\export\\excel\\FlowInstanceExcelExporterModule.java:129: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\export\\excel\\FlowInstanceExcelExporterModule.java:140: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\export\\excel\\FlowInstanceExcelExporterModule.java:210: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\export\\excel\\FlowInstanceExcelExporterModule.java:222: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\flowinstanceadmin2\\export\\excel\\FlowInstanceExcelExporterModule.java:303: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowInstanceExtraParametersProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowInstanceListModule",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\list\\FlowInstanceListModule.java:959: error: method getFlowInstanceEventAttributes in class ExternalMessageUtils cannot be applied to given types;\r | com\\nordicpeak\\flowengine\\list\\FlowInstanceListModule.java:1806: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\list\\FlowInstanceListModule.java:1864: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowInstanceManualExternalIDModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowListExtensionProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowManagersListUserProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "FlowVoteModule",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\voting\\FlowVoteModule.java:311: error: method getGlobalScripts in class ModuleUtils cannot be applied to given types;\r | com\\nordicpeak\\flowengine\\voting\\FlowVoteModule.java:1017: error: no suitable method found for sendFile(ByteArrayInputStream,String,<null>,<null>,HttpServletRequest,HttpServletResponse,ContentDisposition,long)\r | com\\nordicpeak\\flowengine\\voting\\FlowVoteModule.java:1922: error: method sendContactSMS in class StandardFlowNotificationHandler cannot be applied to given types;\r | com\\nordicpeak\\flowengine\\voting\\FlowVoteModule.java:1980: error: method sendContactSMS in class StandardFlowNotificationHandler cannot be applied to given types;\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "GenericFlowPaymentProvider",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.paymentprovider.GenericFlowPaymentProvider"
+    ]
+  },
+  {
+    "project": "GeometryContainsAddressQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "GroupQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "GroupTreeQueryDataProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "GroupUserTreeQueryDataProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "HTTPIntegrationProvider",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.integration.http.HTTPIntegrationProvider"
+    ]
+  },
+  {
+    "project": "HTTPTagSharingProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "IconMapQuery",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\queries\\iconmapquery\\beans\\IconMapQueryInstance.java:41: error: package com.nordicpeak.flowengine.remotegeometryendpointprovider does not exist\r | com\\nordicpeak\\flowengine\\queries\\iconmapquery\\beans\\IconMapQuery.java:31: error: package com.nordicpeak.flowengine.remotegeometryendpointprovider does not exist\r | com\\nordicpeak\\flowengine\\queries\\iconmapquery\\beans\\IconMapQuery.java:35: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\queries\\iconmapquery\\beans\\SelectedRemoteGeometry.java:14: error: package com.nordicpeak.flowengine.remotegeometryendpointprovider does not exist\r | com\\nordicpeak\\flowengine\\queries\\iconmapquery\\beans\\IconMapQueryInstance.java:117: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\queries\\iconmapquery\\beans\\IconMapQueryInstance.java:501: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\queries\\iconmapquery\\beans\\IconMapQueryInstance.java:506: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\queries\\iconmapquery\\beans\\SelectedRemoteGeometry.java:69: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "InfoQueryProviderModule",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.infoquery.InfoQueryProviderModule"
+    ]
+  },
+  {
+    "project": "InternalAlternativeListProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "InternalContactDetailQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.internalcontactdetails.InternalContactDetailQueryProviderModule"
+    ]
+  },
+  {
+    "project": "InternalUserQueriesCommon",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "InternalUserQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.internaluserquery.InternalUserQueryProviderModule"
+    ]
+  },
+  {
+    "project": "LMProxy",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "LMSearchProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ListSearchQueryProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "LoggedInQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ManagerFlowTest",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ManagerQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ManualCheckboxQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.manualcheckboxquery.ManualCheckboxQueryProviderModule"
+    ]
+  },
+  {
+    "project": "ManualSignQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.manualsignquery.ManualSignQueryProviderModule"
+    ]
+  },
+  {
+    "project": "ManualTextAreaQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.manualtextareaquery.ManualTextAreaQueryProviderModule"
+    ]
+  },
+  {
+    "project": "MaritalStatusQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "MatchingInternalAccountQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "MultiSigningHandler2",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.multisigninghandlers.MultiSigningHandler2Module"
+    ]
+  },
+  {
+    "project": "MultipartSigningMailEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "MunicipalityCodeQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "OfficialAddressQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "OrigoMapProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "PUDQuery",
+    "status": "built-excluded-duplicate-classes",
+    "excluded": [],
+    "reason": "6 classes duplicate existing jars: com/nordicpeak/flowengine/queries/pudquery/PUDAlternative.class (PUDQuery-2.0.0-SNAPSHOT.jar), com/nordicpeak/flowengine/queries/pudquery/PUDQuery.class (PUDQuery-2.0.0-SNAPSHOT.jar), com/nordicpeak/flowengine/queries/pudquery/PUDQueryCRUD.class (PUDQuery-2.0.0-SNAPSHOT.jar), com/nordicpeak/flowengine/queries/pudquery/PUDQueryInstance.class (PUDQuery-2.0.0-SNAPSHOT.jar)",
+    "enabledClasses": []
+  },
+  {
+    "project": "ParagraphInfoQueryProviderModule",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.paragraphinfoquery.ParagraphInfoQueryProviderModule"
+    ]
+  },
+  {
+    "project": "PaymentTransactionLog",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.paymentlog.AccountModule",
+      "com.nordicpeak.flowengine.paymentlog.TransactionFlowAdminExtensionModule",
+      "com.nordicpeak.flowengine.paymentlog.TransactionModule"
+    ]
+  },
+  {
+    "project": "PersonQueryProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "PlotQueryProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "PredefinedUserQueryProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "PriceTableQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.pricetablequery.PriceTableQueryProviderModule"
+    ]
+  },
+  {
+    "project": "PriorityQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.priorityquery.PriorityQueryProviderModule"
+    ]
+  },
+  {
+    "project": "QueueModules",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queue.QueueAdminModule",
+      "com.nordicpeak.flowengine.queue.QueueSlotAdminModule",
+      "com.nordicpeak.flowengine.queue.UserQueueSlotModule",
+      "com.nordicpeak.flowengine.queue.query.QueueQueryProviderModule"
+    ]
+  },
+  {
+    "project": "RandomBookingNumberGenerator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "RandomSubmitEventGenerator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "RatingScaleQueryProvider",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.ratingscalequery.RatingScaleQueryProviderModule"
+    ]
+  },
+  {
+    "project": "RecommendedFlowsModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "RemoteFlowInstanceProviders",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\remoteflowinstance\\HTTPRemoteFlowInstanceClientModule.java:29: error: package com.nordicpeak.flowengine.flowinstanceadmin2 does not exist\r | com\\nordicpeak\\flowengine\\remoteflowinstance\\HTTPRemoteFlowInstanceClientModule.java:30: error: package com.nordicpeak.flowengine.flowinstanceadmin2.beans does not exist\r | com\\nordicpeak\\flowengine\\remoteflowinstance\\HTTPRemoteFlowInstanceClientModule.java:31: error: package com.nordicpeak.flowengine.flowinstanceadmin2.enums does not exist\r | com\\nordicpeak\\flowengine\\remoteflowinstance\\HTTPRemoteFlowInstanceClientModule.java:32: error: package com.nordicpeak.flowengine.flowinstanceadmin2.interfaces does not exist\r | com\\nordicpeak\\flowengine\\remoteflowinstance\\HTTPRemoteFlowInstanceClientModule.java:35: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\remoteflowinstance\\HTTPRemoteFlowInstanceClientModule.java:37: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\remoteflowinstance\\HTTPRemoteFlowInstanceClientModule.java:89: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\remoteflowinstance\\HTTPRemoteFlowInstanceClientModule.java:139: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "RemoteGeometryEndpointProvider",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\remotegeometryendpointprovider\\RemoteGeometryEndpointProviderModule.java:41: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\remotegeometryendpointprovider\\RemoteGeometryEndpoint.java:25: error: RemoteGeometryEndpoint is not abstract and does not override abstract method getSourceID() in APISource\r | com\\nordicpeak\\flowengine\\remotegeometryendpointprovider\\RemoteGeometryEndpointProviderModule.java:68: error: RemoteGeometryEndpointProviderModule is not abstract and does not override abstract method getAPIAccountSources(APISourceAccountDescriptor) in APISourceProvider\r | com\\nordicpeak\\flowengine\\remotegeometryendpointprovider\\RemoteGeometryEndpointProviderModule.java:415: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "RemoteInfoQueryProviderModule",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\queries\\remoteinfoquery\\RemoteInfoQueryEndpoint.java:32: error: RemoteInfoQueryEndpoint is not abstract and does not override abstract method getSourceID() in APISource\r | com\\nordicpeak\\flowengine\\queries\\remoteinfoquery\\RemoteInfoQueryEndpointAdminModule.java:53: error: RemoteInfoQueryEndpointAdminModule is not abstract and does not override abstract method getAPIAccountSources(APISourceAccountDescriptor) in APISourceProvider\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "RemoteSinglesignQueryProvider",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\queries\\remotesinglesignquery\\api\\RemoteSinglesignQueryEndpoint.java:22: error: RemoteSinglesignQueryEndpoint is not abstract and does not override abstract method getSourceID() in APISource\r | com\\nordicpeak\\flowengine\\queries\\remotesinglesignquery\\api\\RemoteSinglesignQueryEndpointAdminModule.java:77: error: RemoteSinglesignQueryEndpointAdminModule is not abstract and does not override abstract method getAPIAccountSources(APISourceAccountDescriptor) in APISourceProvider\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "RemoteXMLFlowInstanceProviders",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "RemovedGroupsNotifier",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "ReservationModule",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\reservation\\ReservationModule.java:69: error: ReservationModule is not abstract and does not override abstract method deleteReservations(List<String>,Integer,User) in ReservationProvider\r | com\\nordicpeak\\flowengine\\reservation\\ReservationModule.java:340: error: method does not override or implement a method from a supertype\r | com\\nordicpeak\\flowengine\\reservation\\ReservationModule.java:400: error: method does not override or implement a method from a supertype\r | com\\nordicpeak\\flowengine\\reservation\\ReservationModule.java:406: error: method does not override or implement a method from a supertype\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "RestrictedFlowAdminModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SSBTProxy",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SSBTQueries",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.ssbt.CompanyDetailsQueryProviderModule"
+    ]
+  },
+  {
+    "project": "SendContactQueryMailEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SendMailEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SendTextFieldMailEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SendTextFieldSMSEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SetAttributeFromAlternativeIDEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SetContactDetailsEvaluationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SetPUDFromCitizenAddressEvaluator",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\evaluators\\setpudfromcitizenaddressevaluator\\SetPUDFromCitizenAddressEvaluationProviderModule.java:52: error: package com.nordicpeak.flowengine.queries.iconmapquery.beans does not exist\r | com\\nordicpeak\\flowengine\\evaluators\\setpudfromcitizenaddressevaluator\\SetPUDFromCitizenAddressEvaluationProviderModule.java:53: error: package com.nordicpeak.flowengine.queries.iconmapquery.beans does not exist\r | com\\nordicpeak\\flowengine\\evaluators\\setpudfromcitizenaddressevaluator\\SetPUDFromCitizenAddressEvaluationProviderModule.java:107: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\evaluators\\setpudfromcitizenaddressevaluator\\SetPUDFromCitizenAddressEvaluationProviderModule.java:107: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\evaluators\\setpudfromcitizenaddressevaluator\\SetPUDFromCitizenAddressEvaluationProviderModule.java:118: error: cannot find symbol\r | com\\nordicpeak\\flowengine\\evaluators\\setpudfromcitizenaddressevaluator\\SetPUDFromCitizenAddressEvaluationProviderModule.java:217: error: cannot find symbol\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "SetTextFieldValueAttributeEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "SokigoSchoolTransportIntegrationProvider",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\integration\\sokigo\\beans\\SokigoSchoolTransportChildQueryFilterEndpoint.java:20: error: SokigoSchoolTransportChildQueryFilterEndpoint is not abstract and does not override abstract method getChildren(Map<String,Child>,User,String,List<String>,ImmutableFlow,AttributeHandler) in ChildQueryFilterEndpoint\r | com\\nordicpeak\\flowengine\\integration\\sokigo\\beans\\SokigoSchoolTransportChildQueryFilterEndpoint.java:52: error: method does not override or implement a method from a supertype\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "StatusOverrideEvaluationProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "StatusQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "TableAttributeEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "TableAttributeSummaryEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "TableWeightEvaluators",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "TargetGroupFlowBrowser",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "TreservaIntegrationProvider",
+    "status": "not-built",
+    "reason": "com\\nordicpeak\\flowengine\\integration\\treservaddecision\\TreservaDecisionProviderModule.java:497: error: no suitable method found for sendFile(InputStream,String,<null>,<null>,HttpServletRequest,HttpServletResponse,ContentDisposition,long)\r",
+    "enabledClasses": []
+  },
+  {
+    "project": "URLParameterEvaluators",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "UnsecureMultiSignQuery",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.unsecuremultisignquery.UnsecureMultiSignQueryProviderModule"
+    ]
+  },
+  {
+    "project": "UserAddressQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "UserAgeQueryStateEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "UserHandlerListUserProvider",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "UserInvoiceModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "UserListQueryProvider",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.userlistquery.UserListQueryProviderModule"
+    ]
+  },
+  {
+    "project": "UserQueryMailEvaluator",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "UserSubscriptionModule",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "UserTreeQueryProvider",
+    "status": "built-with-enabled-modules",
+    "excluded": [],
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.usertreequery.UserTreeQueryProviderModule"
+    ]
+  },
+  {
+    "project": "WMSProxy",
+    "status": "built-not-enabled",
+    "excluded": [],
+    "reason": "Activation and end-to-end verification tracked separately",
+    "enabledClasses": []
+  },
+  {
+    "project": "WeightEvaluationProviders",
+    "status": "built-partial-not-enabled",
+    "excluded": [
+      "weightapi",
+      "setweightfromapievaluator",
+      "settextfieldweightfromapievaluator"
+    ],
+    "reason": "Optional API endpoints excluded because upstream APISourceProvider changed; authorization is not bypassed",
+    "enabledClasses": []
+  }
+]

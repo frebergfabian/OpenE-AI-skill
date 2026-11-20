@@ -1,6 +1,14 @@
 -- Run after module migrations and after the reviewed fixture has been imported.
 -- Names and data are synthetic; the transaction is safe to retry.
 START TRANSACTION;
+-- The upstream migration skips version 7; version 8 adds the ordered domain
+-- column that the current SiteProfile DAO requires. The local profile is used
+-- by DocumentSigner to associate a document with its originating site.
+ALTER TABLE site_profile_domains ADD COLUMN IF NOT EXISTS sortIndex INTEGER UNSIGNED NOT NULL AFTER domain;
+UPDATE table_versions SET version=8 WHERE tableGroupName='se.unlogic.openhierarchy.foregroundmodules.siteprofile.SiteProfilesAdminModule' AND version=6;
+INSERT INTO site_profiles(name,design) SELECT 'Sandbox lokal',NULL WHERE NOT EXISTS (SELECT 1 FROM site_profiles WHERE name='Sandbox lokal');
+SET @profile=(SELECT profileID FROM site_profiles WHERE name='Sandbox lokal' ORDER BY profileID LIMIT 1);
+INSERT IGNORE INTO site_profile_domains(profileID,domain,sortIndex) VALUES(@profile,'127.0.0.1',0),(@profile,'localhost',1);
 -- Publish only our named synthetic fixtures, using a relative date so a fresh
 -- installation works regardless of when the portable build was produced.
 UPDATE flowengine_flows SET enabled=1,publishDate=CURRENT_DATE,unPublishDate=NULL

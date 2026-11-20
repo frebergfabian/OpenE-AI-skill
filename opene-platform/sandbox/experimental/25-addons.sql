@@ -11,11 +11,24 @@ INSERT INTO sandbox_query_modules VALUES
  ('com.nordicpeak.flowengine.queries.childinfoquery.ChildInfoQueryProviderModule','sandbox-child','ChildInfoQuery'),
  ('com.nordicpeak.flowengine.queries.ssbt.CompanyDetailsQueryProviderModule','sandbox-company','CompanyDetailsQuery'),
  ('com.nordicpeak.flowengine.queries.unsecuremultisignquery.UnsecureMultiSignQueryProviderModule','sandbox-multisign-query','UnsecureMultiSignQuery'),
- ('com.nordicpeak.flowengine.queries.manualmultisignquery.ManualMultiSignQueryProviderModule','sandbox-manual-multisign','ManualMultiSignQuery');
+ ('com.nordicpeak.flowengine.queries.manualmultisignquery.ManualMultiSignQueryProviderModule','sandbox-manual-multisign','ManualMultiSignQuery'),
+ ('com.nordicpeak.flowengine.queries.colorpickerquery.ColorPickerQueryProviderModule','sandbox-color','ColorPickerQuery'),
+ ('com.nordicpeak.flowengine.queries.fixedtablequery.FixedTableQueryProviderModule','sandbox-fixed-table','FixedTableQuery'),
+ ('com.nordicpeak.flowengine.queries.manualcheckboxquery.ManualCheckboxQueryProviderModule','sandbox-manual-checkbox','ManualCheckboxQuery'),
+ ('com.nordicpeak.flowengine.queries.manualsignquery.ManualSignQueryProviderModule','sandbox-manual-sign','ManualSignQuery'),
+ ('com.nordicpeak.flowengine.queries.manualtextareaquery.ManualTextAreaQueryProviderModule','sandbox-manual-textarea','ManualTextAreaQuery'),
+ ('com.nordicpeak.flowengine.queries.paragraphinfoquery.ParagraphInfoQueryProviderModule','sandbox-paragraph','ParagraphInfoQuery'),
+ ('com.nordicpeak.flowengine.queries.pricetablequery.PriceTableQueryProviderModule','sandbox-price-table','PriceTableQuery'),
+ ('com.nordicpeak.flowengine.queries.priorityquery.PriorityQueryProviderModule','sandbox-priority','PriorityQuery'),
+ ('com.nordicpeak.flowengine.queries.ratingscalequery.RatingScaleQueryProviderModule','sandbox-rating','RatingScaleQuery'),
+ ('com.nordicpeak.flowengine.queries.userlistquery.UserListQueryProviderModule','sandbox-user-list','UserListQuery'),
+ ('com.nordicpeak.flowengine.queries.usertreequery.UserTreeQueryProviderModule','sandbox-user-tree','UserTreeQuery'),
+ ('com.nordicpeak.flowengine.queries.internalcontactdetails.InternalContactDetailQueryProviderModule','sandbox-internal-contact','InternalContactDetailQuery'),
+ ('com.nordicpeak.flowengine.queries.internaluserquery.InternalUserQueryProviderModule','sandbox-internal-user','InternalUserQuery');
 INSERT INTO openhierarchy_foreground_modules
  (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu,staticContentPackage)
 SELECT q.classname,q.prefix,q.alias,'Sandbox query provider',CONCAT(q.prefix,'Admin.sv.xsl'),'Classpath',1,1,1,1,1,0,
-       CASE WHEN q.prefix IN ('DateTimeQuery','DynamicTableQuery','BookingQuery','QueueQuery','PUDQuery','ChildInfoQuery','CompanyDetailsQuery','UnsecureMultiSignQuery','ManualMultiSignQuery') THEN 'staticcontent' ELSE NULL END
+       CASE WHEN q.prefix <> 'InfoQuery' THEN 'staticcontent' ELSE NULL END
 FROM sandbox_query_modules q WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_modules m WHERE m.classname=q.classname);
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,'queryStyleSheet',CONCAT(q.prefix,'.sv.xsl') FROM sandbox_query_modules q JOIN openhierarchy_foreground_modules m ON m.classname=q.classname
@@ -26,6 +39,10 @@ WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE
 INSERT IGNORE INTO flowengine_flow_type_allowed_queries(flowTypeID,queryTypeID)
 SELECT t.flowTypeID,q.classname FROM flowengine_flow_types t CROSS JOIN sandbox_query_modules q;
 DROP TEMPORARY TABLE sandbox_query_modules;
+INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
+SELECT m.moduleID,'supportedAttributes','email:E-post' FROM openhierarchy_foreground_modules m
+WHERE m.classname='com.nordicpeak.flowengine.queries.internalcontactdetails.InternalContactDetailQueryProviderModule'
+AND NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE s.moduleID=m.moduleID AND s.id='supportedAttributes');
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,'searchServiceURL','@SIMULATOR@/search' FROM openhierarchy_foreground_modules m
 WHERE m.classname='com.nordicpeak.flowengine.queries.pudquery.PUDQueryProviderModule'

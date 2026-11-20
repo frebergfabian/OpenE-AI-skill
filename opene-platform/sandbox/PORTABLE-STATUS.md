@@ -8,7 +8,8 @@ Detta är en experimentell implementation, inte en godkänd release. Den av anv�
 - Den ursprungliga grund-exe:n klarade röktest 12/12, Playwright 6/6 och två samtidiga instanser. Dessa körningar omfattade inte hela tilläggspaketet.
 - Separata utvecklingsinstanser har verifierat bestående bokning och kö, PUD, barnrelation, enkel- och flerpartssignering, HTTP, lokal e-post, SMS samt lyckad och avbruten simulerad betalning med sparade ärenden. Förutsättningar och begränsningar finns i `tests/integration-cases-result.txt`.
 - En SSBT-fråga har sparat syntetiska företagsuppgifter via en särskild lokal JSON-adapter. Det är inte en verifiering av Bolagsverkets SOAP-kontrakt.
-- Första-start-koden importerar fem syntetiska tjänster och konfigurerar testdata. Publicering och omladdning av webbservern är ny kod som ännu inte har verifierats med en ren installation.
+- Betalningssimulatorn implementerar en begränsad del av [Swedbank Pays payment order](https://developer.swedbankpay.com/checkout-v3/get-started/payment-request/), [redirect-operation](https://developer.swedbankpay.com/checkout-v3/get-started/display-ui/) och [callback](https://developer.swedbankpay.com/checkout-v3/features/payment-operations/callback/). Den är inte en fullständig implementation av leverantörens API.
+- Första-start-koden importerar och publicerar fem syntetiska tjänster och konfigurerar testdata. Detta har provats i rena utvecklingsinstanser. Dokumentsignering med en automatiskt konfigurerad lokal webbplatsprofil har också verifierats med ett sparat, signerat PDF-dokument.
 - Tilläggens byggresultat och eventuella klasskonflikter dokumenteras av byggskriptet. Byggt betyder inte automatiskt aktiverat eller funktionellt testat.
 
 ## Kvar före release
