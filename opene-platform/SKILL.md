@@ -18,6 +18,17 @@ Skilj på fyra verifieringar när du rapporterar ett resultat: att en modul ladd
 
 Öppna byggaren via **Adm. e-tjänster**. Behåll importerade tjänster som utkast medan du granskar typ, behörigheter, integrationer och regler. Exportera den verifierade versionen via versionsraden. En `.oeflow` är en versionsfil. Komplett miljöåterställning omfattar databas, filarkiv och skyddad konfiguration.
 
+## Egen lokal sandbox (`sandbox/sandboxctl`)
+
+När uppgiften kräver att en e-tjänst byggs eller testas och ingen annan miljö är utpekad, använd en lokal sandbox. Motorn är fristående (bash + Docker Compose). Se [sandbox/README.md](sandbox/README.md) och [genomförbarhet och status](references/sandbox.md).
+
+1. `sandbox/sandboxctl status --json`. Exit 0 = frisk, 3 = saknas. Saknas den: `sandbox/sandboxctl create` (persistent "default"), eller `create --ephemeral` för ett isolerat engångstest.
+2. `sandbox/sandboxctl info --secrets` ger URL (127.0.0.1) och lösenord för `sandbox-admin`, `handlaggare`, `sokande` och `sokande2`. Det är en lokal testvärd, så testkontona får användas. Upprepa aldrig lösenorden i svaret.
+3. Bygg eller importera tjänsten, testa i webbläsaren och gör ett riktigt inskick. E-post hamnar i Mailpit (URL i `info`).
+4. `sandbox/sandboxctl test` före och efter större ändringar. Exportera den verifierade `.oeflow`:en från versionsraden.
+5. Rensa: `destroy <namn>` för ephemeral. `reset --yes`/`destroy --yes` på persistent data bara när användaren bett om det.
+Ändra aldrig en remote-miljö utan uttryckligt godkännande. `sandboxctl remote <url>` gör bara läskontroller.
+
 ## Referenser från praktiska experiment (2026-11-12)
 
 - [Gränssnittskarta och behörigheter](references/granssnitt-karta.md): sökvägar, låsningar, rollmodell.

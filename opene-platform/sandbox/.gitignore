@@ -1,0 +1,7 @@
+.env
+*.env.local
+tests/playwright/node_modules/
+tests/playwright/report/
+tests/playwright/results/
+work/
+dist/

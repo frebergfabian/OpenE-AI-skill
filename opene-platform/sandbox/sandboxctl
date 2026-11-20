@@ -1,0 +1,205 @@
+#!/usr/bin/env bash
+# sandboxctl - hanterar lokala Open ePlatform-sandboxar (Docker Compose).
+# Fristående från Claude: används av människor, Claude Code, Codex m.fl.
+#
+#   sandboxctl create  [namn] [--ephemeral]   skapa instans (hemligheter + portar) och starta
+#   sandboxctl start   [namn]                 starta (bygger imagen vid behov)
+#   sandboxctl stop    [namn]                 stoppa, data behålls
+#   sandboxctl status  [namn] [--json]        containrar + verklig hälsa (HTTP, inloggning, DB)
+#   sandboxctl test    [namn]                 röktest (tests/smoke.sh) + ev. Playwright
+#   sandboxctl logs    [namn] [tjänst]        följ loggar
+#   sandboxctl info    [namn]                 URL:er och kontonamn (aldrig lösenord om inte --secrets)
+#   sandboxctl reset   [namn] --yes           radera data och starta om från ren bas
+#   sandboxctl destroy [namn] --yes           ta bort containrar, volymer och instanskonfiguration
+#   sandboxctl list                           alla instanser
+#   sandboxctl build                          bygg om OpenE-imagen från låsta källor
+#   sandboxctl remote  <url>                  läs-endast hälsokontroll av befintlig miljö
+#
+# Standardinstans: "default" (persistent). Instanskonfiguration: ${OPENE_SANDBOX_HOME:-~/.opene-sandbox}.
+set -euo pipefail
+
+HERE=$(cd "$(dirname "$0")" && pwd)
+HOME_DIR=${OPENE_SANDBOX_HOME:-$HOME/.opene-sandbox}
+IMAGE=${OPENE_IMAGE:-opene-sandbox:local}
+mkdir -p "$HOME_DIR/instances"
+
+die(){ echo "sandboxctl: $*" >&2; exit 1; }
+say(){ echo "sandboxctl: $*" >&2; }
+need(){ command -v "$1" >/dev/null || die "$1 saknas (se sandbox/README.md, beroenden)"; }
+valid_name(){ [[ $1 =~ ^[a-z0-9][a-z0-9-]{0,30}$ ]] || die "ogiltigt instansnamn '$1' (a-z, 0-9, -)"; }
+inst_dir(){ echo "$HOME_DIR/instances/$1"; }
+envf(){ echo "$(inst_dir "$1")/.env"; }
+exists(){ [ -f "$(envf "$1")" ]; }
+getenv(){ grep -E "^$2=" "$(envf "$1")" | head -1 | cut -d= -f2-; }
+rand(){ (openssl rand -hex 18 2>/dev/null || head -c 18 /dev/urandom | od -An -tx1 | tr -d ' \n') | head -c 24; }
+
+compose(){ # namn args...
+  local n=$1; shift
+  docker compose --project-directory "$HERE" -f "$HERE/compose.yaml" \
+    --env-file "$(envf "$n")" -p "opene-$n" "$@"
+}
+
+port_free(){ # 0 = ledig
+  ! (exec 3<>"/dev/tcp/127.0.0.1/$1") 2>/dev/null
+}
+used_ports(){ cat "$HOME_DIR"/instances/*/.env 2>/dev/null | grep -E '^SANDBOX_(HTTP|MAIL)_PORT=' | cut -d= -f2; }
+pick_port(){ # start
+  local p=$1
+  while used_ports | grep -qx "$p" || ! port_free "$p"; do p=$((p+10)); done
+  echo "$p"
+}
+
+cmd_create(){
+  local name=default ephemeral=0
+  for a in "$@"; do case $a in --ephemeral) ephemeral=1 ;; -*) die "okänd flagga $a" ;; *) name=$a ;; esac; done
+  [ $ephemeral = 1 ] && [ "$name" = default ] && name="eph-$(date +%H%M%S)-$RANDOM"
+  valid_name "$name"
+  exists "$name" && die "instansen '$name' finns redan (sandboxctl start $name)"
+  mkdir -p "$(inst_dir "$name")"; chmod 700 "$(inst_dir "$name")"
+  local http mail; http=$(pick_port 8480); mail=$(pick_port $((http+1)))
+  umask 077
+  cat > "$(envf "$name")" <<EOF
+# Genererad av sandboxctl $(date -u +%FT%TZ). Får inte checkas in.
+SANDBOX_PROJECT=opene-$name
+SANDBOX_NAME=$name
+SANDBOX_MODE=$([ $ephemeral = 1 ] && echo ephemeral || echo persistent)
+SANDBOX_HTTP_PORT=$http
+SANDBOX_MAIL_PORT=$mail
+OPENE_IMAGE=$IMAGE
+DB_PASSWORD=$(rand)
+DB_ROOT_PASSWORD=$(rand)
+ADMIN_PASSWORD=$(rand)
+CITIZEN_PASSWORD=$(rand)
+MANAGER_PASSWORD=$(rand)
+EOF
+  say "skapade '$name' ($(getenv "$name" SANDBOX_MODE)) på http://127.0.0.1:$http"
+  cmd_start "$name"
+}
+
+ensure_image(){
+  docker image inspect "$IMAGE" >/dev/null 2>&1 && return 0
+  say "imagen $IMAGE saknas: bygger från låsta källor (första gången tar det en stund)"
+  cmd_build
+}
+
+cmd_build(){
+  need docker
+  DOCKER_BUILDKIT=1 docker build -t "$IMAGE" -f "$HERE/docker/Dockerfile" "$HERE"
+}
+
+cmd_start(){
+  local n=${1:-default}; exists "$n" || die "instansen '$n' finns inte (sandboxctl create $n)"
+  need docker; ensure_image
+  compose "$n" up -d --no-build
+  say "väntar på att OpenE ska svara (första start migrerar databasen, kan ta flera minuter)"
+  wait_ready "$n" 600 && cmd_info "$n"
+}
+
+wait_ready(){ # namn sekunder
+  local n=$1 t=$2 url; url="http://127.0.0.1:$(getenv "$n" SANDBOX_HTTP_PORT)/"
+  for ((i=0; i<t; i+=5)); do
+    curl -fsS -o /dev/null -m 5 "$url" 2>/dev/null && { say "OpenE svarar på $url"; return 0; }
+    sleep 5
+  done
+  say "OpenE svarade inte inom ${t}s - se: sandboxctl logs $n opene"; return 1
+}
+
+cmd_stop(){ local n=${1:-default}; exists "$n" || die "okänd instans $n"; compose "$n" stop; }
+
+cmd_status(){
+  local n=default json=0
+  for a in "$@"; do case $a in --json) json=1 ;; *) n=$a ;; esac; done
+  exists "$n" || { [ $json = 1 ] && echo '{"exists":false}' || say "instansen '$n' finns inte"; return 3; }
+  local port url http login seeded running
+  port=$(getenv "$n" SANDBOX_HTTP_PORT); url="http://127.0.0.1:$port"
+  running=$(compose "$n" ps --status running --services 2>/dev/null | tr '\n' ',' | sed 's/,$//')
+  http=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "$url/" || echo 000)
+  login=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "$url/login" || echo 000)
+  seeded=$(compose "$n" exec -T db sh -c 'mariadb -N -uopene -p"$MARIADB_PASSWORD" opene -e "SELECT v FROM sandbox_meta WHERE k=\"users_seeded\""' 2>/dev/null || true)
+  if [ $json = 1 ]; then
+    printf '{"exists":true,"name":"%s","mode":"%s","url":"%s","running":"%s","http":%s,"login":%s,"usersSeeded":"%s"}\n' \
+      "$n" "$(getenv "$n" SANDBOX_MODE)" "$url" "$running" "$http" "$login" "$seeded"
+  else
+    echo "instans:   $n ($(getenv "$n" SANDBOX_MODE))"
+    echo "url:       $url   mail: http://127.0.0.1:$(getenv "$n" SANDBOX_MAIL_PORT)"
+    echo "tjänster:  ${running:-inga}"
+    echo "http /:    $http   /login: $login"
+    echo "konton:    ${seeded:-inte seedade ännu}"
+  fi
+  [ "$http" = 200 ] && [ -n "$seeded" ]
+}
+
+cmd_info(){
+  local n=default secrets=0
+  for a in "$@"; do case $a in --secrets) secrets=1 ;; *) n=$a ;; esac; done
+  exists "$n" || die "okänd instans $n"
+  echo "OpenE:    http://127.0.0.1:$(getenv "$n" SANDBOX_HTTP_PORT)/"
+  echo "Mailpit:  http://127.0.0.1:$(getenv "$n" SANDBOX_MAIL_PORT)/"
+  echo "Konton:   sandbox-admin (admin), handlaggare (Handläggare), sokande + sokande2 (Medborgare)"
+  if [ $secrets = 1 ]; then
+    echo "ADMIN_PASSWORD=$(getenv "$n" ADMIN_PASSWORD)"
+    echo "MANAGER_PASSWORD=$(getenv "$n" MANAGER_PASSWORD)"
+    echo "CITIZEN_PASSWORD=$(getenv "$n" CITIZEN_PASSWORD)"
+  else
+    echo "Lösenord: $(envf "$n")  (eller sandboxctl info $n --secrets)"
+  fi
+}
+
+confirm(){ # namn flaggor...
+  local n=$1; shift
+  [[ " $* " == *" --yes "* ]] && return 0
+  [ "$(getenv "$n" SANDBOX_MODE)" = ephemeral ] && return 0
+  die "detta raderar data i '$n'. Kör igen med --yes för att bekräfta"
+}
+
+cmd_reset(){
+  local n=default; for a in "$@"; do [[ $a != --* ]] && n=$a; done
+  exists "$n" || die "okänd instans $n"; confirm "$n" "$@"
+  compose "$n" down -v --remove-orphans
+  cmd_start "$n"
+}
+
+cmd_destroy(){
+  local n=default; for a in "$@"; do [[ $a != --* ]] && n=$a; done
+  exists "$n" || die "okänd instans $n"; confirm "$n" "$@"
+  compose "$n" down -v --remove-orphans || true
+  rm -rf "$(inst_dir "$n")"
+  say "instansen '$n' är borttagen"
+}
+
+cmd_list(){
+  local d n
+  for d in "$HOME_DIR"/instances/*/; do
+    [ -f "$d/.env" ] || continue; n=$(basename "$d")
+    printf '%-24s %-10s http://127.0.0.1:%s\n' "$n" "$(getenv "$n" SANDBOX_MODE)" "$(getenv "$n" SANDBOX_HTTP_PORT)"
+  done
+}
+
+cmd_logs(){ local n=${1:-default}; shift || true; compose "$n" logs -f --tail 200 "$@"; }
+
+cmd_test(){
+  local n=${1:-default}; exists "$n" || die "okänd instans $n"
+  OPENE_URL="http://127.0.0.1:$(getenv "$n" SANDBOX_HTTP_PORT)" \
+  OPENE_ADMIN_USER=sandbox-admin OPENE_ADMIN_PASSWORD="$(getenv "$n" ADMIN_PASSWORD)" \
+    bash "$HERE/tests/smoke.sh"
+  if [ -f "$HERE/tests/playwright/package.json" ] && command -v npx >/dev/null; then
+    (cd "$HERE/tests/playwright" && \
+     OPENE_URL="http://127.0.0.1:$(getenv "$n" SANDBOX_HTTP_PORT)" \
+     OPENE_ADMIN_USER=sandbox-admin OPENE_ADMIN_PASSWORD="$(getenv "$n" ADMIN_PASSWORD)" \
+     npx --yes playwright test)
+  fi
+}
+
+cmd_remote(){ # läs-endast
+  local url=${1:?url}; url=${url%/}
+  for p in / /login /oversikt; do
+    printf '%-10s %s\n' "$p" "$(curl -sk -o /dev/null -m 10 -w '%{http_code}' "$url$p" || echo 000)"
+  done
+}
+
+c=${1:-help}; shift || true
+case $c in
+  create|start|stop|status|test|logs|info|reset|destroy|list|build|remote) "cmd_$c" "$@" ;;
+  help|-h|--help) sed -n '2,20p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *) die "okänt kommando '$c' (sandboxctl help)" ;;
+esac
