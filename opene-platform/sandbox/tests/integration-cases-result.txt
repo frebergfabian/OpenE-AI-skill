@@ -24,6 +24,8 @@ Ren instans 0.2.6-dev: uppstart 81,2 sekunder, omstart 24,4 sekunder, röktest 1
 
 Dokumentsignering 0.2.7-dev: en ny instans skapade lokal webbplatsprofil automatiskt. Ett syntetiskt PDF-dokument skapades och skickades till en syntetisk användare, som signerade med DummySigningProvider. document_signer_documents visade dokument 1 med status SIGNED och profileID 2; document_signer_document_signers innehöll användarens underskriftstid. Systemloggen hade 0 ERROR.
 
-Utökade frågetyper 0.2.9-dev: tretton ytterligare frågetypsmoduler registrerades och laddades vid ren start med 0 ERROR; samtliga tretton fanns i den tillåtna frågetypslistan för tjänstetyp 4. Detta verifierar inte varje frågetyps användarflöde. `addon-activation-result.json` är en inventering av bygg- och registreringsstatus för denna körning; en aktiverad klass innebär inte att hela projektet är funktionstestat.
+Utökade frågetyper 0.2.9-dev: tretton ytterligare frågetypsmoduler registrerades och laddades vid ren start med 0 ERROR; samtliga tretton fanns i den tillåtna frågetypslistan för tjänstetyp 4. I 0.3.1-dev registrerades dessutom listhanteraren, en lokal listleverantör och sex frågetyper, som laddades med 0 ERROR och tilläts för tjänstetyp 4. De nya frågetyperna syntes även i administratörens lista i 0.3.2-dev. Detta verifierar inte varje frågetyps användarflöde.
+
+Regler 0.3.3-dev: sjutton lokala regelmoduler, inklusive SMS- och e-postregler, laddades och registrerades i regelhanteraren med 0 ERROR. Individuella regelutföranden med ärenden är inte verifierade. `addon-activation-result.json` inventerar bygg- och registreringsstatus för 0.3.3-dev; en aktiverad klass innebär inte att hela projektet är funktionstestat.
 
 Alla prov avser isolerade lokala testinstanser med syntetisk data. Ingen av ovanstående körningar visar att samtliga fixtures och integrationer fungerar automatiskt på en ny installation.

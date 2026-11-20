@@ -36,45 +36,57 @@
   },
   {
     "project": "AgeQueryStateEvaluationProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.agequerystateevaluator.AgeQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "AlternativeListCheckboxQueryProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.alternativelistcheckboxquery.AlternativeListCheckboxQueryProviderModule"
+    ]
   },
   {
     "project": "AlternativeListDropdownQueryProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.alternativelistdropdownquery.AlternativeListDropDownQueryProviderModule"
+    ]
   },
   {
     "project": "AlternativeListHandler",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.alternativelist.AlternativeListHandlerModule"
+    ]
   },
   {
     "project": "AlternativeListPriorityQuery",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.alternativelistpriorityquery.AlternativeListPriorityQueryProviderModule"
+    ]
   },
   {
     "project": "AlternativeListRadioButtonQueryProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.alternativelistradiobuttonquery.AlternativeListRadioButtonQueryProviderModule"
+    ]
   },
   {
     "project": "AnonymousPosterEvaluator",
@@ -180,10 +192,12 @@
   },
   {
     "project": "ChildCountQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.childcountquerystateevaluator.ChildCountQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "ChildInfoQueryProvider",
@@ -203,17 +217,21 @@
   },
   {
     "project": "CitizenIDGroupMembershipQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.citizenidgroupmembershipquerystateevaluator.CitizenIDGroupMembershipQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "CitizenIdentifierQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.citizenidentifier.CitizenIdentifierQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "CityworksIntegrationProvider",
@@ -472,10 +490,12 @@
   },
   {
     "project": "GroupQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.groupquerystateevaluator.GroupQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "GroupTreeQueryDataProvider",
@@ -524,10 +544,12 @@
   },
   {
     "project": "InternalAlternativeListProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.internalalternativelist.InternalAlternativeListProviderModule"
+    ]
   },
   {
     "project": "InternalContactDetailQuery",
@@ -570,17 +592,21 @@
   },
   {
     "project": "ListSearchQueryProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.listsearchqueryprovider.ListSearchQueryProviderModule"
+    ]
   },
   {
     "project": "LoggedInQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.loggedin.LoggedInQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "ManagerFlowTest",
@@ -591,10 +617,12 @@
   },
   {
     "project": "ManagerQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.manager.ManagerQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "ManualCheckboxQuery",
@@ -625,17 +653,21 @@
   },
   {
     "project": "MaritalStatusQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.maritalstatusquerystateevaluator.MaritalStatusQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "MatchingInternalAccountQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.internalaccount.MatchingInternalAccountQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "MultiSigningHandler2",
@@ -655,17 +687,21 @@
   },
   {
     "project": "MunicipalityCodeQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.municipalitycode.MunicipalityCodeQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "OfficialAddressQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.officialaddressquerystateevaluator.OfficialAddressQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "OrigoMapProvider",
@@ -717,10 +753,12 @@
   },
   {
     "project": "PredefinedUserQueryProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.queries.predefineduserquery.PredefinedUserQueryProviderModule"
+    ]
   },
   {
     "project": "PriceTableQuery",
@@ -851,31 +889,39 @@
   },
   {
     "project": "SendContactQueryMailEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.sendcontactquerymailevaluator.SendContactQueryMailEvaluationProviderModule"
+    ]
   },
   {
     "project": "SendMailEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.sendmailevaluator.SendMailEvaluationProviderModule"
+    ]
   },
   {
     "project": "SendTextFieldMailEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.sendtextfieldmailevaluator.SendTextFieldMailEvaluationProviderModule"
+    ]
   },
   {
     "project": "SendTextFieldSMSEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.sendtextfieldsmsevaluator.SendTextFieldSMSEvaluationProviderModule"
+    ]
   },
   {
     "project": "SetAttributeFromAlternativeIDEvaluator",
@@ -919,10 +965,12 @@
   },
   {
     "project": "StatusQueryStateEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.statusquerystate.StatusQueryStateEvaluationProviderModule"
+    ]
   },
   {
     "project": "TableAttributeEvaluator",
@@ -1013,10 +1061,12 @@
   },
   {
     "project": "UserQueryMailEvaluator",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.userquerymailevaluator.UserQueryMailEvaluationProviderModule"
+    ]
   },
   {
     "project": "UserSubscriptionModule",
