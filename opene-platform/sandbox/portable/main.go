@@ -344,7 +344,13 @@ func (i *Instance) unpack() error {
 	if e = os.WriteFile(filepath.Join(temp, "payload.sha256"), []byte(expected), 0600); e != nil {
 		return e
 	}
-	return os.Rename(temp, i.Program)
+	// Windows scanners can briefly hold a newly extracted file or directory.
+	// Keep the complete staging tree and retry instead of reporting a broken install.
+	for n := 0; n < 40; n++ {
+		if e = os.Rename(temp, i.Program); e == nil { return nil }
+		time.Sleep(250 * time.Millisecond)
+	}
+	return e
 }
 func (i *Instance) control(method, p string) ([]byte, error) {
 	req, e := http.NewRequest(method, localURL(i.State.Control)+p, nil)
@@ -514,7 +520,7 @@ func (i *Instance) seed() error {
 		if u == "sandbox-admin" {
 			admin = 1
 		}
-		q += fmt.Sprintf("INSERT INTO simple_users(username,password,hashAlgoritm,firstname,lastname,email,admin,enabled,added) VALUES('%s','%s','PBKDF2WithHmacSHA256','Sandbox','%s','%s@sandbox.invalid',%d,1,NOW());\n", u, hash, u, u, admin)
+		q += fmt.Sprintf("INSERT INTO simple_users(username,password,hashAlgoritm,firstname,lastname,email,admin,enabled,added) VALUES('%s','%s','PBKDF2WithHmacSHA256','Sandbox','%s','%s@exempelkoping.example.com',%d,1,NOW());\n", u, hash, u, u, admin)
 		q += fmt.Sprintf("INSERT INTO simple_user_attributes(userID,name,value) SELECT userID,'citizenIdentifier','%s' FROM simple_users WHERE username='%s';\n", identifiers[u], u)
 		for _, g := range groups[u] {
 			q += fmt.Sprintf("INSERT INTO simple_user_groups(userID,groupID) SELECT userID,%d FROM simple_users WHERE username='%s';\n", g, u)
@@ -694,6 +700,7 @@ func (i *Instance) serve() (err error) {
 				return e
 			}
 			s := strings.ReplaceAll(string(b), "/var/lib/opene", filepath.ToSlash(i.Dir))
+			s = strings.ReplaceAll(s, "@SIMULATOR@", localURL(i.State.Simulator))
 			s = strings.ReplaceAll(s, "'mail'", "'127.0.0.1'")
 			s = strings.ReplaceAll(s, "'1025'", "'"+strconv.Itoa(i.State.SMTP)+"'")
 			if _, e = i.sql(s, true); e != nil {
@@ -709,6 +716,9 @@ func (i *Instance) serve() (err error) {
 	}
 	// Dynamic settings must follow newly allocated ports on every restart.
 	q := fmt.Sprintf("UPDATE openhierarchy_foreground_module_settings s JOIN openhierarchy_foreground_modules m USING(moduleID) SET s.value='%d' WHERE m.classname='se.unlogic.hierarchy.foregroundmodules.mailsenders.direct.DirectMailSender' AND s.id='port';", i.State.SMTP)
+	q += fmt.Sprintf("UPDATE openhierarchy_foreground_module_settings s JOIN openhierarchy_foreground_modules m USING(moduleID) SET s.value='%s/search' WHERE m.classname='com.nordicpeak.flowengine.queries.pudquery.PUDQueryProviderModule' AND s.id='searchServiceURL';", localURL(i.State.Simulator))
+	q += "DELETE s FROM openhierarchy_foreground_module_settings s JOIN openhierarchy_foreground_modules m USING(moduleID) WHERE m.classname='com.nordicpeak.flowengine.notifications.StandardFlowNotificationHandler' AND s.id IN ('installationBaseURL','emailSenderName','emailSenderAddress','smsSenderName','userFlowInstanceModuleAlias','flowInstanceAdminModuleAlias','flowAdminModuleAlias');"
+	q += fmt.Sprintf("INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value) SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m JOIN (SELECT 'installationBaseURL' id,'%s' value UNION ALL SELECT 'emailSenderName','OpenE Sandbox' UNION ALL SELECT 'emailSenderAddress','opene@exempelkoping.example.com' UNION ALL SELECT 'smsSenderName','OpenESandbox' UNION ALL SELECT 'userFlowInstanceModuleAlias','/minasidor' UNION ALL SELECT 'flowInstanceAdminModuleAlias','/flowinstanceadmin' UNION ALL SELECT 'flowAdminModuleAlias','/flowadmin') v WHERE m.classname='com.nordicpeak.flowengine.notifications.StandardFlowNotificationHandler';", localURL(i.State.HTTP))
 	if _, e = i.sql(q, true); e != nil {
 		return e
 	}
@@ -729,6 +739,9 @@ func (i *Instance) serve() (err error) {
 		}
 	}
 	if e = poll(90*time.Second, func() bool { c := i.checks(); return c["http"] && c["loginForm"] && c["adminLogin"] }); e != nil {
+		return e
+	}
+	if e = i.seedFixtures(); e != nil {
 		return e
 	}
 	mu.Lock()

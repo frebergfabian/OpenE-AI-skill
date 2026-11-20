@@ -25,6 +25,15 @@ fs.writeFileSync(path.join(payload,'sql','10-demo.sql'),dump);
 fs.copyFileSync(path.join(sb,'docker','sql','20-sandbox-pre.sql'),path.join(payload,'sql','20-sandbox-pre.sql'));
 if(process.env.OPENE_EXPERIMENTAL_ADDONS==='1')fs.copyFileSync(path.join(sb,'experimental','25-addons.sql'),path.join(payload,'sql','25-addons.sql'));
 else fs.rmSync(path.join(payload,'sql','25-addons.sql'),{force:true});
+if(process.env.OPENE_EXPERIMENTAL_ADDONS==='1'){
+ fs.copyFileSync(path.join(sb,'experimental','30-fixtures.sql'),path.join(payload,'sql','30-fixtures.sql'));
+ fs.mkdirSync(path.join(payload,'fixtures'),{recursive:true});
+ fs.copyFileSync(path.join(sb,'..','assets','funktionslabbet.oeflow'),path.join(payload,'fixtures','funktionslabbet.oeflow'));
+ fs.copyFileSync(path.join(sb,'..','assets','sandbox-fastighet.oeflow'),path.join(payload,'fixtures','sandbox-fastighet.oeflow'));
+}else{
+ fs.rmSync(path.join(payload,'sql','30-fixtures.sql'),{force:true});
+ fs.rmSync(path.join(payload,'fixtures'),{force:true,recursive:true});
+}
 fs.copyFileSync(path.join(sb,'docker','config.xml.tmpl'),path.join(payload,'config.xml.tmpl'));
 fs.copyFileSync(path.join(dist,'BUILDINFO'),path.join(payload,'BUILDINFO'));
 fs.rmSync(path.join(portable,'payload.zip'),{force:true});

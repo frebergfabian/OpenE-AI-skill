@@ -6,11 +6,13 @@ INSERT INTO sandbox_query_modules VALUES
  ('com.nordicpeak.flowengine.queries.DateTimeQueryProviderModule','sandbox-datetime','DateTimeQuery'),
  ('com.nordicpeak.flowengine.queries.dynamictablequery.DynamicTableQueryProviderModule','sandbox-dynamictable','DynamicTableQuery'),
  ('com.nordicpeak.flowengine.booking.queries.BookingQueryProviderModule','sandbox-booking-query','BookingQuery'),
- ('com.nordicpeak.flowengine.queue.query.QueueQueryProviderModule','sandbox-queue-query','QueueQuery');
+ ('com.nordicpeak.flowengine.queue.query.QueueQueryProviderModule','sandbox-queue-query','QueueQuery'),
+ ('com.nordicpeak.flowengine.queries.pudquery.PUDQueryProviderModule','sandbox-pud','PUDQuery'),
+ ('com.nordicpeak.flowengine.queries.childinfoquery.ChildInfoQueryProviderModule','sandbox-child','ChildInfoQuery');
 INSERT INTO openhierarchy_foreground_modules
  (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu,staticContentPackage)
 SELECT q.classname,q.prefix,q.alias,'Sandbox query provider',CONCAT(q.prefix,'Admin.sv.xsl'),'Classpath',1,1,1,1,1,0,
-       CASE WHEN q.prefix IN ('DateTimeQuery','DynamicTableQuery','BookingQuery','QueueQuery') THEN 'staticcontent' ELSE NULL END
+       CASE WHEN q.prefix IN ('DateTimeQuery','DynamicTableQuery','BookingQuery','QueueQuery','PUDQuery','ChildInfoQuery') THEN 'staticcontent' ELSE NULL END
 FROM sandbox_query_modules q WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_modules m WHERE m.classname=q.classname);
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,'queryStyleSheet',CONCAT(q.prefix,'.sv.xsl') FROM sandbox_query_modules q JOIN openhierarchy_foreground_modules m ON m.classname=q.classname
@@ -21,6 +23,10 @@ WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE
 INSERT IGNORE INTO flowengine_flow_type_allowed_queries(flowTypeID,queryTypeID)
 SELECT t.flowTypeID,q.classname FROM flowengine_flow_types t CROSS JOIN sandbox_query_modules q;
 DROP TEMPORARY TABLE sandbox_query_modules;
+INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
+SELECT m.moduleID,'searchServiceURL','@SIMULATOR@/search' FROM openhierarchy_foreground_modules m
+WHERE m.classname='com.nordicpeak.flowengine.queries.pudquery.PUDQueryProviderModule'
+AND NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE s.moduleID=m.moduleID AND s.id='searchServiceURL');
 
 CREATE TEMPORARY TABLE sandbox_support_modules (classname VARCHAR(255), alias VARCHAR(80), xsl VARCHAR(100));
 INSERT INTO sandbox_support_modules VALUES
@@ -30,13 +36,20 @@ INSERT INTO sandbox_support_modules VALUES
  ('com.nordicpeak.flowengine.booking.notificationhandler.BookingNotificationHandler','sandbox-booking-notices','BookingNotificationHandler.sv.xsl'),
  ('com.nordicpeak.flowengine.queue.QueueAdminModule','sandbox-queues','QueueAdminModule.sv.xsl'),
  ('com.nordicpeak.flowengine.queue.QueueSlotAdminModule','sandbox-queue-slots','QueueSlotAdminModule.sv.xsl'),
- ('com.nordicpeak.flowengine.queue.UserQueueSlotModule','sandbox-myqueue','UserQueueSlotModule.sv.xsl');
+ ('com.nordicpeak.flowengine.queue.UserQueueSlotModule','sandbox-myqueue','UserQueueSlotModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.integration.http.HTTPIntegrationProvider','sandbox-http','HTTPIntegrationProvider.sv.xsl'),
+ ('se.exempelkoping.sandbox.SimulatedSMSSender','sandbox-sms',NULL),
+ ('com.nordicpeak.childrelationprovider.DummyChildRelationProvider','sandbox-child-relations',NULL);
 INSERT INTO openhierarchy_foreground_modules
  (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu,staticContentPackage)
-SELECT q.classname,q.alias,q.alias,'Experimental sandbox module',q.xsl,'Classpath',0,0,1,1,1,0,'staticcontent'
+SELECT q.classname,q.alias,q.alias,'Experimental sandbox module',q.xsl,IF(q.xsl IS NULL,NULL,'Classpath'),0,IF(q.alias IN ('sandbox-mybookings','sandbox-myqueue'),1,0),1,1,1,0,IF(q.xsl IS NULL,NULL,'staticcontent')
 FROM sandbox_support_modules q WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_modules m WHERE m.classname=q.classname);
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,'supportedActionIDs','com.nordicpeak.flowengine.FlowBrowserModule.submit'
 FROM sandbox_support_modules q JOIN openhierarchy_foreground_modules m ON m.classname=q.classname
 WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE s.moduleID=m.moduleID AND s.id='supportedActionIDs');
 DROP TEMPORARY TABLE sandbox_support_modules;
+INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
+SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m
+JOIN (SELECT 'child1' id,'true' value UNION ALL SELECT 'childID1','201001010006' UNION ALL SELECT 'ensam1','true') v
+WHERE m.classname='com.nordicpeak.childrelationprovider.DummyChildRelationProvider';

@@ -2,7 +2,10 @@ package main
 
 import (
 	"archive/zip"
+	"bufio"
 	"bytes"
+	"fmt"
+	"net"
 	"net/http/httptest"
 	"os"
 	"path/filepath"
@@ -21,6 +24,32 @@ func TestArchiveRejectsTraversal(t *testing.T) {
 			t.Fatal("accepted", name)
 		}
 	}
+}
+
+func TestSMTPRejectsRealRecipient(t *testing.T) {
+	s := newSimulator(t.TempDir(), 12345)
+	client, server := net.Pipe()
+	defer client.Close()
+	go s.smtpConnection(server)
+	r := bufio.NewReader(client)
+	read := func(prefix string) {
+		t.Helper()
+		line, err := r.ReadString('\n')
+		if err != nil || !strings.HasPrefix(line, prefix) {
+			t.Fatalf("wanted %s, got %q: %v", prefix, line, err)
+		}
+	}
+	read("220")
+	fmt.Fprint(client, "EHLO example\r\n")
+	read("250")
+	fmt.Fprint(client, "MAIL FROM:<sender@sandbox.invalid>\r\n")
+	read("250")
+	fmt.Fprint(client, "RCPT TO:<person@real.example>\r\n")
+	read("550")
+	fmt.Fprint(client, "RCPT TO:<test@exempelkoping.example.com>\r\n")
+	read("250")
+	fmt.Fprint(client, "QUIT\r\n")
+	read("221")
 }
 func TestRemoveRejectsParent(t *testing.T) {
 	d := t.TempDir()
@@ -61,5 +90,23 @@ func TestPUDContract(t *testing.T) {
 	s.handle(w, r)
 	if w.Code != 200 || !strings.Contains(w.Body.String(), `"objid":"00000000-0000-4000-8000-000000000001"`) {
 		t.Fatal(w.Code, w.Body)
+	}
+}
+
+func TestSMSOnlyAcceptsSyntheticNumber(t *testing.T) {
+	s := newSimulator(t.TempDir(), 12345)
+	for _, tc := range []struct {
+		body   string
+		status int
+	}{
+		{`{"recipients":["0700000000"],"message":"test"}`, 200},
+		{`{"recipients":["0701234567"],"message":"test"}`, 403},
+	} {
+		r := httptest.NewRequest("POST", "http://127.0.0.1:12345/sms", strings.NewReader(tc.body))
+		w := httptest.NewRecorder()
+		s.handle(w, r)
+		if w.Code != tc.status {
+			t.Fatalf("wanted %d, got %d", tc.status, w.Code)
+		}
 	}
 }

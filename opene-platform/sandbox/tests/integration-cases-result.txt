@@ -1,0 +1,13 @@
+# Inlämnade syntetiska testärenden, 2026-11-20
+
+Automatisk 0.1.4-dev: en tom instans importerade Funktionslabbet och skapade/kopplade en kalender, en framtida tid och en kö. Efter manuell publicering utan signering skickade sökande in ärende 788; databasen visade status Inskickat, en bokning och en köplats med flowInstanceID 788. Stopp/start bevarade ärendet och gav en av vardera fixture utan dubbletter.
+
+Fastighet 0.1.5-dev: PUD-frågan lades till manuellt i tjänsten. Sökning efter Testfastighet gav simulatoranrop GET /search/registerenheter och det syntetiska objektet 00000000-0000-4000-8000-000000000001. En separat sökande skickade in ärende 788. pud_query_instances innehöll objektet och queryInstanceID 19454, som flowengine_query_instance_descriptors kopplade till ärende 788. Därefter skapades och importerades en separat PUD-fixture; ett ärende från just den separata fixturen är ännu inte verifierat.
+
+Signering 0.1.6-dev: DummySigningProvider signerade ärende 789. Databasen visar SIGNED och SUBMITTED samt bokning och köplats med flowInstanceID 789.
+
+E-post och HTTP 0.1.8-dev: efter manuell publicering och aktivering av inskicksnotis signerades och skickades ärende 788. Två syntetiska meddelanden lagrades i SMTP-fångsten. HTTPIntegrationProvider skickade ärendets XML med FlowInstanceID 788 till /integration/http och fick accepted. Databasen visar SIGNED och SUBMITTED samt bokning och köplats. 0 ERROR i systemloggen.
+
+SMS 0.1.9-dev: efter en manuell ändring av kontaktfrågan och manuell aktivering av SMS-notisen signerades och skickades ärende 789. Simulatorns anropslogg visar POST /sms med mottagare 0700000000 och meddelande om ärende 789. Automatisk motsvarande kontaktfrågeändring är implementerad men inte verifierad i denna testkörning. Simulatorn avvisar andra nummer.
+
+Alla prov avser isolerade lokala testinstanser med syntetisk data. Inget prov visar att övriga integrationskategorier fungerar.

@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -22,6 +23,9 @@ type Call struct {
 	Scenario string `json:"scenario"`
 	Body     string `json:"body"`
 }
+
+var syntheticRecipient = regexp.MustCompile(`(?i)^<[^<>@\s]+@(sandbox\.invalid|exempelkoping\.example\.com)>$`)
+
 type Simulator struct {
 	appPort  int
 	dir      string
@@ -102,7 +106,7 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 		}
 		module := r.FormValue("module")
 		scenario := r.FormValue("scenario")
-		if (module != "pud" && module != "http" && module != "payment") || (scenario != "success" && scenario != "denied" && scenario != "timeout" && scenario != "error") {
+		if (module != "pud" && module != "http" && module != "payment" && module != "sms") || (scenario != "success" && scenario != "denied" && scenario != "timeout" && scenario != "error") {
 			http.Error(w, "Unknown module or scenario", 400)
 			return
 		}
@@ -127,6 +131,9 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/integration/http" {
 		module = "http"
 	}
+	if r.URL.Path == "/sms" {
+		module = "sms"
+	}
 	if module == "" {
 		http.Error(w, "No verified simulator contract for this route", 501)
 		return
@@ -145,6 +152,21 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 	if e != nil {
 		http.Error(w, "Body too large", 413)
 		return
+	}
+	if module == "sms" {
+		var m struct {
+			Recipients []string `json:"recipients"`
+		}
+		if r.Method != "POST" || json.Unmarshal(b, &m) != nil || len(m.Recipients) == 0 {
+			http.Error(w, "Invalid SMS", 400)
+			return
+		}
+		for _, number := range m.Recipients {
+			if number != "0700000000" && number != "+46700000000" {
+				http.Error(w, "Only the synthetic test number is accepted", 403)
+				return
+			}
+		}
 	}
 	s.record(r.Method, r.URL.RequestURI(), scenario, string(b))
 	switch scenario {
@@ -174,6 +196,10 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<response><status>accepted</status><externalID>SYNTHETIC-001</externalID></response>`))
 		return
 	}
+	if module == "sms" {
+		jsonResponse(w, map[string]any{"accepted": true, "synthetic": true})
+		return
+	}
 	if r.Method != "GET" {
 		http.Error(w, "GET required", 405)
 		return
@@ -194,7 +220,7 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, rows)
 }
 
-var simPage = template.Must(template.New("page").Parse(`<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>OpenE Simulator</title><style>body{font:17px system-ui;max-width:1000px;margin:40px auto;padding:0 24px;background:#f3f6f8;color:#132c40}a{color:#056184}section{background:white;padding:24px;border-radius:12px;margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}select,button{font:inherit;padding:8px}nav{display:flex;gap:24px}</style><h1>OpenE Simulator</h1><p>Exempelköpings kommun · Endast syntetiska testuppgifter</p><nav><a href="/">Anrop och scenarier</a><a href="/mail">E-postfångst</a><a href="/api/calls">JSON-logg</a></nav><section><h2>Scenarier</h2><form method="post" action="/scenarios"><select name="module"><option value="pud">Fastighet och adress</option><option value="http">HTTPIntegrationProvider</option></select> <select name="scenario"><option value="success">Lyckat</option><option value="denied">Nekat</option><option value="timeout">Timeout</option><option value="error">Felsvar</option></select> <button>Spara</button></form><p>Valet gäller efterföljande anrop. Ej implementerade integrationer svarar 501.</p><pre>{{.Scenarios}}</pre></section><section><h2>{{.Title}}</h2><pre>{{.Content}}</pre></section></html>`))
+var simPage = template.Must(template.New("page").Parse(`<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>OpenE Simulator</title><style>body{font:17px system-ui;max-width:1000px;margin:40px auto;padding:0 24px;background:#f3f6f8;color:#132c40}a{color:#056184}section{background:white;padding:24px;border-radius:12px;margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}select,button{font:inherit;padding:8px}nav{display:flex;gap:24px}</style><h1>OpenE Simulator</h1><p>Exempelköpings kommun · Endast syntetiska testuppgifter</p><nav><a href="/">Anrop och scenarier</a><a href="/mail">E-postfångst</a><a href="/api/calls">JSON-logg</a></nav><section><h2>Scenarier</h2><form method="post" action="/scenarios"><select name="module"><option value="pud">Fastighet och adress</option><option value="http">HTTPIntegrationProvider</option><option value="payment">Betalning</option><option value="sms">SMS</option></select> <select name="scenario"><option value="success">Lyckat</option><option value="denied">Nekat</option><option value="timeout">Timeout</option><option value="error">Felsvar</option></select> <button>Spara</button></form><p>Valet gäller efterföljande anrop. Ej implementerade integrationer svarar 501.</p><pre>{{.Scenarios}}</pre></section><section><h2>{{.Title}}</h2><pre>{{.Content}}</pre></section></html>`))
 
 func (s *Simulator) page(w http.ResponseWriter, r *http.Request) {
 	s.mu.Lock()
@@ -247,7 +273,12 @@ func (s *Simulator) smtpConnection(c net.Conn) {
 			recipients = nil
 			fmt.Fprint(c, "250 OK\r\n")
 		case strings.HasPrefix(upper, "RCPT TO:"):
-			recipients = append(recipients, line[8:])
+			address := strings.TrimSpace(line[8:])
+			if !syntheticRecipient.MatchString(address) {
+				fmt.Fprint(c, "550 Synthetic recipient required\r\n")
+				continue
+			}
+			recipients = append(recipients, address)
 			fmt.Fprint(c, "250 OK\r\n")
 		case upper == "DATA":
 			if sender == "" || len(recipients) == 0 {
