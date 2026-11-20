@@ -347,7 +347,9 @@ func (i *Instance) unpack() error {
 	// Windows scanners can briefly hold a newly extracted file or directory.
 	// Keep the complete staging tree and retry instead of reporting a broken install.
 	for n := 0; n < 40; n++ {
-		if e = os.Rename(temp, i.Program); e == nil { return nil }
+		if e = os.Rename(temp, i.Program); e == nil {
+			return nil
+		}
 		time.Sleep(250 * time.Millisecond)
 	}
 	return e
@@ -505,7 +507,9 @@ func (i *Instance) sql(query string, db bool) (string, error) {
 func (i *Instance) seed() error {
 	q := "START TRANSACTION;\n"
 	groups := map[string][]int{"sandbox-admin": {6, 10, 11}, "handlaggare": {11}, "handlaggarchef": {11}, "sokande": {9}, "sokande2": {9}}
-	identifiers := map[string]string{"sandbox-admin": "19000101-0008", "handlaggare": "19000101-0016", "handlaggarchef": "19000101-0024", "sokande": "19000101-0032", "sokande2": "19000101-0040"}
+	// OpenE's multisigning handler compares stored values with normalized 12-digit
+	// identifiers exactly; dashes here would prevent legitimate test signers matching.
+	identifiers := map[string]string{"sandbox-admin": "190001010008", "handlaggare": "190001010016", "handlaggarchef": "190001010024", "sokande": "190001010032", "sokande2": "190001010040"}
 	for _, u := range []string{"sandbox-admin", "handlaggare", "handlaggarchef", "sokande", "sokande2"} {
 		salt := make([]byte, 128)
 		if _, e := rand.Read(salt); e != nil {
@@ -686,7 +690,7 @@ func (i *Instance) serve() (err error) {
 	init, _ := i.sql("SELECT v FROM sandbox_meta WHERE k='initialized';", true)
 	first := init != "1"
 	if first {
-		for _, d := range []string{"files/flowforms", "files/pdf", "files/xml", "files/uploads", "files/siteprofile", "tmp"} {
+		for _, d := range []string{"files/flowforms", "files/pdf", "files/xml", "files/uploads", "files/siteprofile", "files/documents", "tmp"} {
 			if e = os.MkdirAll(filepath.Join(i.Dir, d), 0700); e != nil {
 				return e
 			}
@@ -701,6 +705,7 @@ func (i *Instance) serve() (err error) {
 			}
 			s := strings.ReplaceAll(string(b), "/var/lib/opene", filepath.ToSlash(i.Dir))
 			s = strings.ReplaceAll(s, "@SIMULATOR@", localURL(i.State.Simulator))
+			s = strings.ReplaceAll(s, "@OPENE@", localURL(i.State.HTTP))
 			s = strings.ReplaceAll(s, "'mail'", "'127.0.0.1'")
 			s = strings.ReplaceAll(s, "'1025'", "'"+strconv.Itoa(i.State.SMTP)+"'")
 			if _, e = i.sql(s, true); e != nil {
@@ -717,6 +722,7 @@ func (i *Instance) serve() (err error) {
 	// Dynamic settings must follow newly allocated ports on every restart.
 	q := fmt.Sprintf("UPDATE openhierarchy_foreground_module_settings s JOIN openhierarchy_foreground_modules m USING(moduleID) SET s.value='%d' WHERE m.classname='se.unlogic.hierarchy.foregroundmodules.mailsenders.direct.DirectMailSender' AND s.id='port';", i.State.SMTP)
 	q += fmt.Sprintf("UPDATE openhierarchy_foreground_module_settings s JOIN openhierarchy_foreground_modules m USING(moduleID) SET s.value='%s/search' WHERE m.classname='com.nordicpeak.flowengine.queries.pudquery.PUDQueryProviderModule' AND s.id='searchServiceURL';", localURL(i.State.Simulator))
+	q += fmt.Sprintf("UPDATE openhierarchy_foreground_module_settings s JOIN openhierarchy_foreground_modules m USING(moduleID) SET s.value='%s' WHERE m.classname='com.nordicpeak.flowengine.multisigninghandlers.MultiSigningHandler2Module' AND s.id='serverURL';", localURL(i.State.HTTP))
 	q += "DELETE s FROM openhierarchy_foreground_module_settings s JOIN openhierarchy_foreground_modules m USING(moduleID) WHERE m.classname='com.nordicpeak.flowengine.notifications.StandardFlowNotificationHandler' AND s.id IN ('installationBaseURL','emailSenderName','emailSenderAddress','smsSenderName','userFlowInstanceModuleAlias','flowInstanceAdminModuleAlias','flowAdminModuleAlias');"
 	q += fmt.Sprintf("INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value) SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m JOIN (SELECT 'installationBaseURL' id,'%s' value UNION ALL SELECT 'emailSenderName','OpenE Sandbox' UNION ALL SELECT 'emailSenderAddress','opene@exempelkoping.example.com' UNION ALL SELECT 'smsSenderName','OpenESandbox' UNION ALL SELECT 'userFlowInstanceModuleAlias','/minasidor' UNION ALL SELECT 'flowInstanceAdminModuleAlias','/flowinstanceadmin' UNION ALL SELECT 'flowAdminModuleAlias','/flowadmin') v WHERE m.classname='com.nordicpeak.flowengine.notifications.StandardFlowNotificationHandler';", localURL(i.State.HTTP))
 	if _, e = i.sql(q, true); e != nil {
@@ -741,8 +747,36 @@ func (i *Instance) serve() (err error) {
 	if e = poll(90*time.Second, func() bool { c := i.checks(); return c["http"] && c["loginForm"] && c["adminLogin"] }); e != nil {
 		return e
 	}
+	fixtureMarker, _ := i.sql("SELECT v FROM sandbox_meta WHERE k='fixtures_seeded';", true)
+	_, fixtureFileErr := os.Stat(filepath.Join(i.Program, "sql", "30-fixtures.sql"))
+	refreshFixtures := fixtureMarker != "1" && fixtureFileErr == nil
 	if e = i.seedFixtures(); e != nil {
 		return e
+	}
+	if refreshFixtures {
+		// FlowBrowser caches publication state in memory. Reload Tomcat after
+		// initial SQL configuration so published fixtures are visible immediately.
+		shutdown := append([]string{}, javaArgs...)
+		shutdown[len(shutdown)-1] = "stop"
+		c := exec.Command(filepath.Join(i.Program, "jre", "bin", "java.exe"), shutdown...)
+		hidden(c, false)
+		if e = c.Run(); e != nil {
+			return fmt.Errorf("stop Tomcat after fixture setup: %w", e)
+		}
+		previous := children[len(children)-1]
+		done := make(chan error, 1)
+		go func() { done <- previous.Wait() }()
+		select {
+		case <-done:
+		case <-time.After(30 * time.Second):
+			return errors.New("Tomcat did not stop after fixture setup")
+		}
+		if e = start(filepath.Join(i.Program, "jre", "bin", "java.exe"), javaArgs, "tomcat.log", nil); e != nil {
+			return e
+		}
+		if e = poll(90*time.Second, func() bool { c := i.checks(); return c["http"] && c["loginForm"] && c["adminLogin"] }); e != nil {
+			return fmt.Errorf("restart after fixture setup: %w", e)
+		}
 	}
 	mu.Lock()
 	ready = true

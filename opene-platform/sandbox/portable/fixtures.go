@@ -34,7 +34,7 @@ func (i *Instance) seedFixtures() error {
 		_, err = i.sql("UPDATE http_integration_settings SET url='"+localURL(i.State.Simulator)+"/integration/http' WHERE flowFamilyID IN (SELECT flowFamilyID FROM flowengine_flows WHERE name='Funktionslabbet - portabelt utkast');", true)
 		return err
 	}
-	fixtures := []struct{ name, file string }{{"Funktionslabbet - portabelt utkast", "funktionslabbet.oeflow"}, {"Sandbox fastighetstest", "sandbox-fastighet.oeflow"}}
+	fixtures := []struct{ name, file string }{{"Funktionslabbet - portabelt utkast", "funktionslabbet.oeflow"}, {"Sandbox fastighetstest", "sandbox-fastighet.oeflow"}, {"Sandbox barntest", "sandbox-barn.oeflow"}, {"Sandbox betalningstest", "sandbox-betalning.oeflow"}, {"Sandbox foretagstest", "sandbox-foretag.oeflow"}}
 	for _, fixture := range fixtures {
 		count, err := i.sql("SELECT COUNT(*) FROM flowengine_flows WHERE name='"+fixture.name+"';", true)
 		if err != nil {

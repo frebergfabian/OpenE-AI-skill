@@ -34,6 +34,8 @@ func (s *Simulator) payment(w http.ResponseWriter, r *http.Request) {
 	base := "/psp/paymentorders"
 	id := strings.TrimPrefix(r.URL.Path, base+"/")
 	if strings.HasPrefix(r.URL.Path, "/checkout/") {
+		// A successful POST redirects the browser back to this instance's OpenE.
+		w.Header().Set("Content-Security-Policy", fmt.Sprintf("default-src 'none'; style-src 'unsafe-inline'; form-action 'self' http://127.0.0.1:%d; frame-ancestors 'none'", s.appPort))
 		id = strings.TrimPrefix(r.URL.Path, "/checkout/")
 	}
 	if r.URL.Path == base && r.Method == "POST" {

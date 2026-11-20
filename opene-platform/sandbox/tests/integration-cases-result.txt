@@ -10,4 +10,14 @@ E-post och HTTP 0.1.8-dev: efter manuell publicering och aktivering av inskicksn
 
 SMS 0.1.9-dev: efter en manuell ändring av kontaktfrågan och manuell aktivering av SMS-notisen signerades och skickades ärende 789. Simulatorns anropslogg visar POST /sms med mottagare 0700000000 och meddelande om ärende 789. Automatisk motsvarande kontaktfrågeändring är implementerad men inte verifierad i denna testkörning. Simulatorn avvisar andra nummer.
 
-Alla prov avser isolerade lokala testinstanser med syntetisk data. Inget prov visar att övriga integrationskategorier fungerar.
+Barn 0.2.0-dev: en manuellt tillagd ChildInfo-fråga använde DummyChildRelationProvider. Det inskickade ärendet 788 kopplades via queryInstanceID 19454 till en sparad syntetisk barnrelation.
+
+Betalning 0.2.2-dev: efter manuell publicering av den automatiskt importerade betaltjänsten betalades ärende 788. Callback gav status Inskickat och en transaktion på 100 SEK kopplad till ärendet. Avbruten betalning för ärende 789 lämnade status Väntar på betalning och skapade ingen transaktion. Detta provar sandboxens egen betalningsadapter, inte kompatibilitet med en produktionsmodul.
+
+Företag 0.2.3-dev: en manuellt tillagd SSBT-fråga sparade ett syntetiskt företag på ärende 788. Adapterkoden använder ett lokalt JSON-kontrakt; testet bevisar inte kompatibilitet med Bolagsverkets SOAP-kontrakt.
+
+Flerpartssignering 0.2.4-dev: efter manuell registrering och konfiguration, och efter korrigering av testkontonas identifierare i databasen, signerade två olika sökande ärende 788. Databasen visar två SIGNED-händelser med olika användare, SUBMITTED, en slutlig bokning och en köplats kopplade till ärendet. Systemloggen hade 0 ERROR. Den automatiska seedningen har ändrats men är inte verifierad i denna körning.
+
+Ren instans 0.2.5-dev: första start tog 66,5 sekunder på utvecklingsdatorn och rapporterade frisk status och 0 ERROR. Utan manuell tjänstekonfiguration skickades fastighetsärende 788, barnärende 789 och företagsärende 790; respektive syntetiskt objekt, barn och företag finns i databasen och är kopplat till rätt ärende. Den lokala företagsadaptern är fortfarande inte ett SOAP-kontrakt. Betalningsärende 791 gick från väntande till Inskickat med en transaktion på 100 SEK, medan avbrutet ärende 792 saknade transaktion. För ärende 793 sparades signering, bokning och köplats; SMS, SMTP och HTTP-anrop loggades lokalt. Före ärende 793 justerades testköerna manuellt eftersom betaltjänsten och Funktionslabbet delade kö. SQL har därefter ändrats så nya instanser får skilda köer, men detta behöver verifieras från ren start. Webbläsaren rapporterade även ett äldre temafel om $.browser; en korrigering är tillagd men ännu inte verifierad.
+
+Alla prov avser isolerade lokala testinstanser med syntetisk data. Ingen av ovanstående körningar visar att samtliga fixtures och integrationer fungerar automatiskt på en ny installation.

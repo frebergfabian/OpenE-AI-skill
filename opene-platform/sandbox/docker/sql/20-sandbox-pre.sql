@@ -76,6 +76,10 @@ UPDATE openhierarchy_background_modules SET enabled = 0 WHERE classname IN (
 UPDATE openhierarchy_sections SET requiredProtocol = NULL;
 UPDATE openhierarchy_foreground_modules SET requiredProtocol = NULL;
 
+-- The background user menu serves CSS and JS from its classpath package.
+UPDATE openhierarchy_background_modules SET staticContentPackage = 'staticcontent'
+ WHERE classname = 'com.nordicpeak.flowengine.UserFlowInstanceMenuModule';
+
 -- Demokontot 'admin' från upstream har ett känt standardlösenord: inaktivera det.
 -- Sandboxens administratör skapas av seed-users.sh med lösenord från .env.
 UPDATE simple_users SET enabled = 0 WHERE username = 'admin';

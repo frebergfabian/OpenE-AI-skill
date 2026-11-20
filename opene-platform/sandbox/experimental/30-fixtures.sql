@@ -1,6 +1,12 @@
 -- Run after module migrations and after the reviewed fixture has been imported.
 -- Names and data are synthetic; the transaction is safe to retry.
 START TRANSACTION;
+-- Publish only our named synthetic fixtures, using a relative date so a fresh
+-- installation works regardless of when the portable build was produced.
+UPDATE flowengine_flows SET enabled=1,publishDate=CURRENT_DATE,unPublishDate=NULL
+WHERE name IN ('Funktionslabbet - portabelt utkast','Sandbox fastighetstest','Sandbox barntest','Sandbox betalningstest','Sandbox foretagstest');
+UPDATE flowengine_flows SET requireSigning=1,appendSigningSignatureToPDF=1,showSubmitSurvey=0
+WHERE name IN ('Funktionslabbet - portabelt utkast','Sandbox betalningstest');
 INSERT INTO booking_calendars(name,enabled,price,hoursBeforeBookingLocked,disableLeaving,disableRebooking,restrictRebookingToPreviousManager,allowDuplicateBookings)
 SELECT 'Sandbox testkalender',1,0,0,0,0,0,0 WHERE NOT EXISTS (SELECT 1 FROM booking_calendars WHERE name='Sandbox testkalender');
 SET @calendar=(SELECT calendarID FROM booking_calendars WHERE name='Sandbox testkalender' ORDER BY calendarID LIMIT 1);
@@ -24,4 +30,35 @@ AND NOT EXISTS (SELECT 1 FROM flowengine_flow_family_manager_groups g WHERE g.fl
 INSERT INTO http_integration_settings(flowFamilyID,enabled,url,triggerOnStatusChanges)
 SELECT f.flowFamilyID,1,'@SIMULATOR@/integration/http',0 FROM flowengine_flows f WHERE f.name='Funktionslabbet - portabelt utkast'
 AND NOT EXISTS (SELECT 1 FROM http_integration_settings h WHERE h.flowFamilyID=f.flowFamilyID);
+-- Other notification switches remain off. Contacts still choose their channels.
+INSERT INTO flow_familiy_notification_settings(flowFamilyID,sendFlowInstanceSubmittedUserEmail,flowInstanceSubmittedUserEmailSubject,flowInstanceSubmittedUserEmailMessage,sendFlowInstanceSubmittedUserSMS,flowInstanceSubmittedUserSMS)
+SELECT f.flowFamilyID,1,'Sandbox - fiktivt arende mottaget','<p>Det syntetiska testarendet har skickats in.</p>',1,'Sandbox: det syntetiska testarendet har skickats in.'
+FROM flowengine_flows f WHERE f.name='Funktionslabbet - portabelt utkast'
+AND NOT EXISTS (SELECT 1 FROM flow_familiy_notification_settings n WHERE n.flowFamilyID=f.flowFamilyID);
+INSERT INTO booking_calendars(name,enabled,price,hoursBeforeBookingLocked,disableLeaving,disableRebooking,restrictRebookingToPreviousManager,allowDuplicateBookings)
+SELECT 'Sandbox betalningskalender',1,100,0,0,0,0,0 WHERE NOT EXISTS (SELECT 1 FROM booking_calendars WHERE name='Sandbox betalningskalender');
+SET @paycalendar=(SELECT calendarID FROM booking_calendars WHERE name='Sandbox betalningskalender' ORDER BY calendarID LIMIT 1);
+INSERT IGNORE INTO booking_calendar_manager_groups(calendarID,groupID) VALUES(@paycalendar,11);
+INSERT INTO booking_slots(calendarID,start,end,added,poster,size)
+SELECT @paycalendar,DATE_ADD(CURRENT_DATE,INTERVAL 3 DAY)+INTERVAL 11 HOUR,DATE_ADD(CURRENT_DATE,INTERVAL 3 DAY)+INTERVAL 11 HOUR+INTERVAL 30 MINUTE,NOW(),u.userID,4 FROM simple_users u
+WHERE u.username='sandbox-admin' AND NOT EXISTS (SELECT 1 FROM booking_slots WHERE calendarID=@paycalendar);
+UPDATE booking_queries q JOIN flowengine_query_descriptors d ON d.queryID=q.queryID JOIN flowengine_steps s ON s.stepID=d.stepID JOIN flowengine_flows f ON f.flowID=s.flowID
+SET q.calendarID=@paycalendar,q.invoiceLineText='Syntetisk bokning' WHERE f.name='Sandbox betalningstest';
+INSERT INTO queues(name,enabled,showQueuePosition,price,allowDuplicateQueueSlots)
+SELECT 'Sandbox betalningsko',1,1,0,0 WHERE NOT EXISTS (SELECT 1 FROM queues WHERE name='Sandbox betalningsko');
+SET @payqueue=(SELECT queueID FROM queues WHERE name='Sandbox betalningsko' ORDER BY queueID LIMIT 1);
+INSERT IGNORE INTO queue_manager_groups(queueID,groupID) VALUES(@payqueue,11);
+UPDATE queue_queries q JOIN flowengine_query_descriptors d ON d.queryID=q.queryID JOIN flowengine_steps s ON s.stepID=d.stepID JOIN flowengine_flows f ON f.flowID=s.flowID
+SET q.queueID=@payqueue WHERE f.name='Sandbox betalningstest';
+INSERT INTO flow_generic_payment_settings(flowFamilyID,invoicePaymentEventDescription)
+SELECT f.flowFamilyID,'Simulerad faktura' FROM flowengine_flows f WHERE f.name='Sandbox betalningstest'
+AND NOT EXISTS (SELECT 1 FROM flow_generic_payment_settings p WHERE p.flowFamilyID=f.flowFamilyID);
+INSERT INTO payment_chart_of_accounts(name,archived) SELECT 'Sandbox kontoplan',0 WHERE NOT EXISTS (SELECT 1 FROM payment_chart_of_accounts WHERE name='Sandbox kontoplan');
+SET @chart=(SELECT chartID FROM payment_chart_of_accounts WHERE name='Sandbox kontoplan' ORDER BY chartID LIMIT 1);
+INSERT INTO payment_accounts(name,accountType,chartID,archived) SELECT 'Sandbox intakt','INCOME',@chart,0
+WHERE NOT EXISTS (SELECT 1 FROM payment_accounts WHERE name='Sandbox intakt' AND chartID=@chart);
+SET @account=(SELECT accountID FROM payment_accounts WHERE name='Sandbox intakt' AND chartID=@chart ORDER BY accountID LIMIT 1);
+INSERT INTO payment_flow_family_settings(flowFamilyID,accountID,paymentProductSettingsEnabled)
+SELECT f.flowFamilyID,@account,0 FROM flowengine_flows f WHERE f.name='Sandbox betalningstest'
+AND NOT EXISTS (SELECT 1 FROM payment_flow_family_settings p WHERE p.flowFamilyID=f.flowFamilyID);
 COMMIT;

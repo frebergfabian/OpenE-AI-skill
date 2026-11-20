@@ -8,11 +8,14 @@ INSERT INTO sandbox_query_modules VALUES
  ('com.nordicpeak.flowengine.booking.queries.BookingQueryProviderModule','sandbox-booking-query','BookingQuery'),
  ('com.nordicpeak.flowengine.queue.query.QueueQueryProviderModule','sandbox-queue-query','QueueQuery'),
  ('com.nordicpeak.flowengine.queries.pudquery.PUDQueryProviderModule','sandbox-pud','PUDQuery'),
- ('com.nordicpeak.flowengine.queries.childinfoquery.ChildInfoQueryProviderModule','sandbox-child','ChildInfoQuery');
+ ('com.nordicpeak.flowengine.queries.childinfoquery.ChildInfoQueryProviderModule','sandbox-child','ChildInfoQuery'),
+ ('com.nordicpeak.flowengine.queries.ssbt.CompanyDetailsQueryProviderModule','sandbox-company','CompanyDetailsQuery'),
+ ('com.nordicpeak.flowengine.queries.unsecuremultisignquery.UnsecureMultiSignQueryProviderModule','sandbox-multisign-query','UnsecureMultiSignQuery'),
+ ('com.nordicpeak.flowengine.queries.manualmultisignquery.ManualMultiSignQueryProviderModule','sandbox-manual-multisign','ManualMultiSignQuery');
 INSERT INTO openhierarchy_foreground_modules
  (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu,staticContentPackage)
 SELECT q.classname,q.prefix,q.alias,'Sandbox query provider',CONCAT(q.prefix,'Admin.sv.xsl'),'Classpath',1,1,1,1,1,0,
-       CASE WHEN q.prefix IN ('DateTimeQuery','DynamicTableQuery','BookingQuery','QueueQuery','PUDQuery','ChildInfoQuery') THEN 'staticcontent' ELSE NULL END
+       CASE WHEN q.prefix IN ('DateTimeQuery','DynamicTableQuery','BookingQuery','QueueQuery','PUDQuery','ChildInfoQuery','CompanyDetailsQuery','UnsecureMultiSignQuery','ManualMultiSignQuery') THEN 'staticcontent' ELSE NULL END
 FROM sandbox_query_modules q WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_modules m WHERE m.classname=q.classname);
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,'queryStyleSheet',CONCAT(q.prefix,'.sv.xsl') FROM sandbox_query_modules q JOIN openhierarchy_foreground_modules m ON m.classname=q.classname
@@ -39,10 +42,18 @@ INSERT INTO sandbox_support_modules VALUES
  ('com.nordicpeak.flowengine.queue.UserQueueSlotModule','sandbox-myqueue','UserQueueSlotModule.sv.xsl'),
  ('com.nordicpeak.flowengine.integration.http.HTTPIntegrationProvider','sandbox-http','HTTPIntegrationProvider.sv.xsl'),
  ('se.exempelkoping.sandbox.SimulatedSMSSender','sandbox-sms',NULL),
- ('com.nordicpeak.childrelationprovider.DummyChildRelationProvider','sandbox-child-relations',NULL);
+ ('com.nordicpeak.childrelationprovider.DummyChildRelationProvider','sandbox-child-relations',NULL),
+ ('se.exempelkoping.sandbox.SimulatedSwedbankPayProvider','sandbox-pay',NULL),
+ ('com.nordicpeak.flowengine.paymentprovider.GenericFlowPaymentProvider','sandbox-flow-pay','GenericFlowPaymentProvider.sv.xsl'),
+ ('com.nordicpeak.flowengine.paymentlog.AccountModule','sandbox-accounts','AccountModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.paymentlog.TransactionModule','sandbox-transactions','TransactionModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.paymentlog.TransactionFlowAdminExtensionModule','sandbox-transaction-settings','TransactionFlowAdminExtensionModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.multisigninghandlers.MultiSigningHandler2Module','sandbox-multisign','MultiSigningHandler2Module.sv.xsl'),
+ ('com.nordicpeak.flowengine.documentsigner.DocumentSignerAdminModule','sandbox-documents','DocumentSignerAdminModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.documentsigner.DocumentSignerUserModule','sandbox-mydocuments','DocumentSignerUserModule.sv.xsl');
 INSERT INTO openhierarchy_foreground_modules
  (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu,staticContentPackage)
-SELECT q.classname,q.alias,q.alias,'Experimental sandbox module',q.xsl,IF(q.xsl IS NULL,NULL,'Classpath'),0,IF(q.alias IN ('sandbox-mybookings','sandbox-myqueue'),1,0),1,1,1,0,IF(q.xsl IS NULL,NULL,'staticcontent')
+SELECT q.classname,q.alias,q.alias,'Experimental sandbox module',q.xsl,IF(q.xsl IS NULL,NULL,'Classpath'),IF(q.alias='sandbox-pay',1,0),IF(q.alias IN ('sandbox-mybookings','sandbox-myqueue','sandbox-flow-pay','sandbox-multisign','sandbox-mydocuments'),1,0),1,1,1,0,IF(q.xsl IS NULL,NULL,'staticcontent')
 FROM sandbox_support_modules q WHERE NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_modules m WHERE m.classname=q.classname);
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,'supportedActionIDs','com.nordicpeak.flowengine.FlowBrowserModule.submit'
@@ -53,3 +64,9 @@ INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m
 JOIN (SELECT 'child1' id,'true' value UNION ALL SELECT 'childID1','201001010006' UNION ALL SELECT 'ensam1','true') v
 WHERE m.classname='com.nordicpeak.childrelationprovider.DummyChildRelationProvider';
+INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
+SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m JOIN
+(SELECT 'com.nordicpeak.flowengine.documentsigner.DocumentSignerAdminModule' classname,'filestore' id,'/var/lib/opene/files/documents' value
+ UNION ALL SELECT 'com.nordicpeak.flowengine.documentsigner.DocumentSignerAdminModule','tempDir','/var/lib/opene/tmp'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.documentsigner.DocumentSignerUserModule','disclaimerText','Endast syntetisk testsignering.'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.multisigninghandlers.MultiSigningHandler2Module','serverURL','@OPENE@') v ON v.classname=m.classname;

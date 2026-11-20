@@ -14,6 +14,7 @@ const built=new Set(); const results={};
 // Explicit incremental retry for this development session; release builds use a clean output.
 if(process.env.ADDON_RESUME==='1'&&fs.existsSync(path.join(out,'addon-report.json'))){for(const r of JSON.parse(fs.readFileSync(path.join(out,'addon-report.json')))){results[r.project]=r;if(r.status.startsWith('built')&&fs.existsSync(path.join(out,'jars',r.project+'.jar')))built.add(r.project);}}
 for(let round=1;round<=projects.length;round++){
+ if(process.env.ADDON_DEDUPE_ONLY==='1')break;
  let progress=0;
  for(const p of projects.filter(p=>!built.has(p))){
   const root=path.join(src,p,'src'), classes=path.join(out,'classes',p);
@@ -37,4 +38,28 @@ for(let round=1;round<=projects.length;round++){
  console.log(`ROUND ${round}: ${built.size}/${projects.length} built`);
  if(!progress)break;
 }
-for(const p of built)fs.copyFileSync(path.join(out,'jars',p+'.jar'),path.join(app,'WEB-INF','lib',p+'.jar'));
+// The archive contains projects that also exist in the pinned OpenE core.
+// Do not put two versions of a class on Tomcat's unordered classpath.
+function classes(file){
+ const b=fs.readFileSync(file);let e=-1;
+ for(let i=b.length-22;i>=Math.max(0,b.length-65557);i--){if(b.readUInt32LE(i)===0x06054b50){e=i;break;}}
+ if(e<0)throw Error(`Invalid jar: ${file}`);
+ let off=b.readUInt32LE(e+16), count=b.readUInt16LE(e+10), result=[];
+ if(off===0xffffffff||count===0xffff)throw Error(`ZIP64 jar unsupported: ${file}`);
+ for(let i=0;i<count;i++){
+  if(b.readUInt32LE(off)!==0x02014b50)throw Error(`Invalid central directory: ${file}`);
+  const nameLength=b.readUInt16LE(off+28),extraLength=b.readUInt16LE(off+30),commentLength=b.readUInt16LE(off+32);
+  const name=b.subarray(off+46,off+46+nameLength).toString('utf8');
+  if(name.endsWith('.class')&&!name.startsWith('META-INF/')&&!name.endsWith('/module-info.class')&&name!=='module-info.class')result.push(name);
+  off+=46+nameLength+extraLength+commentLength;
+ }
+ return result;
+}
+const owners=new Map(),lib=path.join(app,'WEB-INF','lib');
+for(const f of fs.readdirSync(lib).filter(f=>f.endsWith('.jar')).sort())for(const c of classes(path.join(lib,f)))if(!owners.has(c))owners.set(c,f);
+for(const p of [...built].sort()){
+ const jar=path.join(out,'jars',p+'.jar'),names=classes(jar),conflicts=names.filter(c=>owners.has(c));
+ if(conflicts.length){results[p].status='built-excluded-duplicate-classes';results[p].reason=`${conflicts.length} classes duplicate existing jars: `+conflicts.slice(0,4).map(c=>`${c} (${owners.get(c)})`).join(', ');continue;}
+ fs.copyFileSync(jar,path.join(lib,p+'.jar'));for(const c of names)owners.set(c,p+'.jar');
+}
+fs.writeFileSync(path.join(out,'addon-report.json'),JSON.stringify(projects.map(p=>results[p]),null,2)+'\n');

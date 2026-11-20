@@ -1,42 +1,18 @@
-# Portabel sandbox – utvecklingsstatus 2026-11-20
+# Portabel sandbox: utvecklingsstatus
 
-Detta är ett pågående arbete, inte en release eller ett godkänt paket. `portable` innehåller en Go-starthanterare och en lokal simulator. Utvecklings-exe:n som provades byggdes med Claudes grundwebbrot, utan Nordic Peak-tillägg och utan betalningsadaptern. En senare exe innehåller utvecklingskod för betalningssimulatorn, men även den saknar betalningsadaptern i den inbäddade webbroten.
+Detta är en experimentell implementation, inte en godkänd release. Den av användaren valda releasedestinationen är det offentliga repot OpenE-AI-skill. Ingen release är publicerad.
 
-## Byggt och testat
-- Låst OpenE-källbygge kördes lokalt med JDK 21: 188 jar, se ursprungliga BUILDINFO i byggutdata. SVN används fortfarande direkt och är inte speglat.
-- Första grund-exe:n: första start lyckades, status rapporterade HTTP, inloggningsformulär, fem konton, administratörsinloggning och simulator. Röktest 12/12 och 0 ERROR i systemlogg. Stopp och omstart med samma data lyckades. Starttider har inte mätts systematiskt.
-- Go-enhetstester: arkivets sökvägar, borttagningens gräns, skydd mot cross-origin, okänd integration och PUD-exempelsvar.
-- Swedbank-adaptern kompilerar separat. Checkout-implementationen är inte aktiverad, inte end-to-end-testad och har inte säkerhetsgranskats.
-- Tilläggsrapporten `addon-build-status.tsv` är en ögonblicksbild av en kompilering; byggd betyder inte aktiverad eller funktionellt verifierad. WeightEvaluationProviders byggdes delvis med API-delar undantagna. Arkivet innehöll 144 projektkataloger i denna verifierade nedladdning.
+## Byggt och verifierat
 
-## Återstår före release
-Automatisk modulregistrering och all konfiguration, boknings- och ködata, fixtures, komplett betalningskedja och transaction log, signering, SSBT, barn, SMS och verksamhetssystem med persistenta ärenden, PUD-integrationskonfiguration, verifiering av e-post, fler samtidiga instanser, reset, Playwright, rena Windows-konton, verifierad spärr av utgående trafik, spegling och checksummor av SVN-källor, komplett reproducerbart byggskript, skillens hämtningsskript, samt GitHub Release. Proxyinställningar täcker inte råa socketar. Distributionen får inte beskrivas som isolerad från all utgående trafik. Säkerhetsgranska även simulerade betalningars callback och idempotens innan användning.
+- OpenE har byggts från låsta källor och en lokal SVN-spegel med SHA-256 `744d32447e3d39b91db333110074c004bcde6981401ea42c233caeed866c63ad`. En reproducerbar byggväg finns i `build/build-experimental.ps1`, men den behöver slutverifieras från en ren commit och ger inte nödvändigtvis bitidentiska filer.
+- Den ursprungliga grund-exe:n klarade röktest 12/12, Playwright 6/6 och två samtidiga instanser. Dessa körningar omfattade inte hela tilläggspaketet.
+- Separata utvecklingsinstanser har verifierat bestående bokning och kö, PUD, barnrelation, enkel- och flerpartssignering, HTTP, lokal e-post, SMS samt lyckad och avbruten simulerad betalning med sparade ärenden. Förutsättningar och begränsningar finns i `tests/integration-cases-result.txt`.
+- En SSBT-fråga har sparat syntetiska företagsuppgifter via en särskild lokal JSON-adapter. Det är inte en verifiering av Bolagsverkets SOAP-kontrakt.
+- Första-start-koden importerar fem syntetiska tjänster och konfigurerar testdata. Publicering och omladdning av webbservern är ny kod som ännu inte har verifierats med en ren installation.
+- Tilläggens byggresultat och eventuella klasskonflikter dokumenteras av byggskriptet. Byggt betyder inte automatiskt aktiverat eller funktionellt testat.
 
-Playwright försöktes men startade inte: Chromium headless shell saknades. Ingen release har publicerats. Befintlig gemensam sandbox har inte rörts.
+## Kvar före release
 
-## Fortsatt verifiering
-- Playwright 1.55 kördes mot grund-exe:n med installerad Microsoft Edge (`OPENE_BROWSER_PATH`): 6/6 tester gröna, desktop och mobil. Detta är inte ett test av tillägg eller integrationsflöden.
-- Två grundinstanser startades samtidigt med egna portar och kontrollerades med `status --json`: båda rapporterade friska; därefter förstördes de två testinstanserna.
-- Källspegel `svn-r3190-r1649-r15.tar.gz` har skapats lokalt från exporterna; SHA-256 `744d32447e3d39b91db333110074c004bcde6981401ea42c233caeed866c63ad`. Byggskriptet accepterar spegeln med uttrycklig checksumma. Spegeln är inte publicerad.
-- Kod för syntetiska personidentifierare i kontoseedningen är tillagd men ännu inte provad i en ny exe.
-- Spegelbygget kördes till slut med `OPENE_SVN_MIRROR` och SHA-256 ovan: OpenE-webbrot med 188 jar. Detta verifierar byggbarhet från spegeln, inte bitidentiska binärer.
-- Båda namngivna GitHub-repona är offentliga; destinationen för en intern release måste väljas. Ingen release har publicerats.
+Verifiera den senaste fullständiga exe:n på en ren Windows-användare, inklusive tidsgränser, uppstart utan ERROR, alla automatiska fixtures, röktest och Playwright, omstart, reset och samtidiga instanser. Aktivera och granska alla byggbara tillägg, verifiera samtliga nödvändiga integrationers exakta kontrakt och scenarier, inklusive fler verksamhetssystem och DocumentSigner, samt granska betalningscallbackens återhämtning och idempotens. Därefter behövs en ren byggning med publicerad källspegel, BUILDINFO, checksummor och en GitHub Release.
 
-## Fortsatt arbete: frågetyper och hämtningsskript
-- `get-sandbox.ps1` och `get-sandbox.sh` är tillagda; PowerShell-syntax och avvisning av ogiltigt versionsnamn har provats. Nedladdning kan inte end-to-end-testas innan en release finns.
-- En särskild experimentell exe (`0.1.2-dev`) byggdes med Information, Datum/Tid, Dynamisk tabell och deras beroenden. Alla tre moduler migrerade och laddades med 0 ERROR; alla tre tilläts i e-tjänsttypen. Fem syntetiska citizenIdentifier-attribut seedades. Hälsokontrollen har utökats med systemloggen.
-- Import av `funktionslabbet.oeflow` med administratörskonto ger fortfarande två fel: frågetyperna Bokning och Kö hittades inte. Importen lyckades inte och inget komplett ärende har testats.
-- Den första experimentkörningen saknade AlternativeListHandler och genererade ett ERROR trots att dåvarande hälsokontrollen rapporterade frisk. Beroendet lades till och ny ren instans fick 0 ERROR. Detta bevisar att äldre exe-varianter inte har tillräcklig hälsokontroll.
-- Användaren har valt OpenE-AI-skill som releasedestination trots att repot och releasen är offentliga. Ingen release har publicerats.
-
-## Bokning och kö: experiment 2026-11-20
-- Den experimentella SQL-registreringen utökades med boknings- och kömoduler. En ren `0.1.3-dev` med de byggda BookingModules och QueueModules startade med 0 ERROR och frisk status.
-- `funktionslabbet.oeflow` importerades med HTTP multipart: `POST /flowadmin/importflow/4` gav `302 /flowadmin/showflow/1`. Detta bevisar att frågetyperna hittades och importen accepterades, men inte att en publicerad ansökan fungerar.
-- I testinstansen skapades manuellt en aktiverad syntetisk kalender, en framtida tid, en aktiverad kö och handläggargrupp; de importerade frågorna kopplades till dessa. Detta är inte automatiserad seedning och är inte provat genom inskick eller databasverifierad bokning/köplats.
-- Modulerna saknar fortfarande verifierad användarbehörighet, notisinställningar, fullständiga fixtures och integrationsflöden. Betalning och andra integrationskategorier är inte end-to-end-testade. Ingen release har publicerats.
-
-## Bokning och kö: sparat ärende
-Efter manuell aktivering av tjänsten och konfiguration av kalender och kö valde en separat sökande en tid och en köplats och skickade in ärende 788. Databasen visar status Inskickat och en bokning samt en köplats kopplade till ärendet. Testet kördes utan signering och utan aktiverade notifieringar. Systemloggen hade 0 ERROR men webbläsaren rapporterade JavaScript-fel (`msie`). Instanskonfigurationen och testdata har inte automatiserats och ett rent ombygge med temakorrigeringen har ännu inte verifierats. Se `tests/booking-submission-result.txt`.
-
-## Automatisering och integrerade prov
-En opt-in experimentell första start importerar Funktionslabbet och fastighetsfixturen och skapar kalender, tid och kö. I `0.1.4-dev` verifierades automatisk Funktionslabbskonfiguration, inskick och bibehållna data efter omstart. I `0.1.6-dev` verifierades även att fastighetsfixturen importerades. PUD, dummy-enkelsignering, HTTP-integration, SMTP-fångst och SMS har vart och ett provats med inskickade syntetiska ärenden; se `tests/integration-cases-result.txt` för exakta förutsättningar. Vissa inställningar och publicering gjordes manuellt; detta bevisar inte helautomatisk konfiguration av alla integrationer. Betalning, SSBT, barn, flerpartssignering och leverantörsspecifika verksamhetssystem återstår.
+Java-proxyinställningarna spärrar inte råa socketar. Produkten får inte beskrivas som helt isolerad från all utgående trafik utan ytterligare skydd. Den befintliga gemensamma sandboxen har inte använts eller ändrats.

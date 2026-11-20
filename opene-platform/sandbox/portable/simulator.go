@@ -106,7 +106,7 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 		}
 		module := r.FormValue("module")
 		scenario := r.FormValue("scenario")
-		if (module != "pud" && module != "http" && module != "payment" && module != "sms") || (scenario != "success" && scenario != "denied" && scenario != "timeout" && scenario != "error") {
+		if (module != "pud" && module != "http" && module != "payment" && module != "sms" && module != "ssbt") || (scenario != "success" && scenario != "denied" && scenario != "timeout" && scenario != "error") {
 			http.Error(w, "Unknown module or scenario", 400)
 			return
 		}
@@ -133,6 +133,9 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.URL.Path == "/sms" {
 		module = "sms"
+	}
+	if r.URL.Path == "/ssbt/companies" {
+		module = "ssbt"
 	}
 	if module == "" {
 		http.Error(w, "No verified simulator contract for this route", 501)
@@ -168,6 +171,18 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	if module == "ssbt" {
+		if r.Method != "GET" {
+			http.Error(w, "GET required", 405)
+			return
+		}
+		id := strings.ReplaceAll(r.URL.Query().Get("citizenIdentifier"), "-", "")
+		allowed := map[string]bool{"190001010008": true, "190001010016": true, "190001010024": true, "190001010032": true, "190001010040": true}
+		if !allowed[id] {
+			http.Error(w, "Only sandbox identities are supported", 403)
+			return
+		}
+	}
 	s.record(r.Method, r.URL.RequestURI(), scenario, string(b))
 	switch scenario {
 	case "timeout":
@@ -185,6 +200,10 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 	case "success":
 	default:
 		http.Error(w, "Unknown scenario", 400)
+		return
+	}
+	if module == "ssbt" {
+		jsonResponse(w, map[string]any{"companies": []map[string]string{{"organizationNumber": "0000000000", "name": "Exempelbolaget (syntetiskt test)", "address": "Testgatan 1", "zip": "00000", "city": "Exempelkoping", "email": "referens@exempelkoping.example.com"}}})
 		return
 	}
 	if module == "http" {
@@ -220,7 +239,7 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, rows)
 }
 
-var simPage = template.Must(template.New("page").Parse(`<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>OpenE Simulator</title><style>body{font:17px system-ui;max-width:1000px;margin:40px auto;padding:0 24px;background:#f3f6f8;color:#132c40}a{color:#056184}section{background:white;padding:24px;border-radius:12px;margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}select,button{font:inherit;padding:8px}nav{display:flex;gap:24px}</style><h1>OpenE Simulator</h1><p>Exempelköpings kommun · Endast syntetiska testuppgifter</p><nav><a href="/">Anrop och scenarier</a><a href="/mail">E-postfångst</a><a href="/api/calls">JSON-logg</a></nav><section><h2>Scenarier</h2><form method="post" action="/scenarios"><select name="module"><option value="pud">Fastighet och adress</option><option value="http">HTTPIntegrationProvider</option><option value="payment">Betalning</option><option value="sms">SMS</option></select> <select name="scenario"><option value="success">Lyckat</option><option value="denied">Nekat</option><option value="timeout">Timeout</option><option value="error">Felsvar</option></select> <button>Spara</button></form><p>Valet gäller efterföljande anrop. Ej implementerade integrationer svarar 501.</p><pre>{{.Scenarios}}</pre></section><section><h2>{{.Title}}</h2><pre>{{.Content}}</pre></section></html>`))
+var simPage = template.Must(template.New("page").Parse(`<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>OpenE Simulator</title><style>body{font:17px system-ui;max-width:1000px;margin:40px auto;padding:0 24px;background:#f3f6f8;color:#132c40}a{color:#056184}section{background:white;padding:24px;border-radius:12px;margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}select,button{font:inherit;padding:8px}nav{display:flex;gap:24px}</style><h1>OpenE Simulator</h1><p>Exempelköpings kommun · Endast syntetiska testuppgifter</p><nav><a href="/">Anrop och scenarier</a><a href="/mail">E-postfångst</a><a href="/api/calls">JSON-logg</a></nav><section><h2>Scenarier</h2><form method="post" action="/scenarios"><select name="module"><option value="pud">Fastighet och adress</option><option value="http">HTTPIntegrationProvider</option><option value="payment">Betalning</option><option value="sms">SMS</option><option value="ssbt">Företagsuppslag</option></select> <select name="scenario"><option value="success">Lyckat</option><option value="denied">Nekat</option><option value="timeout">Timeout</option><option value="error">Felsvar</option></select> <button>Spara</button></form><p>Valet gäller efterföljande anrop. Ej implementerade integrationer svarar 501.</p><pre>{{.Scenarios}}</pre></section><section><h2>{{.Title}}</h2><pre>{{.Content}}</pre></section></html>`))
 
 func (s *Simulator) page(w http.ResponseWriter, r *http.Request) {
 	s.mu.Lock()

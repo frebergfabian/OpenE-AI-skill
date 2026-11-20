@@ -147,6 +147,7 @@ rm -f "$APP"/WEB-INF/lib/javax.servlet-api-*.jar "$APP/WEB-INF/config.xml"
    | awk '{ if ($1==prev) print prevfile; prev=$1; prevfile=$1"-"$2".jar" }' | xargs -r rm -f --)
 curl -fsSL -o "$APP/WEB-INF/lib/mariadb-java-client-$MARIADB_CONNECTOR_VERSION.jar" \
   "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/$MARIADB_CONNECTOR_VERSION/mariadb-java-client-$MARIADB_CONNECTOR_VERSION.jar"
+printf '%s  %s\n' "$MARIADB_CONNECTOR_SHA256" "$APP/WEB-INF/lib/mariadb-java-client-$MARIADB_CONNECTOR_VERSION.jar" | sha256sum -c -
 
 mkdir -p "$OUT/sql"
 cp "$OPE/openeplatform/designs/demo.oeplatform.org/trunk/db/Open ePlatform - Example DB.sql" "$OUT/sql/10-demo.sql"
