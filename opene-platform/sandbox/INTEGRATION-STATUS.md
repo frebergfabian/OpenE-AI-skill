@@ -7,7 +7,7 @@ Testbevis och exakta förutsättningar finns i `tests/integration-cases-result.t
 | Betalning | Egen adapter och lokal Checkout-simulator; lyckad och avbruten betalning med sparade ärenden och transaktionslogg är provade. Endast en delmängd av [Swedbank Pays kontrakt](https://developer.swedbankpay.com/checkout-v3/get-started/payment-request/) är implementerad. Återhämtning vid avbrott mitt i callback är inte verifierad. |
 | Enkel-, flerparts- och dokumentsignering | DummySigningProvider och respektive OpenE-modul har provats med bestående data. En separat flerpartstjänst importeras och publiceras automatiskt. |
 | PUD | Lokal söktjänst, syntetisk fastighet och sparat ärende är provade. LMProxy, LMSearch och WMS är inte verifierade end-to-end. |
-| SSBT | De genererade SOAP-klienterna för företagsengagemang och grunduppgift UD0001 har använts mot lokala mottagare med ett sparat företagsärende. Ytterligare uppgifter och rollintyg är inte simulerade. |
+| SSBT | Genererade SOAP-klienter för företagsengagemang och UD0001, UD0003, UD0004 och UD0006 har provats lokalt. Ett företagsärende har sparat syntetiskt företagsnamn, adress, e-post och telefon. Övriga uppgifter, företagsformer utöver AB och rollintyg saknas. |
 | Barn och Navet | DummyChildRelationProvider och ChildInfo har provats med ett sparat ärende och syntetiskt barn. Ett separat Navet-kontrakt och PersonQueryProvider är inte verifierade. |
 | SMS | Lokal SMS-mottagare och avsändarmodul har provats med sparat ärende. Mottagaren tillåter endast syntetiska testnummer. Övriga SMS-evaluatorer är inte individuellt verifierade. |
 | HTTP-verksamhetssystem | HTTPIntegrationProvider har skickat ärende-XML till den lokala mottagaren och loggat svaret. |

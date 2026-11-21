@@ -1,5 +1,7 @@
 # OpenE sandbox
 
+**Windows x64:** använd den [portabla förhandsversionen](../references/portable-sandbox.md), som inkluderar Java och MariaDB och inte behöver Docker. `get-sandbox.ps1` hämtar den låsta testreleasen `v0.5.0-dev`. Instruktionerna nedan gäller den separata Docker-varianten.
+
 En lokal, isolerad Open ePlatform-miljö som byggs från **låsta källor** och styrs med `sandboxctl`. Den är fristående från Claude Code. Skillen, Codex och andra agenter är bara klienter som anropar CLI:t.
 
 ```bash

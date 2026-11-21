@@ -1,5 +1,5 @@
 param(
-    [string]$Version = 'latest',
+    [string]$Version = 'v0.5.0-dev',
     [string]$Name = 'default',
     [switch]$Ephemeral,
     [switch]$NoBrowser

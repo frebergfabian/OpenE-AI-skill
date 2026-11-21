@@ -1,6 +1,6 @@
 # Portabel sandbox: utvecklingsstatus
 
-Detta är en experimentell implementation, inte en godkänd release. Den av användaren valda releasedestinationen är det offentliga repot OpenE-AI-skill. Ingen release är publicerad.
+Detta är en experimentell implementation. Förhandsversionen `v0.5.0-dev` publiceras i det offentliga repot OpenE-AI-skill för praktiska tester med Claude Code på Windows. Den är inte godkänd mot samtliga ursprungliga acceptanskriterier. Se releasens testprotokoll för verifieringen av den distribuerade exe-filen.
 
 ## Byggt och verifierat
 
@@ -13,7 +13,7 @@ Detta är en experimentell implementation, inte en godkänd release. Den av anv�
 - Tilläggens byggresultat och eventuella klasskonflikter dokumenteras av byggskriptet. Byggt betyder inte automatiskt aktiverat eller funktionellt testat.
 - En granskning hittade skarpa adresskonstanter i vissa leverantörers kod och WSDL-resurser i de äldre utvecklingsbyggena. Byggkoden har därefter ändrats för att neutralisera kända konstanter och WSDL/XSD-mål samt neka kvarvarande fjärrmål i WSDL. Det sanerade fullbyggets tolv WSDL-filer har kontrollerats; alla tänkbara hårdkodade mål behöver fortfarande granskas. Äldre provbyggen ska inte distribueras.
 
-## Kvar före release
+## Kvar före full acceptans
 
 Verifiera den senaste fullständiga exe:n på en ren Windows-användare, inklusive tidsgränser, uppstart utan ERROR, alla automatiska fixtures, röktest och Playwright, omstart, reset och samtidiga instanser. Aktivera och granska alla byggbara tillägg, verifiera samtliga nödvändiga integrationers exakta kontrakt och scenarier, inklusive fler verksamhetssystem, samt granska betalningscallbackens återhämtning och idempotens. Därefter behövs en ren byggning med publicerad källspegel, BUILDINFO, checksummor och en GitHub Release.
 

@@ -18,7 +18,18 @@ Skilj på fyra verifieringar när du rapporterar ett resultat: att en modul ladd
 
 Öppna byggaren via **Adm. e-tjänster**. Behåll importerade tjänster som utkast medan du granskar typ, behörigheter, integrationer och regler. Exportera den verifierade versionen via versionsraden. En `.oeflow` är en versionsfil. Komplett miljöåterställning omfattar databas, filarkiv och skyddad konfiguration.
 
-## Egen lokal sandbox (`sandbox/sandboxctl`)
+## Portabel sandbox på Windows
+
+På Windows x64 med Claude Code eller annan agent med lokal kommandoåtkomst, använd den portabla förhandsversionen. Java, Docker och administratörsinstallation behövs inte. Läs [start och begränsningar](references/portable-sandbox.md).
+
+1. Kör `powershell.exe -NoProfile -ExecutionPolicy Bypass -File sandbox/get-sandbox.ps1 -Version v0.5.0-dev -NoBrowser` från skillmappen. SHA-256 verifieras före start.
+2. Kör den hämtade exe-filen under `%LOCALAPPDATA%/OpenE-Sandbox/bin` med `info --secrets`. Använd URL och lokala syntetiska konton; återge aldrig lösenorden i svaret.
+3. Bygg/importera, testa i webbläsaren och gör ett riktigt inskick. Kontrollera det sparade ärendet. Lokal e-post finns på `mailUrl` från `info`.
+4. `stop` behåller data; `start --no-browser` återanvänder instansen. `status --json` kontrollerar hälsan. `reset --yes` och `destroy --yes` raderar data och används bara på användarens begäran.
+
+Sex syntetiska tjänster publiceras automatiskt. Alla tillägg och leverantörskontrakt är inte verifierade. Molnbaserad Claude kan inte starta Windows-exe:n eller nå användarens localhost; använd Claude Code på Windows för det lokala testet.
+
+## Separat Docker-sandbox (`sandbox/sandboxctl`)
 
 När uppgiften kräver att en e-tjänst byggs eller testas och ingen annan miljö är utpekad, använd en lokal sandbox. Motorn är fristående (bash + Docker Compose). Se [sandbox/README.md](sandbox/README.md) och [genomförbarhet och status](references/sandbox.md).
 
