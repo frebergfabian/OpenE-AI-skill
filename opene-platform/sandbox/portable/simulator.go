@@ -2,7 +2,9 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"html/template"
 	"io"
@@ -106,7 +108,7 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 		}
 		module := r.FormValue("module")
 		scenario := r.FormValue("scenario")
-		if (module != "pud" && module != "http" && module != "payment" && module != "sms" && module != "ssbt") || (scenario != "success" && scenario != "denied" && scenario != "timeout" && scenario != "error") {
+		if (module != "pud" && module != "http" && module != "payment" && module != "sms" && module != "ssbt" && module != "artvise" && module != "easit") || (scenario != "success" && scenario != "denied" && scenario != "timeout" && scenario != "error") {
 			http.Error(w, "Unknown module or scenario", 400)
 			return
 		}
@@ -134,8 +136,14 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/sms" {
 		module = "sms"
 	}
-	if r.URL.Path == "/ssbt/companies" {
+	if r.URL.Path == "/ssbt/en" || r.URL.Path == "/ssbt/gu" || r.URL.Path == "/ssbt/ro" {
 		module = "ssbt"
+	}
+	if r.URL.Path == "/integration/artvise" {
+		module = "artvise"
+	}
+	if r.URL.Path == "/integration/easit" {
+		module = "easit"
 	}
 	if module == "" {
 		http.Error(w, "No verified simulator contract for this route", 501)
@@ -171,15 +179,116 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	ssbtID := ""
+	ssbtDetails := map[string]bool{}
 	if module == "ssbt" {
-		if r.Method != "GET" {
-			http.Error(w, "GET required", 405)
+		if r.Method != "POST" || r.URL.Path == "/ssbt/ro" {
+			http.Error(w, "Unsupported synthetic SSBT operation", 501)
 			return
 		}
-		id := strings.ReplaceAll(r.URL.Query().Get("citizenIdentifier"), "-", "")
+		var envelope struct {
+			XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
+			Body    struct {
+				EN *struct{} `xml:"http://schema.bolagsverket.se/ssbten/engagemang EngagemangBegaran"`
+				GU *struct{} `xml:"http://schema.bolagsverket.se/ssbtgu/v2/grundlaggandeuppgifter GrundlaggandeUppgifterBegaran"`
+			} `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
+		}
+		if xml.Unmarshal(b, &envelope) != nil || (r.URL.Path == "/ssbt/en" && envelope.Body.EN == nil) || (r.URL.Path == "/ssbt/gu" && envelope.Body.GU == nil) {
+			http.Error(w, "Invalid SSBT SOAP operation", 400)
+			return
+		}
 		allowed := map[string]bool{"190001010008": true, "190001010016": true, "190001010024": true, "190001010032": true, "190001010040": true}
-		if !allowed[id] {
-			http.Error(w, "Only sandbox identities are supported", 403)
+		decoder := xml.NewDecoder(bytes.NewReader(b))
+		for {
+			tok, e := decoder.Token()
+			if e == io.EOF {
+				break
+			}
+			if e != nil {
+				http.Error(w, "Invalid XML", 400)
+				return
+			}
+			start, ok := tok.(xml.StartElement)
+			if !ok {
+				continue
+			}
+			switch start.Name.Local {
+			case "Personnummer", "Organisationsnummer", "ForetagsformKod", "GrundlaggandeUppgiftId":
+				var value string
+				if decoder.DecodeElement(&value, &start) != nil {
+					http.Error(w, "Invalid XML value", 400)
+					return
+				}
+				switch start.Name.Local {
+				case "Personnummer":
+					value = strings.ReplaceAll(strings.TrimSpace(value), "-", "")
+					if !allowed[value] {
+						http.Error(w, "Only sandbox identities are supported", 403)
+						return
+					}
+					ssbtID = value
+				case "Organisationsnummer":
+					if strings.TrimSpace(value) != "0000000000" {
+						http.Error(w, "Only sandbox organizations are supported", 403)
+						return
+					}
+				case "ForetagsformKod":
+					if strings.TrimSpace(value) != "AB" {
+						http.Error(w, "Company type not simulated", 501)
+						return
+					}
+				case "GrundlaggandeUppgiftId":
+					value = strings.TrimSpace(value)
+					if value != "UD0001" && value != "UD0003" && value != "UD0004" && value != "UD0006" {
+						http.Error(w, "Requested detail not simulated", 501)
+						return
+					}
+					ssbtDetails[value] = true
+				}
+			}
+		}
+		if ssbtID == "" {
+			http.Error(w, "Sandbox identity required", 403)
+			return
+		}
+		if r.URL.Path == "/ssbt/gu" && !ssbtDetails["UD0001"] {
+			http.Error(w, "Required company name not requested", 501)
+			return
+		}
+	}
+	var easitUIDs []string
+	if module == "easit" {
+		var envelope struct {
+			XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
+			Body    struct {
+				Import *struct {
+					Items []struct {
+						UID string `xml:"UID,attr"`
+					} `xml:"http://www.easit.com/bps/schemas ItemToImport"`
+				} `xml:"http://www.easit.com/bps/schemas ImportItemsRequest"`
+			} `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
+		}
+		if r.Method != "POST" || xml.Unmarshal(b, &envelope) != nil || envelope.Body.Import == nil || len(envelope.Body.Import.Items) == 0 || len(envelope.Body.Import.Items) > 100 {
+			http.Error(w, "Only synthetic ImportItems SOAP requests are supported", 400)
+			return
+		}
+		for _, item := range envelope.Body.Import.Items {
+			if !regexp.MustCompile(`^[a-zA-Z0-9-]{1,64}$`).MatchString(item.UID) {
+				http.Error(w, "Invalid item identifier", 400)
+				return
+			}
+			easitUIDs = append(easitUIDs, item.UID)
+		}
+	}
+	if module == "artvise" {
+		var envelope struct {
+			XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
+			Body    struct {
+				Create *struct{} `xml:"http://www.artvise.se/MercuryAPI/ CreateCase"`
+			} `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
+		}
+		if r.Method != "POST" || xml.Unmarshal(b, &envelope) != nil || envelope.Body.Create == nil {
+			http.Error(w, "Only the synthetic CreateCase SOAP operation is supported", 400)
 			return
 		}
 	}
@@ -192,9 +301,35 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	case "error":
+		if module == "artvise" || module == "easit" || module == "ssbt" {
+			w.Header().Set("Content-Type", "text/xml; charset=utf-8")
+			w.WriteHeader(500)
+			io.WriteString(w, `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><s:Fault><faultcode>s:Server</faultcode><faultstring>Simulated backend error</faultstring></s:Fault></s:Body></s:Envelope>`)
+			return
+		}
 		http.Error(w, "Simulated backend failure", 500)
 		return
 	case "denied":
+		if module == "ssbt" {
+			w.Header().Set("Content-Type", "text/xml; charset=utf-8")
+			w.WriteHeader(500)
+			io.WriteString(w, `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><s:Fault><faultcode>s:Client</faultcode><faultstring>Simulated denial</faultstring></s:Fault></s:Body></s:Envelope>`)
+			return
+		}
+		if module == "easit" {
+			w.Header().Set("Content-Type", "text/xml; charset=utf-8")
+			io.WriteString(w, `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><ImportItemsResponse xmlns="http://www.easit.com/bps/schemas">`)
+			for _, uid := range easitUIDs {
+				fmt.Fprintf(w, `<ImportItemResult UID="%s" result="Skipped"><SkippedOrExceptionMessage>Simulated denial</SkippedOrExceptionMessage></ImportItemResult>`, uid)
+			}
+			io.WriteString(w, `</ImportItemsResponse></s:Body></s:Envelope>`)
+			return
+		}
+		if module == "artvise" {
+			w.Header().Set("Content-Type", "text/xml; charset=utf-8")
+			io.WriteString(w, `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><CreateCaseResponse xmlns="http://www.artvise.se/MercuryAPI/"><CreateCaseResult xmlns:a="http://schemas.datacontract.org/2004/07/Artvise.Mercury.Base.DataContracts.API"><a:Message>Simulated denial</a:Message><a:Ok>false</a:Ok></CreateCaseResult></CreateCaseResponse></s:Body></s:Envelope>`)
+			return
+		}
 		http.Error(w, "Simulated denial", 403)
 		return
 	case "success":
@@ -203,7 +338,40 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if module == "ssbt" {
-		jsonResponse(w, map[string]any{"companies": []map[string]string{{"organizationNumber": "0000000000", "name": "Exempelbolaget (syntetiskt test)", "address": "Testgatan 1", "zip": "00000", "city": "Exempelkoping", "email": "referens@exempelkoping.example.com"}}})
+		body := ssbtENResponse
+		if r.URL.Path == "/ssbt/gu" {
+			body = ssbtGUResponse
+			extra := ""
+			if ssbtDetails["UD0003"] {
+				extra += `<ns2:UD0003><ns3:Postadress><ns3:Utdelningsadress1>Testgatan 1</ns3:Utdelningsadress1><ns3:Postnummer>00000</ns3:Postnummer><ns3:Postort>Exempelkoping</ns3:Postort></ns3:Postadress></ns2:UD0003>`
+			}
+			if ssbtDetails["UD0004"] {
+				extra += `<ns2:UD0004><ns3:EPostAdress>referens@exempelkoping.example.com</ns3:EPostAdress></ns2:UD0004>`
+			}
+			if ssbtDetails["UD0006"] {
+				extra += `<ns2:UD0006><ns3:Telefonnummer>0700000000</ns3:Telefonnummer></ns2:UD0006>`
+			}
+			body = strings.Replace(body, "</ns2:GrundlaggandeUppgifterSvarDetaljer>", extra+"</ns2:GrundlaggandeUppgifterSvarDetaljer>", 1)
+		}
+		body = strings.ReplaceAll(body, "190001010040", ssbtID)
+		w.Header().Set("Content-Type", "text/xml; charset=utf-8")
+		io.WriteString(w, `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body>`+body+`</s:Body></s:Envelope>`)
+		return
+	}
+	if module == "artvise" {
+		id := token(16)
+		objectID := time.Now().UnixNano()%2000000000 + 1
+		w.Header().Set("Content-Type", "text/xml; charset=utf-8")
+		fmt.Fprintf(w, `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><CreateCaseResponse xmlns="http://www.artvise.se/MercuryAPI/"><CreateCaseResult xmlns:a="http://schemas.datacontract.org/2004/07/Artvise.Mercury.Base.DataContracts.API"><a:Message>Simulated</a:Message><a:ObjectInformation><a:Identifier>SIM-%s</a:Identifier><a:ObjectID>%d</a:ObjectID></a:ObjectInformation><a:Ok>true</a:Ok></CreateCaseResult></CreateCaseResponse></s:Body></s:Envelope>`, id, objectID)
+		return
+	}
+	if module == "easit" {
+		w.Header().Set("Content-Type", "text/xml; charset=utf-8")
+		io.WriteString(w, `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><ImportItemsResponse xmlns="http://www.easit.com/bps/schemas">`)
+		for _, uid := range easitUIDs {
+			fmt.Fprintf(w, `<ImportItemResult UID="%s" result="OK"><ReturnValues><ReturnValue name="id">EASIT-%s</ReturnValue><ReturnValue name="item">%s</ReturnValue></ReturnValues></ImportItemResult>`, uid, token(8), uid)
+		}
+		io.WriteString(w, `</ImportItemsResponse></s:Body></s:Envelope>`)
 		return
 	}
 	if module == "http" {
@@ -239,7 +407,7 @@ func (s *Simulator) handle(w http.ResponseWriter, r *http.Request) {
 	jsonResponse(w, rows)
 }
 
-var simPage = template.Must(template.New("page").Parse(`<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>OpenE Simulator</title><style>body{font:17px system-ui;max-width:1000px;margin:40px auto;padding:0 24px;background:#f3f6f8;color:#132c40}a{color:#056184}section{background:white;padding:24px;border-radius:12px;margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}select,button{font:inherit;padding:8px}nav{display:flex;gap:24px}</style><h1>OpenE Simulator</h1><p>Exempelköpings kommun · Endast syntetiska testuppgifter</p><nav><a href="/">Anrop och scenarier</a><a href="/mail">E-postfångst</a><a href="/api/calls">JSON-logg</a></nav><section><h2>Scenarier</h2><form method="post" action="/scenarios"><select name="module"><option value="pud">Fastighet och adress</option><option value="http">HTTPIntegrationProvider</option><option value="payment">Betalning</option><option value="sms">SMS</option><option value="ssbt">Företagsuppslag</option></select> <select name="scenario"><option value="success">Lyckat</option><option value="denied">Nekat</option><option value="timeout">Timeout</option><option value="error">Felsvar</option></select> <button>Spara</button></form><p>Valet gäller efterföljande anrop. Ej implementerade integrationer svarar 501.</p><pre>{{.Scenarios}}</pre></section><section><h2>{{.Title}}</h2><pre>{{.Content}}</pre></section></html>`))
+var simPage = template.Must(template.New("page").Parse(`<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>OpenE Simulator</title><style>body{font:17px system-ui;max-width:1000px;margin:40px auto;padding:0 24px;background:#f3f6f8;color:#132c40}a{color:#056184}section{background:white;padding:24px;border-radius:12px;margin:20px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}select,button{font:inherit;padding:8px}nav{display:flex;gap:24px}</style><h1>OpenE Simulator</h1><p>Exempelköpings kommun · Endast syntetiska testuppgifter</p><nav><a href="/">Anrop och scenarier</a><a href="/mail">E-postfångst</a><a href="/api/calls">JSON-logg</a></nav><section><h2>Scenarier</h2><form method="post" action="/scenarios"><select name="module"><option value="pud">Fastighet och adress</option><option value="http">HTTPIntegrationProvider</option><option value="artvise">Artvise ärende</option><option value="easit">Easit ärende</option><option value="payment">Betalning</option><option value="sms">SMS</option><option value="ssbt">Företagsuppslag</option></select> <select name="scenario"><option value="success">Lyckat</option><option value="denied">Nekat</option><option value="timeout">Timeout</option><option value="error">Felsvar</option></select> <button>Spara</button></form><p>Valet gäller efterföljande anrop. Ej implementerade integrationer svarar 501.</p><pre>{{.Scenarios}}</pre></section><section><h2>{{.Title}}</h2><pre>{{.Content}}</pre></section></html>`))
 
 func (s *Simulator) page(w http.ResponseWriter, r *http.Request) {
 	s.mu.Lock()

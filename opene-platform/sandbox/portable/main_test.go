@@ -97,6 +97,98 @@ func TestPUDContract(t *testing.T) {
 	}
 }
 
+func TestArtviseCreateCaseSOAP(t *testing.T) {
+	s := newSimulator(t.TempDir(), 12345)
+	request := `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><CreateCase xmlns="http://www.artvise.se/MercuryAPI/"><apiKey>sandbox</apiKey><caseDto/></CreateCase></s:Body></s:Envelope>`
+	for _, tc := range []struct {
+		scenario string
+		code     int
+		want     string
+	}{
+		{"success", 200, "<a:Ok>true</a:Ok>"}, {"denied", 200, "<a:Ok>false</a:Ok>"}, {"error", 500, "<s:Fault>"},
+	} {
+		r := httptest.NewRequest("POST", "http://127.0.0.1:12345/integration/artvise", strings.NewReader(request))
+		r.Header.Set("X-Sandbox-Scenario", tc.scenario)
+		w := httptest.NewRecorder()
+		s.handle(w, r)
+		if w.Code != tc.code || !strings.Contains(w.Body.String(), tc.want) {
+			t.Fatalf("%s: HTTP %d, body %s", tc.scenario, w.Code, w.Body.String())
+		}
+	}
+	r := httptest.NewRequest("POST", "http://127.0.0.1:12345/integration/artvise", strings.NewReader(`<not-soap/>`))
+	w := httptest.NewRecorder()
+	s.handle(w, r)
+	if w.Code != 400 {
+		t.Fatalf("unexpected operation: %d", w.Code)
+	}
+}
+
+func TestEasitImportItemsSOAP(t *testing.T) {
+	s := newSimulator(t.TempDir(), 12345)
+	request := `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><ImportItemsRequest xmlns="http://www.easit.com/bps/schemas"><ItemToImport UID="test-123"/></ImportItemsRequest></s:Body></s:Envelope>`
+	for _, tc := range []struct {
+		scenario string
+		code     int
+		want     string
+	}{
+		{"success", 200, `UID="test-123" result="OK"`}, {"denied", 200, `result="Skipped"`}, {"error", 500, "<s:Fault>"},
+	} {
+		r := httptest.NewRequest("POST", "http://127.0.0.1:12345/integration/easit", strings.NewReader(request))
+		r.Header.Set("X-Sandbox-Scenario", tc.scenario)
+		w := httptest.NewRecorder()
+		s.handle(w, r)
+		if w.Code != tc.code || !strings.Contains(w.Body.String(), tc.want) {
+			t.Fatalf("%s: HTTP %d, body %s", tc.scenario, w.Code, w.Body.String())
+		}
+	}
+	r := httptest.NewRequest("POST", "http://127.0.0.1:12345/integration/easit", strings.NewReader(`<not-soap/>`))
+	w := httptest.NewRecorder()
+	s.handle(w, r)
+	if w.Code != 400 {
+		t.Fatalf("unexpected operation: %d", w.Code)
+	}
+}
+
+func TestSSBTSoapRequiresSyntheticData(t *testing.T) {
+	s := newSimulator(t.TempDir(), 12345)
+	for _, tc := range []struct{ path, namespace, operation string }{
+		{"/ssbt/en", "http://schema.bolagsverket.se/ssbten/engagemang", "EngagemangBegaran"},
+		{"/ssbt/gu", "http://schema.bolagsverket.se/ssbtgu/v2/grundlaggandeuppgifter", "GrundlaggandeUppgifterBegaran"},
+	} {
+		for _, person := range []string{"190001010032", "199901011234"} {
+			body := fmt.Sprintf(`<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><q:%s xmlns:q="%s"><Personnummer>%s</Personnummer><Organisationsnummer>0000000000</Organisationsnummer><GrundlaggandeUppgiftId>UD0001</GrundlaggandeUppgiftId></q:%s></s:Body></s:Envelope>`, tc.operation, tc.namespace, person, tc.operation)
+			r := httptest.NewRequest("POST", "http://127.0.0.1:12345"+tc.path, strings.NewReader(body))
+			w := httptest.NewRecorder()
+			s.handle(w, r)
+			if person == "190001010032" && (w.Code != 200 || !strings.Contains(w.Body.String(), person)) {
+				t.Fatalf("%s: HTTP %d %s", tc.path, w.Code, w.Body.String())
+			}
+			if person != "190001010032" && w.Code != 403 {
+				t.Fatalf("%s accepted non-synthetic identity: %d", tc.path, w.Code)
+			}
+		}
+	}
+}
+
+func TestSSBTDetailsAreLimitedToRequestedCodes(t *testing.T) {
+	s := newSimulator(t.TempDir(), 12345)
+	body := `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><q:GrundlaggandeUppgifterBegaran xmlns:q="http://schema.bolagsverket.se/ssbtgu/v2/grundlaggandeuppgifter"><Personnummer>190001010032</Personnummer><Organisationsnummer>0000000000</Organisationsnummer><GrundlaggandeUppgiftId>UD0001</GrundlaggandeUppgiftId><GrundlaggandeUppgiftId>UD0003</GrundlaggandeUppgiftId><GrundlaggandeUppgiftId>UD0004</GrundlaggandeUppgiftId></q:GrundlaggandeUppgifterBegaran></s:Body></s:Envelope>`
+	for _, tc := range []struct {
+		body string
+		code int
+	}{{body, 200}, {strings.Replace(body, "UD0004", "UD0048", 1), 501}} {
+		r := httptest.NewRequest("POST", "http://127.0.0.1:12345/ssbt/gu", strings.NewReader(tc.body))
+		w := httptest.NewRecorder()
+		s.handle(w, r)
+		if w.Code != tc.code {
+			t.Fatalf("HTTP %d: %s", w.Code, w.Body.String())
+		}
+		if tc.code == 200 && (!strings.Contains(w.Body.String(), "<ns2:UD0003>") || !strings.Contains(w.Body.String(), "<ns2:UD0004>") || strings.Contains(w.Body.String(), "<ns2:UD0006>")) {
+			t.Fatal(w.Body.String())
+		}
+	}
+}
+
 func TestSMSOnlyAcceptsSyntheticNumber(t *testing.T) {
 	s := newSimulator(t.TempDir(), 12345)
 	for _, tc := range []struct {
@@ -176,30 +268,5 @@ func TestSimulatorFailureScenarios(t *testing.T) {
 	s.handle(w, r)
 	if w.Body.Len() != 0 {
 		t.Fatal("cancelled timeout returned a body")
-	}
-}
-
-func TestCompanySandboxIsLocalAndSynthetic(t *testing.T) {
-	s := newSimulator(t.TempDir(), 12345)
-	for _, tc := range []struct {
-		id     string
-		status int
-	}{{"190001010032", 200}, {"199001011234", 403}} {
-		w := httptest.NewRecorder()
-		r := httptest.NewRequest("GET", "http://127.0.0.1:12345/ssbt/companies?citizenIdentifier="+tc.id, nil)
-		s.handle(w, r)
-		if w.Code != tc.status {
-			t.Fatalf("%s: %d", tc.id, w.Code)
-		}
-		if tc.status == 200 && !strings.Contains(w.Body.String(), "0000000000") {
-			t.Fatal(w.Body)
-		}
-	}
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest("GET", "http://127.0.0.1:12345/ssbt/companies?citizenIdentifier=190001010032", nil)
-	r.Header.Set("X-Sandbox-Scenario", "error")
-	s.handle(w, r)
-	if w.Code != 500 {
-		t.Fatal(w.Code)
 	}
 }

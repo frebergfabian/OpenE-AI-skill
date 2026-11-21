@@ -31,7 +31,7 @@ func (i *Instance) seedFixtures() error {
 		return err
 	}
 	if done == "1" {
-		_, err = i.sql("UPDATE http_integration_settings SET url='"+localURL(i.State.Simulator)+"/integration/http' WHERE flowFamilyID IN (SELECT flowFamilyID FROM flowengine_flows WHERE name='Funktionslabbet - portabelt utkast');", true)
+		_, err = i.sql("UPDATE http_integration_settings SET url='"+localURL(i.State.Simulator)+"/integration/http' WHERE flowFamilyID IN (SELECT flowFamilyID FROM flowengine_flows WHERE name='Funktionslabbet - portabelt utkast'); UPDATE artvise_integration_endpoints SET address='"+localURL(i.State.Simulator)+"/integration/artvise' WHERE name='Sandbox Artvise'; UPDATE easit_integration_endpoints SET webServiceAddress='"+localURL(i.State.Simulator)+"/integration/easit' WHERE name='Sandbox Easit';", true)
 		return err
 	}
 	fixtures := []struct{ name, file string }{{"Funktionslabbet - portabelt utkast", "funktionslabbet.oeflow"}, {"Sandbox fastighetstest", "sandbox-fastighet.oeflow"}, {"Sandbox barntest", "sandbox-barn.oeflow"}, {"Sandbox betalningstest", "sandbox-betalning.oeflow"}, {"Sandbox foretagstest", "sandbox-foretag.oeflow"}, {"Sandbox flerpartssignering", "sandbox-flerpart.oeflow"}}

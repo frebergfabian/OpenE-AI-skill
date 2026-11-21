@@ -103,10 +103,12 @@
   },
   {
     "project": "ArtviseIntegrationProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule"
+    ]
   },
   {
     "project": "AttributeSumLimitQuery",
@@ -218,10 +220,15 @@
   },
   {
     "project": "ChildQueryWeightEvaluationProviders",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.childquery.childcount.ChildCountWeightEvaluationProviderModule",
+      "com.nordicpeak.flowengine.evaluators.childquery.duplicates.ChildDuplicateFlownstanceWeightEvaluationProviderModule",
+      "com.nordicpeak.flowengine.evaluators.childquery.existingstatus.ChildExistingFlowInstanceStatusEvaluationProviderModule",
+      "com.nordicpeak.flowengine.evaluators.childquery.municipalitycode.ChildMunicipalityCodeWeightEvaluationProviderModule"
+    ]
   },
   {
     "project": "CitizenIDGroupMembershipQueryStateEvaluator",
@@ -348,10 +355,12 @@
   },
   {
     "project": "EasitIntegrationProvider",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.integration.easit.EasitIntegrationProviderModule"
+    ]
   },
   {
     "project": "EasitProxy",
@@ -1012,10 +1021,12 @@
   },
   {
     "project": "TableWeightEvaluators",
-    "status": "built-not-enabled",
+    "status": "built-with-enabled-modules",
     "excluded": [],
-    "reason": "Activation and end-to-end verification tracked separately",
-    "enabledClasses": []
+    "reason": "At least one class registered as enabled; other classes and behavior require separate verification",
+    "enabledClasses": [
+      "com.nordicpeak.flowengine.evaluators.settableweightevaluator.SetTableWeightEvaluationProviderModule"
+    ]
   },
   {
     "project": "TargetGroupFlowBrowser",

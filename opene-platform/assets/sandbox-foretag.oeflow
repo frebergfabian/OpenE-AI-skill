@@ -216,9 +216,9 @@
               <value>AB</value>
             </companyTypes>
             <useUD0001>false</useUD0001>
-            <useUD0003>false</useUD0003>
-            <useUD0004>false</useUD0004>
-            <useUD0006>false</useUD0006>
+            <useUD0003>true</useUD0003>
+            <useUD0004>true</useUD0004>
+            <useUD0006>true</useUD0006>
             <useUD0023>false</useUD0023>
             <useUD0025>false</useUD0025>
             <useUD0029>false</useUD0029>

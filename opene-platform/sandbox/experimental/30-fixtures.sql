@@ -38,6 +38,24 @@ AND NOT EXISTS (SELECT 1 FROM flowengine_flow_family_manager_groups g WHERE g.fl
 INSERT INTO http_integration_settings(flowFamilyID,enabled,url,triggerOnStatusChanges)
 SELECT f.flowFamilyID,1,'@SIMULATOR@/integration/http',0 FROM flowengine_flows f WHERE f.name='Funktionslabbet - portabelt utkast'
 AND NOT EXISTS (SELECT 1 FROM http_integration_settings h WHERE h.flowFamilyID=f.flowFamilyID);
+INSERT INTO artvise_integration_endpoints(name,address)
+SELECT 'Sandbox Artvise','@SIMULATOR@/integration/artvise' WHERE NOT EXISTS (SELECT 1 FROM artvise_integration_endpoints WHERE name='Sandbox Artvise');
+SET @artvise=(SELECT endpointID FROM artvise_integration_endpoints WHERE name='Sandbox Artvise' ORDER BY endpointID LIMIT 1);
+UPDATE artvise_integration_endpoints SET address='@SIMULATOR@/integration/artvise' WHERE endpointID=@artvise;
+INSERT INTO artvise_integration_settings(flowFamilyID,enabled,endpointID,apiKey,caseInboxGuid,caseHTMLDescriptionObjectTypeGuid,caseHTMLDescriptionName,caseHTMLDescriptionContent,addAttachmentsSeparately,sendErrorEmail,requiresAnswer)
+SELECT f.flowFamilyID,1,@artvise,'sandbox-key','00000000-0000-4000-8000-000000000001','00000000-0000-4000-8000-000000000002','Syntetiskt arende','Endast syntetiskt test',0,0,0
+FROM flowengine_flows f WHERE f.name='Funktionslabbet - portabelt utkast'
+AND NOT EXISTS (SELECT 1 FROM artvise_integration_settings a WHERE a.flowFamilyID=f.flowFamilyID);
+INSERT INTO easit_integration_endpoints(name,webServiceAddress,apiKey)
+SELECT 'Sandbox Easit','@SIMULATOR@/integration/easit','sandbox-key' WHERE NOT EXISTS (SELECT 1 FROM easit_integration_endpoints WHERE name='Sandbox Easit');
+SET @easit=(SELECT endpointID FROM easit_integration_endpoints WHERE name='Sandbox Easit' ORDER BY endpointID LIMIT 1);
+UPDATE easit_integration_endpoints SET webServiceAddress='@SIMULATOR@/integration/easit' WHERE endpointID=@easit;
+INSERT INTO easit_integration_settings(flowFamilyID,enabled,endpointID)
+SELECT f.flowFamilyID,1,@easit FROM flowengine_flows f WHERE f.name='Sandbox barntest'
+AND NOT EXISTS (SELECT 1 FROM easit_integration_settings e WHERE e.flowFamilyID=f.flowFamilyID);
+INSERT INTO easit_integration_parametergroups(flowFamilyID,name,importHandlerIdentifier,enabled,importWithPrevious,importParametersSeparately,sortIndex)
+SELECT f.flowFamilyID,'Sandbox arende','sandbox-import',1,0,0,1 FROM flowengine_flows f WHERE f.name='Sandbox barntest'
+AND NOT EXISTS (SELECT 1 FROM easit_integration_parametergroups g WHERE g.flowFamilyID=f.flowFamilyID AND g.name='Sandbox arende');
 -- Other notification switches remain off. Contacts still choose their channels.
 INSERT INTO flow_familiy_notification_settings(flowFamilyID,sendFlowInstanceSubmittedUserEmail,flowInstanceSubmittedUserEmailSubject,flowInstanceSubmittedUserEmailMessage,sendFlowInstanceSubmittedUserSMS,flowInstanceSubmittedUserSMS)
 SELECT f.flowFamilyID,1,'Sandbox - fiktivt arende mottaget','<p>Det syntetiska testarendet har skickats in.</p>',1,'Sandbox: det syntetiska testarendet har skickats in.'

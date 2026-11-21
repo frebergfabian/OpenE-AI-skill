@@ -65,8 +65,30 @@ Invoke-WebRequest 'https://repo.maven.apache.org/maven2/javax/xml/ws/jaxws-api/2
 Check-Hash $jaxws SHA256 'a447f84f95658ea68b347acffe156f7700c62a37ede15d81e5298fb8e5fe6dcf'
 Invoke-WebRequest 'https://repo.maven.apache.org/maven2/javax/jws/javax.jws-api/1.1/javax.jws-api-1.1.jar' -OutFile $jws
 Check-Hash $jws SHA256 '9f20ab1fea3f9571ed52a9d98e3c651cc7c04c8a709addf238312b60987c6f2c'
+# JAX-WS RI on JDK 21. Only the additional jars needed alongside the pinned
+# OpenE runtime are included; each downloaded artifact is individually pinned.
+$soapArtifacts = @(
+ @('com/sun/xml/ws/jaxws-rt/2.3.7/jaxws-rt-2.3.7.jar','7645f513085dfa17a5a25afec90b53d4f290b4b9ab15dedf26718ab4b942a3cc'),
+ @('com/sun/xml/ws/policy/2.7.10/policy-2.7.10.jar','ad12eaf70be2f0e24bdf5ef1ccfaae466a0e46b09a629b5ccf2a3031730a40a3'),
+ @('org/glassfish/ha/ha-api/3.1.13/ha-api-3.1.13.jar','49770bf120f76d78ead363e00fa09d02a76d5f12a88e654009066aec67f8d8ad'),
+ @('org/glassfish/external/management-api/3.2.3/management-api-3.2.3.jar','4d1a8f09fe7d6907048cf29c6e6c4ef35ce1fe3d2476220f91d94908d134c66f'),
+ @('org/glassfish/gmbal/gmbal-api-only/4.0.3/gmbal-api-only-4.0.3.jar','d980a9ad0015068a97c000d71cdffdefc9bcef1feaa9f2eaad7e88e10851f9c4'),
+ @('com/sun/xml/stream/buffer/streambuffer/1.5.10/streambuffer-1.5.10.jar','47e630ad59cac57b34f048ef9c28aadafe7a249c46d0eaabf1c7a1e3116102a8'),
+ @('org/jvnet/mimepull/mimepull/1.9.15/mimepull-1.9.15.jar','b9f586bf8844b14a33e75fe7a4b94896dc80d80b732d128777e287af14c836fa'),
+ @('com/sun/xml/messaging/saaj/saaj-impl/1.5.3/saaj-impl-1.5.3.jar','21d451aa7dbe1254388ecc4e5ea71aabbc519c7d7344c9d93e9f79954f38b32b'),
+ @('jakarta/xml/soap/jakarta.xml.soap-api/1.4.2/jakarta.xml.soap-api-1.4.2.jar','0b2e9db574869c09b18e7fe87482be2e4e14b3f3cc8207646595806eede77706')
+)
+foreach ($artifact in $soapArtifacts) {
+    $file = Join-Path $webapp ('WEB-INF\lib\' + [IO.Path]::GetFileName($artifact[0]))
+    Invoke-WebRequest ('https://repo.maven.apache.org/maven2/' + $artifact[0]) -OutFile $file
+    Check-Hash $file SHA256 $artifact[1]
+}
 & node (Join-Path $here 'patch-ssbt.mjs') $addonDir
 Check-Exit 'SSBT sandbox adapter patch'
+& node (Join-Path $here 'patch-artvise.mjs') $addonDir
+Check-Exit 'Artvise loopback restriction patch'
+& node (Join-Path $here 'patch-easit.mjs') $addonDir
+Check-Exit 'Easit loopback restriction patch'
 & node (Join-Path $here 'build-all-addons.mjs') $addonDir $webapp $env:JAVA_HOME $servlet (Join-Path $root 'addon-build')
 Check-Exit 'Add-on build'
 $buildInfo = Join-Path $root 'dist\BUILDINFO'
@@ -76,9 +98,13 @@ $buildInfo = Join-Path $root 'dist\BUILDINFO'
     'mariadb=11.8.10;sha256=05d04b46763ea3dc9111bfc82dc061e0a158c682a73d31ba34b13f2653c88d17'
     'tomcat=9.0.123;sha512=a060f226f1cb61732d286c478982ac4362355e0f5672bb5d3743ae4da3c7b1e6590c81555a003fddd5b6bc190d6049e7c85d16cacfba56181bfd4610380d4fac'
     'mariadb_connector=2.7.6;sha256=d3e448b1e8799ccc06c7ad2745aa03e72f19e13124b676b9656a54a833af7a93'
+    'soap_runtime=jaxws-rt-2.3.7;sha256=7645f513085dfa17a5a25afec90b53d4f290b4b9ab15dedf26718ab4b942a3cc'
     "launcher=$Version;go=1.27.4;target=windows-amd64"
     "sandbox_source_commit=$sourceRevision;dirty=$($dirty.Count -gt 0)"
 ) | Add-Content -LiteralPath $buildInfo -Encoding utf8
+foreach ($artifact in $soapArtifacts) {
+    "soap_dependency=$([IO.Path]::GetFileName($artifact[0]));sha256=$($artifact[1])" | Add-Content -LiteralPath $buildInfo -Encoding utf8
+}
 $javaClasses = Join-Path $root 'sandbox-classes'
 New-Item -ItemType Directory -Path $javaClasses | Out-Null
 $cp = (Join-Path $webapp 'WEB-INF\lib\*') + ';' + $servlet

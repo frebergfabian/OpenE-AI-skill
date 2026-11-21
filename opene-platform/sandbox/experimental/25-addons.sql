@@ -58,6 +58,11 @@ SELECT m.moduleID,'maxHits','20' FROM openhierarchy_foreground_modules m
 WHERE m.classname='com.nordicpeak.flowengine.queries.listsearchqueryprovider.ListSearchQueryProviderModule'
 AND NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE s.moduleID=m.moduleID AND s.id='maxHits');
 INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
+SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m
+JOIN (SELECT 'consumerID' id,'0000000000' value UNION ALL SELECT 'consumerName','Sandbox kommun') v
+WHERE m.classname='com.nordicpeak.flowengine.queries.ssbt.CompanyDetailsQueryProviderModule'
+AND NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE s.moduleID=m.moduleID AND s.id=v.id);
+INSERT INTO openhierarchy_foreground_module_settings(moduleID,id,value)
 SELECT m.moduleID,'searchServiceURL','@SIMULATOR@/search' FROM openhierarchy_foreground_modules m
 WHERE m.classname='com.nordicpeak.flowengine.queries.pudquery.PUDQueryProviderModule'
 AND NOT EXISTS (SELECT 1 FROM openhierarchy_foreground_module_settings s WHERE s.moduleID=m.moduleID AND s.id='searchServiceURL');
@@ -72,6 +77,8 @@ INSERT INTO sandbox_support_modules VALUES
  ('com.nordicpeak.flowengine.queue.QueueSlotAdminModule','sandbox-queue-slots','QueueSlotAdminModule.sv.xsl'),
  ('com.nordicpeak.flowengine.queue.UserQueueSlotModule','sandbox-myqueue','UserQueueSlotModule.sv.xsl'),
  ('com.nordicpeak.flowengine.integration.http.HTTPIntegrationProvider','sandbox-http','HTTPIntegrationProvider.sv.xsl'),
+ ('com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule','sandbox-artvise','ArtviseIntegrationProvider.sv.xsl'),
+ ('com.nordicpeak.flowengine.integration.easit.EasitIntegrationProviderModule','sandbox-easit','EasitIntegrationProvider.sv.xsl'),
  ('se.exempelkoping.sandbox.SimulatedSMSSender','sandbox-sms',NULL),
  ('com.nordicpeak.childrelationprovider.DummyChildRelationProvider','sandbox-child-relations',NULL),
  ('se.exempelkoping.sandbox.SimulatedSwedbankPayProvider','sandbox-pay',NULL),
@@ -156,4 +163,14 @@ SELECT m.moduleID,v.id,v.value FROM openhierarchy_foreground_modules m JOIN
  UNION ALL SELECT 'com.nordicpeak.flowengine.internalalternativelist.InternalAlternativeListProviderModule','ramThreshold','500'
  UNION ALL SELECT 'com.nordicpeak.flowengine.queries.userlistquery.FlowManagersListUserProvider','providerID','sandbox-managers'
  UNION ALL SELECT 'com.nordicpeak.flowengine.queries.usertreequery.UserHandlerListUserProvider','providerID','sandbox-users'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule','priority','100'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule','connectionTimeout','10'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule','requestTimeout','15'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule','maxRetryCount','0'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule','retryInterval','60'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule','retryCronExp','*/15 * * * *'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.artvise.ArtviseIntegrationProviderModule','errorEmailMessage','Simulerat integrationsfel'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.easit.EasitIntegrationProviderModule','priority','100'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.easit.EasitIntegrationProviderModule','connectionTimeout','10'
+ UNION ALL SELECT 'com.nordicpeak.flowengine.integration.easit.EasitIntegrationProviderModule','requestTimeout','15'
  UNION ALL SELECT 'com.nordicpeak.flowengine.multisigninghandlers.MultiSigningHandler2Module','serverURL','@OPENE@') v ON v.classname=m.classname;
