@@ -4,6 +4,8 @@ Detta är en experimentell implementation. Förhandsversionen `v0.5.0-dev` publi
 
 ## Byggt och verifierat
 
+- Den distribuerade förhandsversionens rena källbygge från `e650623` har provats med samtliga sex automatiska tjänster och sparade ärenden, röktest 12/12, Playwright 6/6 och 0 ERROR. Första start tog 114,8 sekunder. Omstart med bevarade data tog 32,1 sekunder och klarar därför inte det ursprungliga 30-sekunderskravet. Se [testprotokollet](tests/preview-v0.5.0-dev-result.txt). Äldre prov nedan har ett annat omfång.
+
 - OpenE har byggts från låsta källor och en lokal SVN-spegel med SHA-256 `744d32447e3d39b91db333110074c004bcde6981401ea42c233caeed866c63ad`. `build/build-experimental.ps1` kördes färdigt från ren commit `6cf8e0c` och skapade exe, BUILDINFO och SHA-256. Det är ett byggprov av en tidigare utvecklingsversion; den slutliga revisionen behöver byggas och verifieras separat. Bygget är inte verifierat som bitidentiskt.
 - Den ursprungliga grund-exe:n klarade röktest 12/12, Playwright 6/6 och två samtidiga instanser. Dessa körningar omfattade inte hela tilläggspaketet.
 - Separata utvecklingsinstanser har verifierat bestående bokning och kö, PUD, barnrelation, enkel- och flerpartssignering, HTTP, lokal e-post, SMS samt lyckad och avbruten simulerad betalning med sparade ärenden. Förutsättningar och begränsningar finns i `tests/integration-cases-result.txt`.

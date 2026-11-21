@@ -1,0 +1,46 @@
+OpenE Sandbox v0.5.0-dev — testprotokoll 2026-11-21
+
+Omfång: distribuerad Windows x64-exe byggd från ren källrevision
+e650623eb75d6c7db63db90ba12f1deb27c41182 (BUILDINFO dirty=False).
+Releasefilens namn har v-prefix; exe:ns interna version är 0.5.0-dev.
+Ren instanskatalog på utvecklingsdatorn, inte ett nytt Windows-konto.
+
+PASS: fullständigt källkodsbygge, WSDL-saneringsprov och Go-enhetsprov.
+PASS: första start med automatisk konfiguration: 114,8 sekunder.
+PASS: röktest 12/12 (inloggning, admin, behörighet, teckenkodning).
+PASS: Playwright 6/6 på desktop och mobil (5,7 sekunder).
+PASS: sex automatiska tjänster används utan manuell tjänstekonfiguration.
+
+Databasverifierade sparade ärenden:
+788 Fastighet: SUBMITTED och kopplat syntetiskt PUD-objekt.
+789 Barn: SUBMITTED och ChildInfo-frågesvar; Easit integrationExternalID sparat.
+790 Företag: SUBMITTED och SSBT-företag med syntetisk adress, e-post, telefon.
+791 Funktionslabbet: SIGNED + SUBMITTED, slutlig bokning och köplats,
+    Artvise integrationExternalID. Lokala HTTP-, SMS- och e-postanrop loggade.
+792 Betalning lyckad: SIGNED + PAYED + SUBMITTED, exakt en transaktion
+    på 100 SEK, slutlig bokning och köplats.
+793 Betalning avbruten: SIGNED, Väntar på betalning, ingen transaktion.
+794 Flerpart: två SIGNED med olika användare (32 och 33), sedan SUBMITTED.
+
+Första avbrytningsförsöket återanvände sökanden med befintlig köplats och
+stoppades av formulärvalideringen. Korrigerat prov med den andra sökanden
+gick igenom till avbrytningssidan och gav ovanstående ärende 793.
+
+PASS: stop/start, nya lokala portar och bevarade ärenden, bokningar,
+köplatser och betalning. Hälsokontroll: alla kontroller true.
+Omstart: 32,1 sekunder — uppfyller INTE ursprungskravet under 30 sekunder.
+PASS: systemloggen har 0 [ERROR] efter inskick, omstart och flerpartssignering.
+PASS: skillarkivets zip-integritet och PowerShell-skriptets syntax.
+
+SSBT använder lokala genererade SOAP-klienter för EN/GU och UD0001,
+UD0003, UD0004, UD0006. Artvise CreateCase och Easit ImportItems loggade.
+Detta visar endast angivna operationer, inte fullständiga leverantörs-API:er.
+
+Inte omtestat med just denna exe: nytt Windows-konto, reset och två samtidiga
+instanser, dokumentsignering, alla fel-/timeoutfall och återhämtning mitt i
+betalningscallback. Separata tidigare utvecklingsprov finns i integration-cases-result.txt.
+Alla byggda tillägg är inte aktiverade/verifierade. Flera verksamhetssystem
+saknar simulator/verifiering. Utgående råa socketar är inte fullständigt spärrade.
+
+Resultat: användbar förhandsversion för Claude Code på Windows med syntetiska
+data. Samtliga ursprungliga acceptanskriterier är inte uppfyllda.
