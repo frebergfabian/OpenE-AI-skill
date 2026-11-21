@@ -125,7 +125,12 @@ INSERT INTO sandbox_rule_modules VALUES
  ('com.nordicpeak.flowengine.evaluators.statusoverrideevaluator.StatusOverrideEvaluationProviderModule','sandbox-rule-status-override','StatusOverrideEvaluationProviderModule.sv.xsl'),
  ('com.nordicpeak.flowengine.evaluators.tableattributeevaluator.TableAttributeEvaluationProviderModule','sandbox-rule-table-attribute','TableAttributeEvaluationProviderModule.sv.xsl'),
  ('com.nordicpeak.flowengine.evaluators.tableattributesummaryevaluator.TableAttributeSummaryEvaluationProviderModule','sandbox-rule-table-summary','TableAttributeSummaryEvaluationProviderModule.sv.xsl'),
- ('com.nordicpeak.flowengine.evaluators.userage.UserAgeQueryStateEvaluationProviderModule','sandbox-rule-user-age','UserAgeQueryStateEvaluationProviderModule.sv.xsl');
+ ('com.nordicpeak.flowengine.evaluators.userage.UserAgeQueryStateEvaluationProviderModule','sandbox-rule-user-age','UserAgeQueryStateEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.childquery.childcount.ChildCountWeightEvaluationProviderModule','sandbox-rule-child-weight','ChildCountWeightEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.childquery.duplicates.ChildDuplicateFlownstanceWeightEvaluationProviderModule','sandbox-rule-child-duplicate','ChildDuplicateFlownstanceWeightEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.childquery.existingstatus.ChildExistingFlowInstanceStatusEvaluationProviderModule','sandbox-rule-child-status','ChildExistingFlowInstanceStatusEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.childquery.municipalitycode.ChildMunicipalityCodeWeightEvaluationProviderModule','sandbox-rule-child-municipality','ChildMunicipalityCodeWeightEvaluationProviderModule.sv.xsl'),
+ ('com.nordicpeak.flowengine.evaluators.settableweightevaluator.SetTableWeightEvaluationProviderModule','sandbox-rule-table-weight','SetTableWeightEvaluationProviderModule.sv.xsl');
 INSERT INTO openhierarchy_foreground_modules
  (classname,name,alias,description,xslPath,xslPathType,anonymousAccess,userAccess,adminAccess,enabled,sectionID,visibleInMenu)
 SELECT q.classname,q.alias,q.alias,'Sandbox rule provider',q.xsl,'Classpath',0,0,1,1,1,0

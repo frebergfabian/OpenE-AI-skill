@@ -30,4 +30,6 @@ Regler 0.3.3-dev: sjutton lokala regelmoduler, inklusive SMS- och e-postregler, 
 
 Automatisk flerpartstjänst 0.3.5-dev: en ren instans importerade och publicerade tjänsten utan manuell konfiguration. Sökande och medsignerare signerade ärende 788; databasen visar två SIGNED med olika användare, SUBMITTED och en sparad signaturpart. Systemloggen hade 0 ERROR. Inventeringen i `addon-activation-result.json` avser nu denna körning.
 
+Byggsäkerhet: enhetstester bekräftar att kända fjärradresser i WSDL neutraliseras och att byggkontrollen avvisar en osanerad WSDL. De modifierade Java-klasserna för Lantmäteriet, Boverket och SSBT har kompilerats. Ett fullständigt ombygge och genomgång av det nya paketet återstår. Ytterligare fem barn- och tabellregler har registrerats i källan men ännu inte provats vid ren start.
+
 Alla prov avser isolerade lokala testinstanser med syntetisk data. Ingen av ovanstående körningar visar att samtliga fixtures och integrationer fungerar automatiskt på en ny installation.

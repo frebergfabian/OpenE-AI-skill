@@ -44,5 +44,11 @@ if(!text.includes('SSBT_SANDBOX_TRANSPORT')){
 			return;
 		}
 		`+marker);
- fs.writeFileSync(file,text,'latin1');
 }
+// Keep the original access checks but remove all packaged remote endpoint
+// defaults, including the unreachable production/test initialization branch.
+const endpointPattern=/(WSUtils\.setEndpoint\(\(BindingProvider\)\s+\w+,\s*")[^"]+("\);)/g;
+const endpoints=[...text.matchAll(endpointPattern)];
+if(endpoints.length!==9)throw Error(`Unexpected SSBT endpoint count: ${endpoints.length}`);
+text=text.replace(endpointPattern,'$1http://127.0.0.1:1/disabled$2');
+fs.writeFileSync(file,text,'latin1');

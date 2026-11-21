@@ -14,6 +14,8 @@ param(
     [string]$Bash = 'C:\Program Files\Git\bin\bash.exe'
 )
 $ErrorActionPreference = 'Stop'
+& node --test (Join-Path $PSScriptRoot 'sanitize-wsdl.test.mjs')
+if ($LASTEXITCODE -ne 0) { throw 'WSDL sanitization tests failed' }
 if ($Version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?$') { throw 'Invalid version' }
 function Check-Hash([string]$Path,[string]$Algorithm,[string]$Expected) {
     if ((Get-FileHash -LiteralPath $Path -Algorithm $Algorithm).Hash.ToLowerInvariant() -ne $Expected) { throw "Checksum mismatch: $Path" }
