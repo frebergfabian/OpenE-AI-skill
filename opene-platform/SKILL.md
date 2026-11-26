@@ -9,6 +9,7 @@ Arbeta mot en uttryckligen utpekad sandbox. Hämta adress, tillit till TLS och r
 
 - Börja i [Cesams kunskapsbank](references/cesam/README.md) när uppgiften gäller Cesams arbetssätt. Skilj dokumenterad standard, observerad praxis, speciallösningar och syntetiskt verifierade funktioner.
 - Läs [arbetsflöden i webbläsaren](references/webblasarfloden.md) när du bygger, importerar eller provar en e-tjänst.
+- Läs [verifierad sandboxuppstart](references/startup-tests.md) för installationsprov, skillpaket, skillnader mellan Windows/Docker och återstående begränsningar.
 - Läs [versioner och beroenden](references/installation.md) vid installation, uppgradering eller fel vid start.
 - Läs [moduler och integrationer](references/moduler.md) och [inventeringen](references/nordic-peak-inventering.tsv) för klassnamn, kompatibilitet och verifieringsnivå.
 - Läs [drift, roller och felsökning](references/drift.md) för behörigheter, katalog, loggar, notifieringar, databas och återställning.
@@ -17,6 +18,28 @@ Arbeta mot en uttryckligen utpekad sandbox. Hämta adress, tillit till TLS och r
 Skilj på fyra verifieringar när du rapporterar ett resultat: att en modul laddar, att rätt roll får se den, att en funktion går att använda och att resultatet sparas eller skickas. Administratörens **Testa e-tjänsten** provar formuläret. En komplett livscykel kräver en publicerad sandboxversion, en separat sökande, kvittens och kontroll av det sparade ärendet under rätt roller.
 
 Öppna byggaren via **Adm. e-tjänster**. Behåll importerade tjänster som utkast medan du granskar typ, behörigheter, integrationer och regler. Exportera den verifierade versionen via versionsraden. En `.oeflow` är en versionsfil. Komplett miljöåterställning omfattar databas, filarkiv och skyddad konfiguration.
+
+## Portabel sandbox på Windows
+
+När ingen testmiljö är utpekad och värden kör Windows x64 med lokal kommandoåtkomst kan du använda den portabla förhandsversionen. Java, Docker och administratörsinstallation behövs inte. Läs [start och begränsningar](references/portable-sandbox.md).
+
+1. Kör `powershell.exe -NoProfile -ExecutionPolicy Bypass -File sandbox/get-sandbox.ps1 -Version v0.5.0-dev -NoBrowser` från skillmappen. SHA-256 verifieras före start.
+2. Kör den hämtade exe-filen under `%LOCALAPPDATA%/OpenE-Sandbox/bin` med `info --secrets`. Använd URL och lokala syntetiska konton; återge aldrig lösenorden i svaret.
+3. Bygg/importera, testa i webbläsaren och gör ett riktigt inskick. Kontrollera det sparade ärendet. Lokal e-post finns på `mailUrl` från `info`.
+4. `stop` behåller data; `start --no-browser` återanvänder instansen. `status --json` kontrollerar hälsan. `reset --yes` och `destroy --yes` raderar data och används bara på användarens begäran.
+
+Sex syntetiska tjänster publiceras automatiskt. Alla tillägg och leverantörskontrakt är inte verifierade. Molnbaserad Claude kan inte starta Windows-exe:n eller nå användarens localhost; använd Claude Code på Windows för det lokala testet.
+
+## Separat Docker-sandbox (`bash sandbox/sandboxctl`)
+
+När uppgiften kräver att en e-tjänst byggs eller testas och ingen annan miljö är utpekad, använd en lokal sandbox. Motorn är fristående (bash + Docker Compose). Se [sandbox/README.md](sandbox/README.md) och [genomförbarhet och status](references/sandbox.md).
+
+1. `bash sandbox/sandboxctl status --json`. Exit 0 = frisk, 3 = saknas. Saknas den: `bash sandbox/sandboxctl create` (persistent "default"), eller `create --ephemeral` för ett isolerat engångstest.
+2. `bash sandbox/sandboxctl info --secrets` ger URL (127.0.0.1) och lösenord för `sandbox-admin`, `handlaggare`, `sokande` och `sokande2`. Det är en lokal testvärd, så testkontona får användas. Upprepa aldrig lösenorden i svaret.
+3. Bygg eller importera tjänsten, testa i webbläsaren och gör ett riktigt inskick. E-post hamnar i Mailpit (URL i `info`).
+4. `bash sandbox/sandboxctl test` före och efter större ändringar. Exportera den verifierade `.oeflow`:en från versionsraden.
+5. Rensa: `destroy <namn>` för ephemeral. `reset --yes`/`destroy --yes` på persistent data bara när användaren bett om det.
+Ändra aldrig en remote-miljö utan uttryckligt godkännande. `sandboxctl remote <url>` gör bara läskontroller.
 
 ## Referenser från praktiska experiment (2026-11-12)
 
@@ -30,7 +53,7 @@ Skilj på fyra verifieringar när du rapporterar ett resultat: att en modul ladd
 ## Arbetsregler som visat sig nödvändiga
 
 1. **Byggrätt kommer från e-tjänsttypens grupper**, inte från admin-flaggan. Ärendeåtkomst kommer från tjänstens handläggare.
-2. **Välj en statusgrupp som inte är tom** (Standard är tom i sandboxen). Kontrollera mappningarna save och submit, och lägg till komplettering om den behövs.
+2. **Kontrollera statusgruppens innehåll** (Standard var tom i den tidigare labbversionen). Kontrollera mappningarna save och submit, och lägg till komplettering om den behövs.
 3. **Bygg och testa färdigt före publicering.** Publicering låser frågor, steg och regler. Ändringar görs sedan i en ny version.
 4. **Nya regler är inaktiverade.** Aktivera och testa både på- och avslag.
 5. **Admintestet bevisar inte persistens** (fiktivt ärendenummer 12345, upptäcker inte saknade mappningar). Publicera i sandbox, skicka in, och verifiera på Mina sidor, i Handläggning, PDF och XML.

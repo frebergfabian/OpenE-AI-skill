@@ -1,0 +1,17 @@
+// Init-skript: varje delprojekt får uppgiften copyRuntimeDeps som kopierar sina externa
+// runtime-beroenden (Maven Central) till -PdepsDir. Körs som `gradlew copyRuntimeDeps`.
+// Projektjar och libs/-jar kopieras separat av build-opene.sh.
+allprojects {
+    afterEvaluate { p ->
+        if (p != p.rootProject && p.configurations.findByName('runtimeClasspath') != null) {
+            p.tasks.register('copyRuntimeDeps', Copy) {
+                def cfg = p.configurations.runtimeClasspath
+                from(cfg.incoming.artifactView {
+                    componentFilter { it instanceof org.gradle.api.artifacts.component.ModuleComponentIdentifier }
+                }.files)
+                into(p.findProperty('depsDir') ?: "${p.layout.buildDirectory.get()}/runtime-deps")
+                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            }
+        }
+    }
+}

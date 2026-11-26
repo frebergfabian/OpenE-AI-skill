@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Config>
+	<Encoding>ISO-8859-1</Encoding>
+	<StyleSheets>
+		<StyleSheet language="Swedish" default="true" name="default (xsl/design.xsl)" fullMenu="true">xsl/design.xsl</StyleSheet>
+	</StyleSheets>
+	<SystemXMLDebug>false</SystemXMLDebug>
+	<SystemXMLDebugFile>system_xmldebug.xml</SystemXMLDebugFile>
+	<ModuleXMLDebug>false</ModuleXMLDebug>
+	<ModuleXMLDebugFile>module_xmldebug.xml</ModuleXMLDebugFile>
+	<BackgroundModuleXMLDebug>false</BackgroundModuleXMLDebug>
+	<BackgroundModuleXMLDebugFile>bgmodule_xmldebug.xml</BackgroundModuleXMLDebugFile>
+	<CoreDAOFactory>se.unlogic.hierarchy.core.daos.implementations.mysql.MySQLCoreDAOFactory</CoreDAOFactory>
+	<DataSource>
+		<Url>jdbc:mysql://@DB_HOST@:3306/@DB_NAME@?useUnicode=true&amp;characterEncoding=ISO-8859-1</Url>
+		<Type>SystemManaged</Type>
+		<Driver>org.mariadb.jdbc.Driver</Driver>
+		<Username>@DB_USER@</Username>
+		<Password>@DB_PASSWORD@</Password>
+		<LogAbandoned>false</LogAbandoned>
+		<RemoveAbandoned>false</RemoveAbandoned>
+		<RemoveAbandonedTimeout>30</RemoveAbandonedTimeout>
+		<TestOnBorrow>true</TestOnBorrow>
+		<ValidationQuery>SELECT 1</ValidationQuery>
+		<MaxActive>20</MaxActive>
+		<MaxIdle>5</MaxIdle>
+		<MinIdle>0</MinIdle>
+		<MaxWait>10000</MaxWait>
+	</DataSource>
+	<DefaultLanguage>Swedish</DefaultLanguage>
+</Config>

@@ -1,0 +1,12 @@
+{
+  "name": "opene-sandbox-playwright",
+  "private": true,
+  "description": "Playwright-tester mot en lokal OpenE-sandbox. Kör via ./sandboxctl test.",
+  "scripts": {
+    "test": "playwright test",
+    "install-browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1"
+  }
+}

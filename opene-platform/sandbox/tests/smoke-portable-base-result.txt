@@ -1,0 +1,14 @@
+Röktest mot http://127.0.0.1:4351
+  OK   katalogen 200
+  OK   teckenkodning ISO-8859-1
+  OK   inloggningsformulär
+  OK   utloggad skickas till inloggning från /flowadmin
+  OK   inloggad som sandbox-admin: Adm. e-tjänster visas
+  OK   /flowadmin/standardstatuses
+  OK   /administration/useradmin
+  OK   /administration/systemadmin
+  OK   /flowinstanceadmin
+  OK   /minasidor
+  OK   statusgrupper migrerade (Enkel finns)
+  OK   utloggning tar bort åtkomst
+Resultat: 12 OK, 0 FEL

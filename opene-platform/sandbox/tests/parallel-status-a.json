@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "accounts": true,
+    "adminLogin": true,
+    "http": true,
+    "loginForm": true,
+    "ready": true,
+    "simulator": true
+  },
+  "healthy": true,
+  "name": "parallel-a",
+  "phase": "ready",
+  "simulatorUrl": "http://127.0.0.1:46294",
+  "url": "http://127.0.0.1:46298"
+}

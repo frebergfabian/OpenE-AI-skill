@@ -1,0 +1,28 @@
+(node:14196) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+Running 6 tests using 2 workers
+
+(node:18332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:23908) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(node:18332) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(node:23908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:18332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [desktop] › specs\navigation.spec.js:12:1 › katalogen visas utan inloggning (1.3s)
+  ok 1 [mobil] › specs\navigation.spec.js:12:1 › katalogen visas utan inloggning (1.5s)
+  ok 3 [desktop] › specs\navigation.spec.js:20:1 › admin loggar in och navigerar i adminsidorna (2.3s)
+  ok 4 [mobil] › specs\navigation.spec.js:20:1 › admin loggar in och navigerar i adminsidorna (2.2s)
+  ok 5 [desktop] › specs\navigation.spec.js:37:1 › oinloggad användare når inte adminsidor (739ms)
+  ok 6 [mobil] › specs\navigation.spec.js:37:1 › oinloggad användare når inte adminsidor (780ms)
+
+  6 passed (6.0s)
+
+To open last HTML report run:
+[36m[39m
+[36m  npx playwright show-report report[39m
+[36m[39m
