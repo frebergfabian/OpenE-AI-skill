@@ -3,3 +3,5 @@ opene-platform/sandbox/portable/*.exe
 opene-platform/sandbox/portable/*.test
 opene-platform/sandbox/build/cache/
 node_modules/
+__pycache__/
+dist/

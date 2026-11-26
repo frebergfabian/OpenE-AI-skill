@@ -20,7 +20,7 @@ Skilj på fyra verifieringar när du rapporterar ett resultat: att en modul ladd
 
 ## Portabel sandbox på Windows
 
-På Windows x64 med Claude Code eller annan agent med lokal kommandoåtkomst, använd den portabla förhandsversionen. Java, Docker och administratörsinstallation behövs inte. Läs [start och begränsningar](references/portable-sandbox.md).
+När ingen testmiljö är utpekad och värden kör Windows x64 med lokal kommandoåtkomst kan du använda den portabla förhandsversionen. Java, Docker och administratörsinstallation behövs inte. Läs [start och begränsningar](references/portable-sandbox.md).
 
 1. Kör `powershell.exe -NoProfile -ExecutionPolicy Bypass -File sandbox/get-sandbox.ps1 -Version v0.5.0-dev -NoBrowser` från skillmappen. SHA-256 verifieras före start.
 2. Kör den hämtade exe-filen under `%LOCALAPPDATA%/OpenE-Sandbox/bin` med `info --secrets`. Använd URL och lokala syntetiska konton; återge aldrig lösenorden i svaret.
@@ -52,7 +52,7 @@ När uppgiften kräver att en e-tjänst byggs eller testas och ingen annan milj�
 ## Arbetsregler som visat sig nödvändiga
 
 1. **Byggrätt kommer från e-tjänsttypens grupper**, inte från admin-flaggan. Ärendeåtkomst kommer från tjänstens handläggare.
-2. **Välj en statusgrupp som inte är tom** (Standard är tom i sandboxen). Kontrollera mappningarna save och submit, och lägg till komplettering om den behövs.
+2. **Kontrollera statusgruppens innehåll** (Standard var tom i den tidigare labbversionen). Kontrollera mappningarna save och submit, och lägg till komplettering om den behövs.
 3. **Bygg och testa färdigt före publicering.** Publicering låser frågor, steg och regler. Ändringar görs sedan i en ny version.
 4. **Nya regler är inaktiverade.** Aktivera och testa både på- och avslag.
 5. **Admintestet bevisar inte persistens** (fiktivt ärendenummer 12345, upptäcker inte saknade mappningar). Publicera i sandbox, skicka in, och verifiera på Mina sidor, i Handläggning, PDF och XML.

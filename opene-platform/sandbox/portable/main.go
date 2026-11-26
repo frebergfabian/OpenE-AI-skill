@@ -284,7 +284,7 @@ func extractZip(data []byte, dest string) error {
 	}
 	for _, f := range z.File {
 		n := filepath.FromSlash(f.Name)
-		if !filepath.IsLocal(n) || f.Mode()&os.ModeSymlink != 0 {
+		if strings.ContainsAny(f.Name, `\:`) || !filepath.IsLocal(n) || f.Mode()&os.ModeSymlink != 0 {
 			return fmt.Errorf("unsafe archive member %q", f.Name)
 		}
 		p := filepath.Join(dest, n)

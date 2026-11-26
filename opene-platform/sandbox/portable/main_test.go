@@ -30,6 +30,29 @@ func TestArchiveRejectsTraversal(t *testing.T) {
 	}
 }
 
+func TestArchiveExtractsRelativeFile(t *testing.T) {
+	var buffer bytes.Buffer
+	archive := zip.NewWriter(&buffer)
+	file, err := archive.Create("webapp/test.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err = file.Write([]byte("synthetic")); err != nil {
+		t.Fatal(err)
+	}
+	if err = archive.Close(); err != nil {
+		t.Fatal(err)
+	}
+	destination := t.TempDir()
+	if err = extractZip(buffer.Bytes(), destination); err != nil {
+		t.Fatal(err)
+	}
+	content, err := os.ReadFile(filepath.Join(destination, "webapp", "test.txt"))
+	if err != nil || string(content) != "synthetic" {
+		t.Fatalf("extracted content %q, error %v", content, err)
+	}
+}
+
 func TestSMTPRejectsRealRecipient(t *testing.T) {
 	s := newSimulator(t.TempDir(), 12345)
 	client, server := net.Pipe()
