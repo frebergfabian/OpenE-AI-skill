@@ -5,6 +5,8 @@ param(
     [switch]$NoBrowser
 )
 $ErrorActionPreference = 'Stop'
+# Windows PowerShell 5.1's per-chunk progress rendering severely slows large downloads.
+$ProgressPreference = 'SilentlyContinue'
 $repo = 'frebergfabian/OpenE-AI-skill'
 # gh may be installed without a login; public downloads need no GitHub account.
 $useGh = $false
@@ -37,8 +39,8 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Kunde inte hämta release via gh' }
     } else {
         $base = "https://github.com/$repo/releases/download/$Version"
-        Invoke-WebRequest -Uri "$base/$asset" -OutFile (Join-Path $tmp $asset)
-        Invoke-WebRequest -Uri "$base/$asset.sha256" -OutFile (Join-Path $tmp "$asset.sha256")
+        Invoke-WebRequest -UseBasicParsing -Uri "$base/$asset" -OutFile (Join-Path $tmp $asset)
+        Invoke-WebRequest -UseBasicParsing -Uri "$base/$asset.sha256" -OutFile (Join-Path $tmp "$asset.sha256")
     }
     $checksum = (Get-Content -LiteralPath (Join-Path $tmp "$asset.sha256") -Raw).Trim()
     if ($checksum -notmatch '^([a-fA-F0-9]{64})(?:\s+\*?([^\r\n]+))?$') { throw 'Ogiltigt checksummeformat' }
