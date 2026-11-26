@@ -99,6 +99,7 @@ jobs:
           installed/opene-platform/sandbox/sandboxctl stop ci
           installed/opene-platform/sandbox/sandboxctl start ci
           installed/opene-platform/sandbox/sandboxctl status ci --json
+          installed/opene-platform/sandbox/sandboxctl test ci
       - name: Failure diagnostics
         if: failure()
         run: |

@@ -26,7 +26,7 @@ bash .claude/skills/opene-platform/sandbox/sandboxctl info demo --secrets
 bash .claude/skills/opene-platform/sandbox/sandboxctl test demo
 ```
 
-Första Dockerbygget hämtar och kompilerar beroenden. Bash och curl behövs på värden; Node/npm behövs för webbläsartesterna. Se [Dockerberoenden](opene-platform/sandbox/README.md) och [verifierade resultat](TESTING.md). Miljöerna har olika omfång: Windows inkluderar sex automatiska tjänster och integrationssimulatorer; Docker bygger grundplattformen med lokal e-post. Förhandsversionen uppfyller ännu inte samtliga integrations- och acceptanskriterier.
+Första Dockerbygget hämtar och kompilerar beroenden. Bash och curl behövs på värden; Node 22+/npm behövs för webbläsartesterna. Se [Dockerberoenden](opene-platform/sandbox/README.md) och [verifierade resultat](TESTING.md). Miljöerna har olika omfång: Windows inkluderar sex automatiska tjänster och integrationssimulatorer; Docker bygger grundplattformen med lokal e-post. Förhandsversionen uppfyller ännu inte samtliga integrations- och acceptanskriterier.
 
 ## Testa och installera den kombinerade skillen
 

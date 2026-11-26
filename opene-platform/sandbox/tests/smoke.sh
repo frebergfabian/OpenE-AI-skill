@@ -13,7 +13,8 @@ ko(){ echo "  FEL  $*"; fail=$((fail+1)); }
 get(){ curl -s -m 30 -b "$JAR" -c "$JAR" -o "$BODY" -w '%{http_code}|%{content_type}|%{redirect_url}' "$URL$1"; }
 # OpenE skickar ISO-8859-1 och HTML-entiteter: normalisera innan sökning.
 text(){ iconv -f ISO-8859-1 -t UTF-8 "$BODY" 2>/dev/null | sed 's/&auml;/ä/g; s/&aring;/å/g; s/&ouml;/ö/g; s/&Auml;/Ä/g; s/&Aring;/Å/g; s/&Ouml;/Ö/g'; }
-has(){ text | grep -q -E -- "$1"; }
+# Consume the response completely: grep -q can produce SIGPIPE under pipefail.
+has(){ text | grep -E -- "$1" >/dev/null; }
 
 echo "Röktest mot $URL"
 r=$(get /); [[ $r == 200* ]] && ok "katalogen 200" || ko "katalogen: $r"

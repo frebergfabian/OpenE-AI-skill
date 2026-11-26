@@ -23,7 +23,7 @@ En lokal, isolerad Open ePlatform-miljö som byggs från **låsta källor** och 
 | Docker Engine 24+ med Compose v2 (Windows: Docker Desktop + **WSL2**) | Kör db, OpenE, Mailpit och proxy |
 | bash (Linux/macOS, Windows: Git Bash) + curl | `sandboxctl` och röktest |
 | Utgående nät vid **bygge**: github.com (inklusive releasefiler), Maven Central, Docker Hub; HTTPS | Källor och beroenden |
-| Valfritt: Node 18+ med npm och operativsystemets Chromium-bibliotek | Playwright-tester (`tests/playwright`); `sandboxctl test` kör npm ci och hämtar Chromium. På en minimal Linuxvärd: kör `npx playwright install --with-deps chromium` i testkatalogen med lämpliga installationsrättigheter. |
+| Valfritt: Node 22+ med npm och operativsystemets Chromium-bibliotek | Playwright-tester (`tests/playwright`); `sandboxctl test` kör npm ci och hämtar Chromium. På en minimal Linuxvärd: kör `npx playwright install --with-deps chromium` i testkatalogen med lämpliga installationsrättigheter. |
 
 Ingen Java, Maven eller SVN behövs på värden: allt byggs i Dockerfilens byggsteg.
 
