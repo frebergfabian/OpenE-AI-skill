@@ -9,8 +9,10 @@ $repo = 'frebergfabian/OpenE-AI-skill'
 # gh may be installed without a login; public downloads need no GitHub account.
 $useGh = $false
 if (Get-Command gh -ErrorAction SilentlyContinue) {
-    & gh auth status *> $null
-    $useGh = ($LASTEXITCODE -eq 0)
+    try {
+        & gh auth status *> $null
+        $useGh = ($LASTEXITCODE -eq 0)
+    } catch { $useGh = $false }
 }
 if ($Version -ne 'latest' -and $Version -notmatch '^v?[0-9]+\.[0-9]+\.[0-9]+(?:-[A-Za-z0-9.-]+)?$') { throw 'Ogiltig releaseversion' }
 if ($Name -notmatch '^[A-Za-z0-9][A-Za-z0-9_-]{0,47}$') { throw 'Ogiltigt instansnamn' }

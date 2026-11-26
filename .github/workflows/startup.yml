@@ -2,6 +2,8 @@ name: Full sandbox startup
 on:
   workflow_dispatch:
   pull_request:
+    paths-ignore:
+      - '**/*.md'
 permissions:
   contents: read
 jobs:
@@ -26,7 +28,10 @@ jobs:
           python -c "import zipfile; zipfile.ZipFile('dist/opene-platform.skill').extractall('installed')"
           $token = $env:GH_TOKEN
           Remove-Item Env:GH_TOKEN
-          try { & ./installed/opene-platform/sandbox/get-sandbox.ps1 -Name ci -NoBrowser }
+          try {
+            & powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./installed/opene-platform/sandbox/get-sandbox.ps1 -Name ci -NoBrowser
+            if ($LASTEXITCODE) { throw 'Windows PowerShell installation failed' }
+          }
           finally { $env:GH_TOKEN = $token }
           $exe = Join-Path $env:LOCALAPPDATA 'OpenE-Sandbox/bin/OpenE-Sandbox-v0.5.0-dev-win-x64.exe'
           $info = (& $exe info --name ci --secrets | ConvertFrom-Json)
