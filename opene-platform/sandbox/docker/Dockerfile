@@ -14,6 +14,11 @@ WORKDIR /opt/build
 COPY build/ ./
 # Källhämtningen cachas i ett eget lager så att ombyggen går snabbt.
 RUN --mount=type=cache,target=/root/.gradle \
+    curl --fail --location --retry 3 --connect-timeout 30 \
+      https://github.com/frebergfabian/OpenE-AI-skill/releases/download/v0.5.0-dev/svn-r3190-r1649-r15.tar.gz \
+      -o /opt/build/svn-mirror.tar.gz \
+ && OPENE_SVN_MIRROR=/opt/build/svn-mirror.tar.gz \
+    OPENE_SVN_MIRROR_SHA256=744d32447e3d39b91db333110074c004bcde6981401ea42c233caeed866c63ad \
     bash build-opene.sh /opt/work /opt/dist
 
 # ------------------------------------------------------------------ runtime

@@ -2,7 +2,7 @@
 # Sätter lösenord (PBKDF2WithHmacSHA256, samma format som OpenHierarchys PBKDF2PasswordHandler)
 # för sandboxens testkonton. Lösenorden kommer från miljövariabler och lagras aldrig i Git.
 #   SANDBOX_USERS="admin:ADMIN_PASSWORD sokande:CITIZEN_PASSWORD handlaggare:MANAGER_PASSWORD"
-set -uo pipefail
+set -euo pipefail
 MYSQL=("$@")
 log(){ echo "[opene-seed] $*"; }
 
@@ -30,13 +30,13 @@ sql_str(){ printf "%s" "$1" | sed "s/'/''/g"; }
 for spec in $SANDBOX_ACCOUNTS; do
   IFS=: read -r user var first last mail groups isadmin <<<"$spec"
   pw=${!var:-}
-  [ -n "$pw" ] || { log "hoppar över $user ($var är inte satt)"; continue; }
+  [ -n "$pw" ] || { log "saknar lösenord för $user ($var är inte satt)"; exit 1; }
   h=$(pbkdf2 "$pw")
   "${MYSQL[@]}" --default-character-set=utf8mb4 -e "
     INSERT INTO simple_users (username, password, firstname, lastname, email, admin, enabled, added, hashAlgoritm)
       VALUES ('$(sql_str "$user")', '$h', '$(sql_str "$first")', '$(sql_str "$last")', '$(sql_str "$mail")', $isadmin, 1, NOW(), 'PBKDF2WithHmacSHA256')
     ON DUPLICATE KEY UPDATE password=VALUES(password), hashAlgoritm=VALUES(hashAlgoritm), enabled=1, admin=VALUES(admin);" \
-  && log "konto $user klart" || log "kunde inte skapa $user"
+  && log "konto $user klart" || { log "kunde inte skapa $user"; exit 1; }
   for g in ${groups//,/ }; do
     g=${g//_/ }
     "${MYSQL[@]}" --default-character-set=utf8mb4 -e "INSERT IGNORE INTO simple_user_groups (userID, groupID)

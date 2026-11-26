@@ -115,6 +115,7 @@ cmd_status(){
   running=$(compose "$n" ps --status running --services 2>/dev/null | tr '\n' ',' | sed 's/,$//')
   http=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "$url/" || true)
   login=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "$url/login" || true)
+  http=$((10#${http:-0})); login=$((10#${login:-0}))
   seeded=$(compose "$n" exec -T db sh -c 'mariadb -N -uopene -p"$MARIADB_PASSWORD" opene -e "SELECT v FROM sandbox_meta WHERE k=\"users_seeded\""' 2>/dev/null || true)
   if [ $json = 1 ]; then
     printf '{"exists":true,"name":"%s","mode":"%s","url":"%s","running":"%s","http":%s,"login":%s,"usersSeeded":"%s"}\n' \
