@@ -38,6 +38,18 @@ class SkillTests(unittest.TestCase):
         skill.package(self.root, second)
         self.assertEqual(output.read_bytes(), second.read_bytes())
 
+    def test_runtime_symlinks_excluded_but_skill_symlinks_rejected(self):
+        cache = self.root / "node_modules" / ".bin"
+        cache.mkdir(parents=True)
+        try:
+            (cache / "playwright").symlink_to(self.entry)
+        except OSError:
+            self.skipTest("Symlink creation is unavailable")
+        self.assertEqual(len(skill.validate(self.root)), 2)
+        (self.root / "reference.md").symlink_to(self.entry)
+        with self.assertRaises(ValueError):
+            skill.validate(self.root)
+
     def test_broken_link_and_escape_are_rejected(self):
         for target in ("missing.md", "../outside.md"):
             (self.base / "outside.md").write_text("private")

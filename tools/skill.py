@@ -21,9 +21,11 @@ LINK = re.compile(r"(?<!!)\[[^\]]*\]\(([^)]+)\)|!\[[^\]]*\]\(([^)]+)\)")
 def files(directory):
     for path in sorted(directory.rglob("*")):
         relative = path.relative_to(directory)
+        if EXCLUDED.intersection(relative.parts):
+            continue
         if path.is_symlink():
             raise ValueError(f"Symlink in skill: {relative}")
-        if path.is_file() and not EXCLUDED.intersection(relative.parts):
+        if path.is_file():
             if path.suffix not in EXCLUDED_SUFFIXES and path.name not in {"payload.zip", ".env"}:
                 yield path
 
