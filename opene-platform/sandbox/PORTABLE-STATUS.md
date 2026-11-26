@@ -2,6 +2,10 @@
 
 Detta är en experimentell implementation. Förhandsversionen `v0.5.0-dev` publiceras i det offentliga repot OpenE-AI-skill för praktiska tester med Claude Code på Windows. Den är inte godkänd mot samtliga ursprungliga acceptanskriterier. Se releasens testprotokoll för verifieringen av den distribuerade exe-filen.
 
+## Ny uppstartsverifiering 26 november 2026
+
+Det kombinerade skillpaketet har provats uppackat på Windows Server 2025: första start av den publicerade v0.5.0-dev-exe:n, 12 röktester, 6 webbläsartester, omstart och reset med frisk hälsokontroll. Dockergrundplattformen har provats separat. Se [aktuellt uppstartsprotokoll](../references/startup-tests.md) för omfång, distributioner och begränsningar. Detta är inget nytt fullbygge av exe:n och ingen ny verifiering av samtliga integrationsscenarier.
+
 ## Byggt och verifierat
 
 - Den distribuerade förhandsversionens rena källbygge från `e650623` har provats med samtliga sex automatiska tjänster och sparade ärenden, röktest 12/12, Playwright 6/6 och 0 ERROR. Första start tog 114,8 sekunder. Omstart med bevarade data tog 32,1 sekunder och klarar därför inte det ursprungliga 30-sekunderskravet. Se [testprotokollet](tests/preview-v0.5.0-dev-result.txt). Äldre prov nedan har ett annat omfång.
