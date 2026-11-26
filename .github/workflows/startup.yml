@@ -1,0 +1,85 @@
+name: Full sandbox startup
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      OPENE_SANDBOX_HOME: '${{ runner.temp }}\opene-test'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install packaged skill
+        shell: pwsh
+        run: |
+          python tools/skill.py --output dist/opene-platform.skill
+          python -c "import zipfile; zipfile.ZipFile('dist/opene-platform.skill').extractall('installed')"
+          & ./installed/opene-platform/sandbox/get-sandbox.ps1 -Name ci -NoBrowser
+          $exe = Join-Path $env:LOCALAPPDATA 'OpenE-Sandbox/bin/OpenE-Sandbox-v0.5.0-dev-win-x64.exe'
+          $info = (& $exe info --name ci --secrets | ConvertFrom-Json)
+          foreach ($p in $info.accounts.PSObject.Properties) { Write-Output "::add-mask::$($p.Value)" }
+          "OPENE_URL=$($info.url)" >> $env:GITHUB_ENV
+          'OPENE_ADMIN_USER=sandbox-admin' >> $env:GITHUB_ENV
+          "OPENE_ADMIN_PASSWORD=$($info.accounts.'sandbox-admin')" >> $env:GITHUB_ENV
+          "SANDBOX_EXE=$exe" >> $env:GITHUB_ENV
+      - name: Browser prerequisites
+        working-directory: installed/opene-platform/sandbox/tests/playwright
+        run: |
+          npm ci
+          npx playwright install chromium
+      - name: Browser tests
+        working-directory: installed/opene-platform/sandbox/tests/playwright
+        run: npx playwright test
+      - name: Restart and health
+        shell: pwsh
+        run: |
+          & $env:SANDBOX_EXE stop --name ci
+          if ($LASTEXITCODE) { throw 'Stop failed' }
+          & $env:SANDBOX_EXE start --name ci --no-browser
+          if ($LASTEXITCODE) { throw 'Restart failed' }
+          & $env:SANDBOX_EXE status --name ci --json
+          if ($LASTEXITCODE) { throw 'Health failed' }
+      - name: Cleanup disposable instance
+        if: always()
+        shell: pwsh
+        run: |
+          if ($env:SANDBOX_EXE) { & $env:SANDBOX_EXE destroy --name ci --yes }
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      OPENE_SANDBOX_HOME: '${{ runner.temp }}/opene-test'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install packaged skill and start Docker
+        run: |
+          python tools/skill.py --output dist/opene-platform.skill
+          python -c "import zipfile; zipfile.ZipFile('dist/opene-platform.skill').extractall('installed')"
+          chmod +x installed/opene-platform/sandbox/sandboxctl
+          installed/opene-platform/sandbox/sandboxctl create ci --ephemeral
+      - name: Smoke and browser tests
+        run: |
+          installed/opene-platform/sandbox/sandboxctl test ci
+      - name: Restart and health
+        run: |
+          installed/opene-platform/sandbox/sandboxctl stop ci
+          installed/opene-platform/sandbox/sandboxctl start ci
+          installed/opene-platform/sandbox/sandboxctl status ci --json
+      - name: Failure diagnostics
+        if: failure()
+        run: |
+          docker ps -a
+          docker logs opene-ci-opene-1 --tail 100 || true
+      - name: Cleanup disposable instance
+        if: always()
+        run: installed/opene-platform/sandbox/sandboxctl destroy ci --yes

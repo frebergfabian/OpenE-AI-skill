@@ -98,7 +98,7 @@ cmd_start(){
 wait_ready(){ # namn sekunder
   local n=$1 t=$2 url; url="http://127.0.0.1:$(getenv "$n" SANDBOX_HTTP_PORT)/"
   for ((i=0; i<t; i+=5)); do
-    curl -fsS -o /dev/null -m 5 "$url" 2>/dev/null && { say "OpenE svarar på $url"; return 0; }
+    cmd_status "$n" --json >/dev/null 2>&1 && { say "OpenE och testkontona är redo på $url"; return 0; }
     sleep 5
   done
   say "OpenE svarade inte inom ${t}s - se: sandboxctl logs $n opene"; return 1
@@ -113,8 +113,8 @@ cmd_status(){
   local port url http login seeded running
   port=$(getenv "$n" SANDBOX_HTTP_PORT); url="http://127.0.0.1:$port"
   running=$(compose "$n" ps --status running --services 2>/dev/null | tr '\n' ',' | sed 's/,$//')
-  http=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "$url/" || echo 000)
-  login=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "$url/login" || echo 000)
+  http=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "$url/" || true)
+  login=$(curl -s -o /dev/null -m 5 -w '%{http_code}' "$url/login" || true)
   seeded=$(compose "$n" exec -T db sh -c 'mariadb -N -uopene -p"$MARIADB_PASSWORD" opene -e "SELECT v FROM sandbox_meta WHERE k=\"users_seeded\""' 2>/dev/null || true)
   if [ $json = 1 ]; then
     printf '{"exists":true,"name":"%s","mode":"%s","url":"%s","running":"%s","http":%s,"login":%s,"usersSeeded":"%s"}\n' \
@@ -126,7 +126,7 @@ cmd_status(){
     echo "http /:    $http   /login: $login"
     echo "konton:    ${seeded:-inte seedade ännu}"
   fi
-  [ "$http" = 200 ] && [ -n "$seeded" ]
+  [ "$http" = 200 ] && [ "$login" = 200 ] && [ -n "$seeded" ]
 }
 
 cmd_info(){
@@ -183,7 +183,7 @@ cmd_test(){
   OPENE_ADMIN_USER=sandbox-admin OPENE_ADMIN_PASSWORD="$(getenv "$n" ADMIN_PASSWORD)" \
     bash "$HERE/tests/smoke.sh"
   if [ -f "$HERE/tests/playwright/package.json" ] && command -v npx >/dev/null; then
-    (cd "$HERE/tests/playwright" && \
+    (cd "$HERE/tests/playwright" && npm ci && npx playwright install chromium && \
      OPENE_URL="http://127.0.0.1:$(getenv "$n" SANDBOX_HTTP_PORT)" \
      OPENE_ADMIN_USER=sandbox-admin OPENE_ADMIN_PASSWORD="$(getenv "$n" ADMIN_PASSWORD)" \
      npx --yes playwright test)
@@ -193,7 +193,7 @@ cmd_test(){
 cmd_remote(){ # läs-endast
   local url=${1:?url}; url=${url%/}
   for p in / /login /oversikt; do
-    printf '%-10s %s\n' "$p" "$(curl -sk -o /dev/null -m 10 -w '%{http_code}' "$url$p" || echo 000)"
+    printf '%-10s %s\n' "$p" "$(curl -sk -o /dev/null -m 10 -w '%{http_code}' "$url$p" || true)"
   done
 }
 
