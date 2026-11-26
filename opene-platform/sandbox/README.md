@@ -22,8 +22,8 @@ En lokal, isolerad Open ePlatform-miljö som byggs från **låsta källor** och 
 |---|---|
 | Docker Engine 24+ med Compose v2 (Windows: Docker Desktop + **WSL2**) | Kör db, OpenE, Mailpit och proxy |
 | bash (Linux/macOS, Windows: Git Bash) + curl | `sandboxctl` och röktest |
-| Utgående nät vid **bygge**: github.com, svn.openhierarchy.org och svn.nordicpeak.com på **port 3690 (svn://)**, Maven Central, Docker Hub | Källor och beroenden |
-| Valfritt: Node 18+ | Playwright-tester (`tests/playwright`) |
+| Utgående nät vid **bygge**: github.com (inklusive releasefiler), Maven Central, Docker Hub; HTTPS | Källor och beroenden |
+| Valfritt: Node 18+ med npm och operativsystemets Chromium-bibliotek | Playwright-tester (`tests/playwright`); `sandboxctl test` kör npm ci och hämtar Chromium. På en minimal Linuxvärd: kör `npx playwright install --with-deps chromium` i testkatalogen med lämpliga installationsrättigheter. |
 
 Ingen Java, Maven eller SVN behövs på värden: allt byggs i Dockerfilens byggsteg.
 
@@ -41,6 +41,8 @@ Ingen Java, Maven eller SVN behövs på värden: allt byggs i Dockerfilens byggs
 - Hemligheter slumpas per instans till `~/.opene-sandbox/instances/<namn>/.env` (rättigheter 600) och finns aldrig i Git eller i imagen. `config.xml` skapas vid start.
 
 ## Egen OpenE-distribution (`build/`)
+Dockerbygget hämtar den publicerade SVN-källspegeln från v0.5.0-dev och verifierar SHA-256 före användning. Den innehåller samma låsta revisioner, inga ersättningsberoenden. Ett fristående källbygge utan `OPENE_SVN_MIRROR` behöver fortfarande SVN port 3690.
+
 `build/build-opene.sh` bygger en komplett webbrot från versionerna i `build/versions.env`:
 1. Hämtar Open ePlatform (Git, låst commit), OpenHierarchy (svn r3190), Nordic Peak Utils (svn r1649) och PureCaptcha (svn r15).
 2. Kompilerar Utils, cron4j-forken, PureCaptcha, OpenHierarchy, SiteProfile, MinimalUser, PaymentProvider och PersonProvider med `javac --release 8 -encoding ISO-8859-1`.

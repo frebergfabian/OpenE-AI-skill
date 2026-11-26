@@ -10,6 +10,7 @@ jobs:
     timeout-minutes: 30
     env:
       GH_TOKEN: ${{ github.token }}
+      OPENE_EXPECT_FIXTURES: '1'
     steps:
       - uses: actions/checkout@v4
       - name: Isolate test data
@@ -23,7 +24,10 @@ jobs:
         run: |
           python tools/skill.py --output dist/opene-platform.skill
           python -c "import zipfile; zipfile.ZipFile('dist/opene-platform.skill').extractall('installed')"
-          & ./installed/opene-platform/sandbox/get-sandbox.ps1 -Name ci -NoBrowser
+          $token = $env:GH_TOKEN
+          Remove-Item Env:GH_TOKEN
+          try { & ./installed/opene-platform/sandbox/get-sandbox.ps1 -Name ci -NoBrowser }
+          finally { $env:GH_TOKEN = $token }
           $exe = Join-Path $env:LOCALAPPDATA 'OpenE-Sandbox/bin/OpenE-Sandbox-v0.5.0-dev-win-x64.exe'
           $info = (& $exe info --name ci --secrets | ConvertFrom-Json)
           if (!$info.accounts.'sandbox-admin') { throw 'Missing administrator credentials' }

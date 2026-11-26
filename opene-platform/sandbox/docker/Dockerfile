@@ -29,8 +29,8 @@ RUN apt-get update \
  && rm -rf /usr/local/tomcat/webapps/* \
  && groupadd --system --gid 10001 opene \
  && useradd --system --uid 10001 --gid opene --home-dir /var/lib/opene opene \
- && mkdir -p /var/lib/opene/files /var/lib/opene/tmp /var/log/opene \
- && chown -R opene:opene /var/lib/opene /var/log/opene /usr/local/tomcat/logs /usr/local/tomcat/work /usr/local/tomcat/temp
+ && mkdir -p /var/lib/opene/files /var/lib/opene/tmp /var/log/opene /usr/local/tomcat/conf/Catalina/localhost \
+ && chown -R opene:opene /var/lib/opene /var/log/opene /usr/local/tomcat/logs /usr/local/tomcat/work /usr/local/tomcat/temp /usr/local/tomcat/conf/Catalina
 
 COPY --from=build --chown=opene:opene /opt/dist/webapp /usr/local/tomcat/webapps/ROOT
 COPY --from=build /opt/dist/sql /opt/opene/sql

@@ -24,7 +24,7 @@ r=$(get /flowadmin); [[ $r == 302*login* ]] && ok "utloggad skickas till inloggn
 
 curl -s -m 30 -b "$JAR" -c "$JAR" -o "$BODY" --data-urlencode "username=$USER" --data-urlencode "password=$PASS" "$URL/login"
 r=$(get /flowadmin)
-if [[ $r == 200* ]] && has 'Lägg till e-tjänst|Importera e-tjänst'; then ok "inloggad som $USER: Adm. e-tjänster visas"; else ko "inloggning eller Adm. e-tjänster misslyckades ($r)"; fi
+if [[ $r == 200* ]] && has '/flowadmin/addflow' && has '/flowadmin/importflow' && ! has 'name="password"'; then ok "inloggad som $USER: Adm. e-tjänster visas"; else ko "inloggning eller Adm. e-tjänster misslyckades ($r)"; fi
 
 for p in /flowadmin/standardstatuses /administration/useradmin /administration/systemadmin /flowinstanceadmin /minasidor; do
   r=$(get "$p")

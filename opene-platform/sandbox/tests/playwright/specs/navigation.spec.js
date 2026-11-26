@@ -31,6 +31,11 @@ test('admin loggar in och navigerar i adminsidorna', async ({ page }, info) => {
   }
   await page.goto('/flowadmin');
   await expect(page.locator('#lab-main, main, body')).toContainText(/e-tjänst/i);
+  if (process.env.OPENE_EXPECT_FIXTURES === '1') {
+    for (const name of ['Funktionslabbet - portabelt utkast', 'Sandbox fastighetstest', 'Sandbox barntest', 'Sandbox betalningstest', 'Sandbox foretagstest', 'Sandbox flerpartssignering']) {
+      await expect(page.locator('body')).toContainText(name);
+    }
+  }
   await page.screenshot({ path: info.outputPath('flowadmin.png'), fullPage: true });
 });
 
